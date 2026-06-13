@@ -1,0 +1,258 @@
+[
+  {
+    "model": "predictor.match",
+    "pk": 1,
+    "fields": {
+      "home_team": "USA",
+      "away_team": "Costa Rica",
+      "match_date": "2026-06-11",
+      "match_time": "18:00:00",
+      "kickoff_datetime": "2026-06-11T18:00:00-05:00",
+      "status": "upcoming",
+      "home_score": null,
+      "away_score": null,
+      "venue": "SoFi Stadium, Los Angeles",
+      "group_stage": "Group A"
+    }
+  },
+  {
+    "model": "predictor.match",
+    "pk": 2,
+    "fields": {
+      "home_team": "Mexico",
+      "away_team": "Canada",
+      "match_date": "2026-06-11",
+      "match_time": "21:00:00",
+      "kickoff_datetime": "2026-06-11T21:00:00-06:00",
+      "status": "upcoming",
+      "home_score": null,
+      "away_score": null,
+      "venue": "Estadio Azteca, Mexico City",
+      "group_stage": "Group A"
+    }
+  },
+  {
+    "model": "predictor.match",
+    "pk": 3,
+    "fields": {
+      "home_team": "Brazil",
+      "away_team": "Haiti",
+      "match_date": "2026-06-12",
+      "match_time": "18:00:00",
+      "kickoff_datetime": "2026-06-12T18:00:00-05:00",
+      "status": "upcoming",
+      "home_score": null,
+      "away_score": null,
+      "venue": "Hard Rock Stadium, Miami",
+      "group_stage": "Group B"
+    }
+  },
+  {
+    "model": "predictor.match",
+    "pk": 4,
+    "fields": {
+      "home_team": "Morocco",
+      "away_team": "Scotland",
+      "match_date": "2026-06-12",
+      "match_time": "21:00:00",
+      "kickoff_datetime": "2026-06-12T21:00:00-05:00",
+      "status": "upcoming",
+      "home_score": null,
+      "away_score": null,
+      "venue": "MetLife Stadium, New York",
+      "group_stage": "Group B"
+    }
+  },
+  {
+    "model": "predictor.match",
+    "pk": 5,
+    "fields": {
+      "home_team": "Germany",
+      "away_team": "Japan",
+      "match_date": "2026-06-13",
+      "match_time": "18:00:00",
+      "kickoff_datetime": "2026-06-13T18:00:00-05:00",
+      "status": "upcoming",
+      "home_score": null,
+      "away_score": null,
+      "venue": "AT&T Stadium, Dallas",
+      "group_stage": "Group C"
+    }
+  },
+  {
+    "model": "predictor.match",
+    "pk": 6,
+    "fields": {
+      "home_team": "Netherlands",
+      "away_team": "Curaçao",
+      "match_date": "2026-06-13",
+      "match_time": "21:00:00",
+      "kickoff_datetime": "2026-06-13T21:00:00-05:00",
+      "status": "upcoming",
+      "home_score": null,
+      "away_score": null,
+      "venue": "Lumen Field, Seattle",
+      "group_stage": "Group C"
+    }
+  },
+  {
+    "model": "predictor.match",
+    "pk": 7,
+    "fields": {
+      "home_team": "Spain",
+      "away_team": "Australia",
+      "match_date": "2026-06-14",
+      "match_time": "18:00:00",
+      "kickoff_datetime": "2026-06-14T18:00:00-05:00",
+      "status": "upcoming",
+      "home_score": null,
+      "away_score": null,
+      "venue": "MetLife Stadium, New York",
+      "group_stage": "Group D"
+    }
+  },
+  {
+    "model": "predictor.match",
+    "pk": 8,
+    "fields": {
+      "home_team": "Argentina",
+      "away_team": "Cabo Verde",
+      "match_date": "2026-06-14",
+      "match_time": "21:00:00",
+      "kickoff_datetime": "2026-06-14T21:00:00-06:00",
+      "status": "upcoming",
+      "home_score": null,
+      "away_score": null,
+      "venue": "SoFi Stadium, Los Angeles",
+      "group_stage": "Group D"
+    }
+  },
+  {
+    "model": "predictor.match",
+    "pk": 9,
+    "fields": {
+      "home_team": "France",
+      "away_team": "Tunisia",
+      "match_date": "2026-06-15",
+      "match_time": "18:00:00",
+      "kickoff_datetime": "2026-06-15T18:00:00-05:00",
+      "status": "upcoming",
+      "home_score": null,
+      "away_score": null,
+      "venue": "Hard Rock Stadium, Miami",
+      "group_stage": "Group E"
+    }
+  },
+  {
+    "model": "predictor.match",
+    "pk": 10,
+    "fields": {
+      "home_team": "England",
+      "away_team": "Peru",
+      "match_date": "2026-06-15",
+      "match_time": "21:00:00",
+      "kickoff_datetime": "2026-06-15T21:00:00-05:00",
+      "status": "upcoming",
+      "home_score": null,
+      "away_score": null,
+      "venue": "AT&T Stadium, Dallas",
+      "group_stage": "Group E"
+    }
+  },
+  {
+    "model": "predictor.match",
+    "pk": 11,
+    "fields": {
+      "home_team": "Portugal",
+      "away_team": "Saudi Arabia",
+      "match_date": "2026-06-16",
+      "match_time": "18:00:00",
+      "kickoff_datetime": "2026-06-16T18:00:00-05:00",
+      "status": "upcoming",
+      "home_score": null,
+      "away_score": null,
+      "venue": "Lumen Field, Seattle",
+      "group_stage": "Group F"
+    }
+  },
+  {
+    "model": "predictor.match",
+    "pk": 12,
+    "fields": {
+      "home_team": "Colombia",
+      "away_team": "Ghana",
+      "match_date": "2026-06-16",
+      "match_time": "21:00:00",
+      "kickoff_datetime": "2026-06-16T21:00:00-05:00",
+      "status": "upcoming",
+      "home_score": null,
+      "away_score": null,
+      "venue": "BMO Field, Toronto",
+      "group_stage": "Group F"
+    }
+  },
+  {
+    "model": "predictor.match",
+    "pk": 13,
+    "fields": {
+      "home_team": "USA",
+      "away_team": "Mexico",
+      "match_date": "2026-06-17",
+      "match_time": "21:00:00",
+      "kickoff_datetime": "2026-06-17T21:00:00-05:00",
+      "status": "upcoming",
+      "home_score": null,
+      "away_score": null,
+      "venue": "AT&T Stadium, Dallas",
+      "group_stage": "Group A"
+    }
+  },
+  {
+    "model": "predictor.match",
+    "pk": 14,
+    "fields": {
+      "home_team": "Brazil",
+      "away_team": "Morocco",
+      "match_date": "2026-06-18",
+      "match_time": "18:00:00",
+      "kickoff_datetime": "2026-06-18T18:00:00-05:00",
+      "status": "upcoming",
+      "home_score": null,
+      "away_score": null,
+      "venue": "SoFi Stadium, Los Angeles",
+      "group_stage": "Group B"
+    }
+  },
+  {
+    "model": "predictor.match",
+    "pk": 15,
+    "fields": {
+      "home_team": "Germany",
+      "away_team": "Netherlands",
+      "match_date": "2026-06-19",
+      "match_time": "21:00:00",
+      "kickoff_datetime": "2026-06-19T21:00:00-05:00",
+      "status": "upcoming",
+      "home_score": null,
+      "away_score": null,
+      "venue": "MetLife Stadium, New York",
+      "group_stage": "Group C"
+    }
+  },
+  {
+    "model": "predictor.match",
+    "pk": 16,
+    "fields": {
+      "home_team": "Spain",
+      "away_team": "Argentina",
+      "match_date": "2026-06-20",
+      "match_time": "21:00:00",
+      "kickoff_datetime": "2026-06-20T21:00:00-05:00",
+      "status": "upcoming",
+      "home_score": null,
+      "away_score": null,
+      "venue": "Hard Rock Stadium, Miami",
+      "group_stage": "Group D"
+    }
+  }
+]

@@ -1,0 +1,276 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="FIFA World Cup 2026 Family Prediction League">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{% block title %}WC2026 Prediction League{% endblock %}</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+  <!-- AOS (Animate On Scroll) -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <!-- Custom Dark Theme -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?XTransformPort=8000">
+
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <!-- Stadium Lights Effect -->
+  <div class="stadium-lights"></div>
+
+  <!-- Floating Footballs Container -->
+  <div id="floating-footballs"></div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Loading Bar -->
+  <div class="loading-bar" id="loading-bar"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark-custom fixed-top" id="mainNavbar">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'predictor:home' %}">
+        <span class="brand-icon">&#9917;</span>
+        <span class="brand-text gold-text">WC2026</span>
+      </a>
+      <button class="navbar-toggler border-gold" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link{% block nav_home %}{% endblock %}" href="{% url 'predictor:home' %}">
+              <i class="bi bi-house-door"></i> Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link{% block nav_today %}{% endblock %}" href="{% url 'predictor:today' %}">
+              <i class="bi bi-calendar-event"></i> Today
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link{% block nav_matches %}{% endblock %}" href="{% url 'predictor:matches' %}">
+              <i class="bi bi-trophy"></i> Matches
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link{% block nav_schedule %}{% endblock %}" href="{% url 'predictor:schedule' %}">
+              <i class="bi bi-calendar3"></i> Schedule
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link{% block nav_leaderboard %}{% endblock %}" href="{% url 'predictor:leaderboard' %}">
+              <i class="bi bi-bar-chart-fill"></i> Leaderboard
+            </a>
+          </li>
+        </ul>
+        <div class="d-flex align-items-center">
+          {% if current_participant %}
+          <span class="participant-chip me-2">
+            <i class="bi bi-person-fill"></i> {{ current_participant.name }}
+          </span>
+          <a href="{% url 'predictor:logout' %}" class="btn btn-gold-outline btn-sm">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </a>
+          {% else %}
+          <a href="{% url 'predictor:login' %}" class="btn btn-gold btn-sm">
+            <i class="bi bi-box-arrow-in-right"></i> Login
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Flash Messages -->
+  {% if messages %}
+  <div class="container mt-5 pt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show animate__animated animate__fadeInDown glass-card" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Main Content -->
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer text-center py-4 mt-auto">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 text-md-start">
+          <span class="brand-icon">&#9917;</span> <span class="gold-text">WC2026</span>
+        </div>
+        <div class="col-md-4">
+          <p class="text-muted mb-0">FIFA World Cup 2026 &mdash; Family Prediction League</p>
+          <p class="text-muted small mb-0">Made with &#10084;&#65039; for the family</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+          <a href="/admin/" class="text-muted small">Admin</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Confetti Container -->
+  <div class="confetti-container" id="confettiContainer"></div>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- AOS -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 700,
+      easing: 'ease-out-cubic',
+      once: true,
+      offset: 60,
+    });
+  </script>
+
+  <!-- Custom JS -->
+  <script src="{% static 'js/main.js' %}?XTransformPort=8000"></script>
+
+  <!-- Gateway Integration: Add XTransformPort to all internal links, forms, and AJAX -->
+  <script>
+  (function() {
+    // When running inside the Caddy gateway with XTransformPort,
+    // we need to add the query parameter to all internal navigation
+    const PORT = '8000';
+    const PARAM = 'XTransformPort';
+
+    // Check if we're behind the gateway (running in iframe with XTransformPort)
+    const urlParams = new URLSearchParams(window.location.search);
+    const isBehindGateway = urlParams.has(PARAM);
+
+    if (isBehindGateway) {
+      // Intercept all link clicks to add XTransformPort
+      document.addEventListener('click', function(e) {
+        const link = e.target.closest('a[href]');
+        if (!link) return;
+
+        const href = link.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto') || href.startsWith('tel') || href.startsWith('javascript') || href.startsWith('//')) return;
+
+        // Add XTransformPort to internal links
+        try {
+          const url = new URL(href, window.location.origin);
+          if (!url.searchParams.has(PARAM)) {
+            url.searchParams.set(PARAM, PORT);
+            link.setAttribute('href', url.pathname + url.search);
+          }
+        } catch(err) {}
+      });
+
+      // Add XTransformPort to all forms on submit
+      document.addEventListener('submit', function(e) {
+        const form = e.target;
+        if (form.tagName !== 'FORM') return;
+
+        const action = form.getAttribute('action') || window.location.pathname;
+        if (action.startsWith('http') || action.startsWith('//')) return;
+
+        try {
+          const url = new URL(action, window.location.origin);
+          if (!url.searchParams.has(PARAM)) {
+            url.searchParams.set(PARAM, PORT);
+            form.setAttribute('action', url.pathname + url.search);
+          }
+        } catch(err) {}
+      }, true);
+
+      // Handle AJAX requests - add XTransformPort to fetch URLs
+      const originalFetch = window.fetch;
+      window.fetch = function(url, options) {
+        if (typeof url === 'string' && !url.startsWith('http') && !url.startsWith('#') && !url.startsWith('//')) {
+          try {
+            const urlObj = new URL(url, window.location.origin);
+            if (!urlObj.searchParams.has(PARAM)) {
+              urlObj.searchParams.set(PARAM, PORT);
+              url = urlObj.pathname + urlObj.search;
+            }
+          } catch(err) {}
+        } else if (url instanceof Request) {
+          // Handle Request objects
+          try {
+            const originalUrl = url.url;
+            if (!originalUrl.startsWith('http') && !originalUrl.startsWith('//')) {
+              const urlObj = new URL(originalUrl, window.location.origin);
+              if (!urlObj.searchParams.has(PARAM)) {
+                urlObj.searchParams.set(PARAM, PORT);
+                url = new Request(urlObj.pathname + urlObj.search, url);
+              }
+            }
+          } catch(err) {}
+        }
+        return originalFetch.call(this, url, options);
+      };
+
+      // Fix all existing links on the page that don't have XTransformPort
+      function fixLinks() {
+        document.querySelectorAll('a[href]').forEach(function(link) {
+          const href = link.getAttribute('href');
+          if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto') || href.startsWith('tel') || href.startsWith('javascript') || href.startsWith('//')) return;
+
+          try {
+            const url = new URL(href, window.location.origin);
+            if (!url.searchParams.has(PARAM) && url.pathname.startsWith('/')) {
+              url.searchParams.set(PARAM, PORT);
+              link.setAttribute('href', url.pathname + url.search);
+            }
+          } catch(err) {}
+        });
+
+        // Fix form actions
+        document.querySelectorAll('form[action]').forEach(function(form) {
+          const action = form.getAttribute('action');
+          if (!action || action.startsWith('http') || action.startsWith('//')) return;
+
+          try {
+            const url = new URL(action, window.location.origin);
+            if (!url.searchParams.has(PARAM)) {
+              url.searchParams.set(PARAM, PORT);
+              form.setAttribute('action', url.pathname + url.search);
+            }
+          } catch(err) {}
+        });
+      }
+
+      // Run immediately and after any DOM changes
+      fixLinks();
+
+      // Use MutationObserver to fix links added dynamically
+      const observer = new MutationObserver(function() {
+        fixLinks();
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
+  })();
+  </script>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

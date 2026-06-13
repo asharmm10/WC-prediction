@@ -1,0 +1,215 @@
+{% extends "predictor/base.html" %}
+{% load static %}
+
+{% block title %}All Matches | WC2026{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- ============================================================
+         HEADER SECTION
+         ============================================================ -->
+    <div class="text-center mb-4" data-aos="fade-down">
+        <h1 class="display-5 fw-bold mb-3">
+            <span class="gold-text">⚽ All Matches</span>
+        </h1>
+
+        <!-- Filter Buttons -->
+        <div class="d-flex flex-wrap justify-content-center gap-2" id="match-filters">
+            <button class="btn btn-gold filter-btn active" data-filter="all" style="min-height: 44px;">
+                All
+            </button>
+            <button class="btn btn-gold-outline filter-btn" data-filter="upcoming" style="min-height: 44px;">
+                🕐 Upcoming
+            </button>
+            <button class="btn btn-gold-outline filter-btn" data-filter="live" style="min-height: 44px;">
+                🔴 Live
+            </button>
+            <button class="btn btn-gold-outline filter-btn" data-filter="completed" style="min-height: 44px;">
+                ✅ Completed
+            </button>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         MATCH GRID
+         ============================================================ -->
+    <div class="row g-3 g-md-4" id="match-grid">
+        {% for match in matches %}
+        <div class="col-md-6 col-lg-4 match-col"
+             data-status="{{ match.status }}"
+             data-aos="fade-up"
+             data-aos-delay="{{ forloop.counter0|divisibleby:3 }}00">
+
+            <a href="{% url 'predictor:match_detail' match.id %}" class="text-decoration-none">
+                <div class="match-card glass-card p-3 h-100 position-relative"
+                     data-match-id="{{ match.id }}">
+
+                    <!-- Status & Group Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        {% if match.status == 'upcoming' and not match.is_locked %}
+                            <span class="status-badge status-open">UPCOMING</span>
+                        {% elif match.status == 'upcoming' and match.is_locked %}
+                            <span class="status-badge status-locked">LOCKED</span>
+                        {% elif match.status == 'live' %}
+                            <span class="status-badge status-live">LIVE</span>
+                        {% elif match.status == 'completed' %}
+                            <span class="status-badge status-completed">COMPLETED</span>
+                        {% else %}
+                            <span class="status-badge status-open">{{ match.status|upper }}</span>
+                        {% endif %}
+
+                        {% if match.group_stage %}
+                        <span class="badge rounded-pill"
+                              style="background: rgba(59,130,246,0.15); color: #3b82f6; border: 1px solid rgba(59,130,246,0.3); font-size: 0.7rem;">
+                            {{ match.group_stage }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Teams & VS -->
+                    <div class="text-center mb-3">
+                        <!-- Home Team -->
+                        <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
+                            <div class="flag-placeholder d-flex align-items-center justify-content-center"
+                                 style="background-color: #1a4d2e; width: 40px; height: 40px; min-width: 40px; border-radius: 50%; font-size: 1rem; font-weight: 700; color: #fff; border: 2px solid rgba(255,255,255,0.2);">
+                                {{ match.home_team|first }}
+                            </div>
+                            <span class="fw-bold text-white fs-6">{{ match.home_team }}</span>
+                        </div>
+
+                        <!-- VS Badge or Score -->
+                        {% if match.status == 'completed' and match.home_score is not None %}
+                        <div class="d-flex align-items-center justify-content-center gap-2 my-2">
+                            <span class="display-6 fw-bold gold-text home-score">{{ match.home_score }}</span>
+                            <span class="fs-5 text-secondary">&ndash;</span>
+                            <span class="display-6 fw-bold gold-text away-score">{{ match.away_score }}</span>
+                        </div>
+                        {% elif match.status == 'live' and match.home_score is not None %}
+                        <div class="d-flex align-items-center justify-content-center gap-2 my-2">
+                            <span class="display-6 fw-bold home-score" style="color: var(--danger);">{{ match.home_score }}</span>
+                            <span class="fs-5 text-secondary">&ndash;</span>
+                            <span class="display-6 fw-bold away-score" style="color: var(--danger);">{{ match.away_score }}</span>
+                        </div>
+                        {% else %}
+                        <span class="vs-badge d-inline-flex align-items-center justify-content-center my-1"
+                              style="width: 36px; height: 36px; border-radius: 50%; background: var(--gold-gradient); color: #0a0e17; font-weight: 800; font-size: 0.65rem;">
+                            VS
+                        </span>
+                        {% endif %}
+
+                        <!-- Away Team -->
+                        <div class="d-flex align-items-center justify-content-center gap-2 mt-2">
+                            <div class="flag-placeholder d-flex align-items-center justify-content-center"
+                                 style="background-color: #8b1a1a; width: 40px; height: 40px; min-width: 40px; border-radius: 50%; font-size: 1rem; font-weight: 700; color: #fff; border: 2px solid rgba(255,255,255,0.2);">
+                                {{ match.away_team|first }}
+                            </div>
+                            <span class="fw-bold text-white fs-6">{{ match.away_team }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Match Date & Time -->
+                    <div class="text-center text-secondary small mb-2">
+                        📅 {{ match.kickoff_datetime|date:"M j, Y" }} &middot;
+                        🕐 {{ match.kickoff_datetime|date:"H:i" }}
+                    </div>
+
+                    {% if match.venue %}
+                    <div class="text-center text-secondary small mb-2">
+                        📍 {{ match.venue }}
+                    </div>
+                    {% endif %}
+
+                    <!-- Action Button -->
+                    <div class="text-center mt-2 pt-2" style="border-top: 1px solid rgba(255,255,255,0.08);">
+                        {% if match.status == 'completed' %}
+                            <span class="btn btn-sm btn-gold-outline" style="min-height: 40px; pointer-events: none;">
+                                📊 View Result
+                            </span>
+                        {% elif match.status == 'live' %}
+                            <span class="btn btn-sm" style="min-height: 40px; background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); pointer-events: none;">
+                                🔴 Live Now
+                            </span>
+                        {% elif current_participant and not match.is_locked %}
+                            {% if match.has_predicted %}
+                            <span class="btn btn-sm" style="min-height: 40px; background: var(--success-bg); color: var(--success); border: 1px solid rgba(16,185,129,0.3); pointer-events: none;">
+                                ✅ Predicted
+                            </span>
+                            {% else %}
+                            <span class="btn btn-sm btn-gold" style="min-height: 40px;">
+                                ⚽ Predict
+                            </span>
+                            {% endif %}
+                        {% elif not current_participant and not match.is_locked %}
+                            <span class="btn btn-sm btn-gold-outline" style="min-height: 40px;">
+                                🔑 Login to Predict
+                            </span>
+                        {% else %}
+                            <span class="btn btn-sm" style="min-height: 40px; background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); pointer-events: none;">
+                                🔒 Locked
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Predicted Indicator -->
+                    {% if match.has_predicted and current_participant %}
+                    <div class="position-absolute top-0 end-0 m-2">
+                        <span class="d-flex align-items-center justify-content-center"
+                              style="width: 26px; height: 26px; border-radius: 50%; background: var(--success); color: #fff; font-size: 0.8rem;"
+                              title="You have predicted this match">
+                            ✓
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5" data-aos="fade-up">
+            <div class="glass-card p-5 mx-auto" style="max-width: 500px;">
+                <div class="mb-3" style="font-size: 4rem;">⚽</div>
+                <h3 class="gold-text mb-2">No Matches Found</h3>
+                <p class="text-secondary">There are no matches in the system yet. Check back later!</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Filter Script -->
+<script>
+(function() {
+    'use strict';
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const matchCols = document.querySelectorAll('.match-col');
+
+    filterBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const filter = this.getAttribute('data-filter');
+
+            // Update active button
+            filterBtns.forEach(function(b) {
+                b.classList.remove('active', 'btn-gold');
+                b.classList.add('btn-gold-outline');
+            });
+            this.classList.remove('btn-gold-outline');
+            this.classList.add('btn-gold', 'active');
+
+            // Filter match cards
+            matchCols.forEach(function(col) {
+                const status = col.getAttribute('data-status');
+                if (filter === 'all' || status === filter) {
+                    col.style.display = '';
+                } else {
+                    // Also show locked upcoming matches under "upcoming"
+                    if (filter === 'upcoming' && status === 'upcoming') {
+                        col.style.display = '';
+                    } else {
+                        col.style.display = 'none';
+                    }
+                }
+            });
+        });
+    });
+})();
+</script>
+{% endblock %}

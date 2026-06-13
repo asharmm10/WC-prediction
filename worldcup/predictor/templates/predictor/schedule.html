@@ -1,0 +1,133 @@
+{% extends "predictor/base.html" %}
+{% load static %}
+
+{% block title %}Schedule | WC2026{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- ============================================================
+         HEADER SECTION
+         ============================================================ -->
+    <div class="text-center mb-4" data-aos="fade-down">
+        <h1 class="display-5 fw-bold mb-2">
+            <span class="gold-text">📅 Tournament Schedule</span>
+        </h1>
+        <p class="lead text-secondary">
+            Full match schedule for the FIFA World Cup 2026
+        </p>
+    </div>
+
+    <!-- ============================================================
+         SCHEDULE GROUPED BY DATE
+         ============================================================ -->
+    {% if grouped_matches %}
+        {% for date, matches in grouped_matches %}
+        <section class="mb-5" data-aos="fade-up">
+            <!-- Date Header -->
+            <h2 class="match-day-header mb-3">
+                {{ date|date:"l, F j, Y" }}
+            </h2>
+
+            <!-- Matches for this date -->
+            <div class="list-group">
+                {% for match in matches %}
+                <a href="{% url 'predictor:match_detail' match.id %}"
+                   class="list-group-item list-group-item-action glass-card p-3 mb-2 text-decoration-none"
+                   style="border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;">
+
+                    <div class="row align-items-center g-2">
+                        <!-- Kickoff Time -->
+                        <div class="col-3 col-md-2 text-center">
+                            <span class="fw-bold fs-5 gold-text">{{ match.kickoff_datetime|date:"H:i" }}</span>
+                        </div>
+
+                        <!-- Match Details -->
+                        <div class="col-9 col-md-7">
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <!-- Home Team -->
+                                <div class="d-flex align-items-center gap-1">
+                                    <div class="flag-placeholder d-flex align-items-center justify-content-center"
+                                         style="background-color: #1a4d2e; width: 30px; height: 30px; min-width: 30px; border-radius: 50%; font-size: 0.75rem; font-weight: 700; color: #fff; border: 1px solid rgba(255,255,255,0.2);">
+                                        {{ match.home_team|first }}
+                                    </div>
+                                    <span class="fw-semibold text-white small">{{ match.home_team }}</span>
+                                </div>
+
+                                <!-- Score or VS -->
+                                {% if match.status == 'completed' and match.home_score is not None %}
+                                <span class="fw-bold gold-text mx-1">
+                                    {{ match.home_score }} &ndash; {{ match.away_score }}
+                                </span>
+                                {% elif match.status == 'live' and match.home_score is not None %}
+                                <span class="fw-bold mx-1" style="color: var(--danger);">
+                                    {{ match.home_score }} &ndash; {{ match.away_score }}
+                                </span>
+                                {% else %}
+                                <span class="vs-badge d-inline-flex align-items-center justify-content-center mx-1"
+                                      style="width: 24px; height: 24px; border-radius: 50%; background: var(--gold-gradient); color: #0a0e17; font-weight: 800; font-size: 0.5rem;">
+                                    VS
+                                </span>
+                                {% endif %}
+
+                                <!-- Away Team -->
+                                <div class="d-flex align-items-center gap-1">
+                                    <div class="flag-placeholder d-flex align-items-center justify-content-center"
+                                         style="background-color: #8b1a1a; width: 30px; height: 30px; min-width: 30px; border-radius: 50%; font-size: 0.75rem; font-weight: 700; color: #fff; border: 1px solid rgba(255,255,255,0.2);">
+                                        {{ match.away_team|first }}
+                                    </div>
+                                    <span class="fw-semibold text-white small">{{ match.away_team }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Venue (visible on md+) -->
+                            {% if match.venue %}
+                            <div class="text-secondary mt-1 d-none d-md-block" style="font-size: 0.8rem;">
+                                📍 {{ match.venue }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Group & Status -->
+                        <div class="col-12 col-md-3 d-flex justify-content-md-end align-items-center gap-2 mt-2 mt-md-0">
+                            {% if match.group_stage %}
+                            <span class="badge rounded-pill"
+                                  style="background: rgba(59,130,246,0.15); color: #3b82f6; border: 1px solid rgba(59,130,246,0.3); font-size: 0.65rem;">
+                                {{ match.group_stage }}
+                            </span>
+                            {% endif %}
+
+                            {% if match.status == 'completed' %}
+                            <span class="status-badge status-completed" style="font-size: 0.65rem;">COMPLETED</span>
+                            {% elif match.status == 'live' %}
+                            <span class="status-badge status-live" style="font-size: 0.65rem;">LIVE</span>
+                            {% elif match.is_locked %}
+                            <span class="status-badge status-locked" style="font-size: 0.65rem;">LOCKED</span>
+                            {% else %}
+                            <span class="status-badge status-open" style="font-size: 0.65rem;">OPEN</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Mobile Venue -->
+                    {% if match.venue %}
+                    <div class="text-secondary d-md-none mt-1" style="font-size: 0.75rem;">
+                        📍 {{ match.venue }}
+                    </div>
+                    {% endif %}
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+        {% endfor %}
+    {% else %}
+    <!-- Empty State -->
+    <div class="text-center py-5" data-aos="fade-up">
+        <div class="glass-card p-5 mx-auto" style="max-width: 500px;">
+            <div class="mb-3" style="font-size: 4rem;">📅</div>
+            <h3 class="gold-text mb-2">No Schedule Available</h3>
+            <p class="text-secondary">The tournament schedule hasn't been published yet. Check back soon!</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

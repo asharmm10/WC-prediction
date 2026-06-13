@@ -1,0 +1,2002 @@
+     1→/* ==========================================================================
+     2→   FIFA World Cup 2026 Family Prediction League
+     3→   Premium Dark Theme — Gold & Navy
+     4→   ========================================================================== */
+     5→
+     6→/* --------------------------------------------------------------------------
+     7→   CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+     8→   -------------------------------------------------------------------------- */
+     9→:root {
+    10→  /* — Backgrounds — */
+    11→  --bg-primary:           #0a0e17;
+    12→  --bg-secondary:         #111827;
+    13→  --bg-card:              rgba(17, 24, 39, 0.8);
+    14→  --bg-card-hover:        rgba(17, 24, 39, 0.95);
+    15→  --bg-glass:             rgba(17, 24, 39, 0.6);
+    16→  --bg-glass-hover:       rgba(17, 24, 39, 0.75);
+    17→  --bg-input:             #1f2937;
+    18→
+    19→  /* — Gold Accent — */
+    20→  --gold:                 #d4af37;
+    21→  --gold-light:           #f5d442;
+    22→  --gold-dark:            #b8960c;
+    23→  --gold-gradient:        linear-gradient(135deg, #d4af37, #f5d442, #d4af37);
+    24→  --gold-gradient-hover:  linear-gradient(135deg, #e6c44e, #fde68a, #e6c44e);
+    25→  --gold-text-gradient:   linear-gradient(135deg, #d4af37 0%, #f5d442 50%, #d4af37 100%);
+    26→
+    27→  /* — Text — */
+    28→  --text-primary:         #ffffff;
+    29→  --text-secondary:       #9ca3af;
+    30→  --text-muted:           #6b7280;
+    31→  --text-gold:            #f5d442;
+    32→
+    33→  /* — Status Colors — */
+    34→  --success:              #10b981;
+    35→  --success-bg:           rgba(16, 185, 129, 0.15);
+    36→  --danger:               #ef4444;
+    37→  --danger-bg:            rgba(239, 68, 68, 0.15);
+    38→  --warning:              #f59e0b;
+    39→  --warning-bg:           rgba(245, 158, 11, 0.15);
+    40→  --info:                 #3b82f6;
+    41→  --info-bg:              rgba(59, 130, 246, 0.15);
+    42→
+    43→  /* — Medal Colors — */
+    44→  --medal-gold:           #FFD700;
+    45→  --medal-silver:         #C0C0C0;
+    46→  --medal-bronze:         #CD7F32;
+    47→
+    48→  /* — Borders — */
+    49→  --border-gold:          rgba(212, 175, 55, 0.2);
+    50→  --border-gold-hover:    rgba(212, 175, 55, 0.4);
+    51→  --border-subtle:        rgba(255, 255, 255, 0.08);
+    52→
+    53→  /* — Glass — */
+    54→  --glass-bg:             rgba(255, 255, 255, 0.05);
+    55→  --glass-blur:           blur(16px);
+    56→
+    57→  /* — Shadows — */
+    58→  --shadow-card:          0 8px 32px rgba(0, 0, 0, 0.3);
+    59→  --shadow-card-hover:    0 12px 40px rgba(0, 0, 0, 0.4);
+    60→  --shadow-gold:          0 0 20px rgba(212, 175, 55, 0.2);
+    61→  --shadow-gold-strong:   0 0 30px rgba(212, 175, 55, 0.35);
+    62→  --shadow-input-focus:   0 0 0 3px rgba(212, 175, 55, 0.25);
+    63→
+    64→  /* — Sizing — */
+    65→  --radius-sm:            8px;
+    66→  --radius-md:            12px;
+    67→  --radius-lg:            16px;
+    68→  --radius-xl:            24px;
+    69→  --radius-full:          9999px;
+    70→  --touch-min:            44px;
+    71→  --touch-preferred:      48px;
+    72→
+    73→  /* — Transitions — */
+    74→  --transition-fast:      150ms ease;
+    75→  --transition-base:      250ms ease;
+    76→  --transition-slow:      400ms ease;
+    77→  --transition-spring:    350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    78→
+    79→  /* — Z-Index Scale — */
+    80→  --z-base:               1;
+    81→  --z-dropdown:           100;
+    82→  --z-sticky:             200;
+    83→  --z-navbar:             1000;
+    84→  --z-modal:              1050;
+    85→  --z-tooltip:            1100;
+    86→  --z-confetti:           9999;
+    87→
+    88→  /* — Typography — */
+    89→  --font-sans:            'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    90→  --font-display:         'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    91→  --font-mono:            'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
+    92→}
+    93→
+    94→
+    95→/* --------------------------------------------------------------------------
+    96→   RESET & BASE
+    97→   -------------------------------------------------------------------------- */
+    98→*,
+    99→*::before,
+   100→*::after {
+   101→  box-sizing: border-box;
+   102→  margin: 0;
+   103→  padding: 0;
+   104→}
+   105→
+   106→html {
+   107→  font-size: 16px;
+   108→  scroll-behavior: smooth;
+   109→  -webkit-text-size-adjust: 100%;
+   110→  -webkit-font-smoothing: antialiased;
+   111→  -moz-osx-font-smoothing: grayscale;
+   112→}
+   113→
+   114→body {
+   115→  font-family: var(--font-sans);
+   116→  background-color: var(--bg-primary);
+   117→  color: var(--text-primary);
+   118→  line-height: 1.6;
+   119→  min-height: 100vh;
+   120→  display: flex;
+   121→  flex-direction: column;
+   122→  overflow-x: hidden;
+   123→  position: relative;
+   124→}
+   125→
+   126→/* Sticky footer: main content grows, footer sticks to bottom */
+   127→body > main,
+   128→body > .main-content {
+   129→  flex: 1 0 auto;
+   130→}
+   131→
+   132→body > footer,
+   133→body > .footer {
+   134→  flex-shrink: 0;
+   135→}
+   136→
+   137→img,
+   138→svg {
+   139→  display: block;
+   140→  max-width: 100%;
+   141→}
+   142→
+   143→a {
+   144→  color: var(--gold-light);
+   145→  text-decoration: none;
+   146→  transition: color var(--transition-fast);
+   147→}
+   148→
+   149→a:hover {
+   150→  color: var(--text-primary);
+   151→}
+   152→
+   153→ul, ol {
+   154→  list-style: none;
+   155→}
+   156→
+   157→button,
+   158→input,
+   159→select,
+   160→textarea {
+   161→  font: inherit;
+   162→  color: inherit;
+   163→}
+   164→
+   165→button {
+   166→  cursor: pointer;
+   167→  border: none;
+   168→  background: none;
+   169→}
+   170→
+   171→::selection {
+   172→  background: rgba(212, 175, 55, 0.35);
+   173→  color: var(--text-primary);
+   174→}
+   175→
+   176→
+   177→/* --------------------------------------------------------------------------
+   178→   CUSTOM SCROLLBAR
+   179→   -------------------------------------------------------------------------- */
+   180→::-webkit-scrollbar {
+   181→  width: 8px;
+   182→  height: 8px;
+   183→}
+   184→
+   185→::-webkit-scrollbar-track {
+   186→  background: var(--bg-primary);
+   187→}
+   188→
+   189→::-webkit-scrollbar-thumb {
+   190→  background: var(--gold-dark);
+   191→  border-radius: var(--radius-full);
+   192→  border: 2px solid var(--bg-primary);
+   193→}
+   194→
+   195→::-webkit-scrollbar-thumb:hover {
+   196→  background: var(--gold);
+   197→}
+   198→
+   199→/* Firefox */
+   200→* {
+   201→  scrollbar-width: thin;
+   202→  scrollbar-color: var(--gold-dark) var(--bg-primary);
+   203→}
+   204→
+   205→
+   206→/* --------------------------------------------------------------------------
+   207→   STADIUM LIGHTS EFFECT (top-of-page ambient glow)
+   208→   -------------------------------------------------------------------------- */
+   209→.stadium-lights,
+   210→body::before {
+   211→  content: '';
+   212→  position: fixed;
+   213→  top: -200px;
+   214→  left: 50%;
+   215→  transform: translateX(-50%);
+   216→  width: 120%;
+   217→  height: 500px;
+   218→  background:
+   219→    radial-gradient(ellipse 600px 300px at 30% 0%, rgba(212, 175, 55, 0.08) 0%, transparent 70%),
+   220→    radial-gradient(ellipse 600px 300px at 70% 0%, rgba(212, 175, 55, 0.08) 0%, transparent 70%),
+   221→    radial-gradient(ellipse 800px 200px at 50% 0%, rgba(255, 255, 255, 0.04) 0%, transparent 60%);
+   222→  pointer-events: none;
+   223→  z-index: 0;
+   224→  animation: stadiumLights 8s ease-in-out infinite alternate;
+   225→}
+   226→
+   227→
+   228→/* --------------------------------------------------------------------------
+   229→   FLOATING FOOTBALL ELEMENTS (CSS-only animated background)
+   230→   -------------------------------------------------------------------------- */
+   231→.floating-elements {
+   232→  position: fixed;
+   233→  inset: 0;
+   234→  pointer-events: none;
+   235→  z-index: 0;
+   236→  overflow: hidden;
+   237→}
+   238→
+   239→.floating-football {
+   240→  position: absolute;
+   241→  font-size: 1.5rem;
+   242→  opacity: 0.06;
+   243→  animation: float 20s ease-in-out infinite;
+   244→}
+   245→
+   246→.floating-football:nth-child(1) { top: 10%; left: 5%;  animation-delay: 0s;   animation-duration: 22s; font-size: 1.2rem; }
+   247→.floating-football:nth-child(2) { top: 25%; left: 85%; animation-delay: 3s;   animation-duration: 18s; font-size: 1.8rem; }
+   248→.floating-football:nth-child(3) { top: 50%; left: 15%; animation-delay: 7s;   animation-duration: 25s; font-size: 1rem; }
+   249→.floating-football:nth-child(4) { top: 70%; left: 75%; animation-delay: 2s;   animation-duration: 20s; font-size: 2rem; }
+   250→.floating-football:nth-child(5) { top: 85%; left: 45%; animation-delay: 5s;   animation-duration: 23s; font-size: 1.4rem; }
+   251→.floating-football:nth-child(6) { top: 5%;  left: 55%; animation-delay: 10s;  animation-duration: 19s; font-size: 1.6rem; }
+   252→
+   253→
+   254→/* --------------------------------------------------------------------------
+   255→   NAVBAR
+   256→   -------------------------------------------------------------------------- */
+   257→.navbar {
+   258→  position: fixed;
+   259→  top: 0;
+   260→  left: 0;
+   261→  right: 0;
+   262→  z-index: var(--z-navbar);
+   263→  background: rgba(10, 14, 23, 0.85);
+   264→  backdrop-filter: var(--glass-blur);
+   265→  -webkit-backdrop-filter: var(--glass-blur);
+   266→  border-bottom: 1px solid var(--border-gold);
+   267→  padding: 0 1rem;
+   268→  transition: background var(--transition-base), box-shadow var(--transition-base);
+   269→}
+   270→
+   271→.navbar.scrolled,
+   272→.navbar.is-scrolled {
+   273→  background: rgba(10, 14, 23, 0.95);
+   274→  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+   275→}
+   276→
+   277→.navbar-inner {
+   278→  display: flex;
+   279→  align-items: center;
+   280→  justify-content: space-between;
+   281→  max-width: 1280px;
+   282→  margin: 0 auto;
+   283→  height: 64px;
+   284→}
+   285→
+   286→.navbar-brand {
+   287→  display: flex;
+   288→  align-items: center;
+   289→  gap: 0.5rem;
+   290→  font-family: var(--font-display);
+   291→  font-size: 1.25rem;
+   292→  font-weight: 800;
+   293→  color: var(--text-primary);
+   294→  letter-spacing: -0.02em;
+   295→}
+   296→
+   297→.navbar-brand .brand-icon {
+   298→  font-size: 1.5rem;
+   299→}
+   300→
+   301→.navbar-brand .brand-text-gold {
+   302→  background: var(--gold-text-gradient);
+   303→  -webkit-background-clip: text;
+   304→  background-clip: text;
+   305→  -webkit-text-fill-color: transparent;
+   306→}
+   307→
+   308→.navbar-nav {
+   309→  display: flex;
+   310→  align-items: center;
+   311→  gap: 0.25rem;
+   312→}
+   313→
+   314→.nav-link {
+   315→  position: relative;
+   316→  display: flex;
+   317→  align-items: center;
+   318→  gap: 0.375rem;
+   319→  padding: 0.5rem 1rem;
+   320→  font-size: 0.9375rem;
+   321→  font-weight: 500;
+   322→  color: var(--text-secondary);
+   323→  border-radius: var(--radius-sm);
+   324→  transition: color var(--transition-fast), background var(--transition-fast);
+   325→  min-height: var(--touch-min);
+   326→}
+   327→
+   328→.nav-link:hover {
+   329→  color: var(--text-primary);
+   330→  background: rgba(255, 255, 255, 0.05);
+   331→}
+   332→
+   333→.nav-link.active {
+   334→  color: var(--gold-light);
+   335→}
+   336→
+   337→.nav-link.active::after {
+   338→  content: '';
+   339→  position: absolute;
+   340→  bottom: 0;
+   341→  left: 1rem;
+   342→  right: 1rem;
+   343→  height: 2px;
+   344→  background: var(--gold-gradient);
+   345→  border-radius: var(--radius-full);
+   346→}
+   347→
+   348→/* Mobile hamburger */
+   349→.navbar-toggler {
+   350→  display: none;
+   351→  flex-direction: column;
+   352→  justify-content: center;
+   353→  align-items: center;
+   354→  gap: 5px;
+   355→  width: var(--touch-preferred);
+   356→  height: var(--touch-preferred);
+   357→  border-radius: var(--radius-sm);
+   358→  transition: background var(--transition-fast);
+   359→}
+   360→
+   361→.navbar-toggler:hover {
+   362→  background: rgba(255, 255, 255, 0.05);
+   363→}
+   364→
+   365→.navbar-toggler span {
+   366→  display: block;
+   367→  width: 22px;
+   368→  height: 2px;
+   369→  background: var(--text-primary);
+   370→  border-radius: var(--radius-full);
+   371→  transition: transform var(--transition-base), opacity var(--transition-fast);
+   372→}
+   373→
+   374→.navbar-toggler.is-open span:nth-child(1) {
+   375→  transform: rotate(45deg) translate(5px, 5px);
+   376→}
+   377→
+   378→.navbar-toggler.is-open span:nth-child(2) {
+   379→  opacity: 0;
+   380→}
+   381→
+   382→.navbar-toggler.is-open span:nth-child(3) {
+   383→  transform: rotate(-45deg) translate(5px, -5px);
+   384→}
+   385→
+   386→/* Mobile menu */
+   387→.navbar-collapse {
+   388→  display: flex;
+   389→  align-items: center;
+   390→}
+   391→
+   392→@media (max-width: 767px) {
+   393→  .navbar-toggler {
+   394→    display: flex;
+   395→  }
+   396→
+   397→  .navbar-collapse {
+   398→    position: fixed;
+   399→    top: 64px;
+   400→    left: 0;
+   401→    right: 0;
+   402→    bottom: 0;
+   403→    background: rgba(10, 14, 23, 0.97);
+   404→    backdrop-filter: var(--glass-blur);
+   405→    -webkit-backdrop-filter: var(--glass-blur);
+   406→    flex-direction: column;
+   407→    justify-content: flex-start;
+   408→    padding: 2rem 1.5rem;
+   409→    gap: 0.5rem;
+   410→    transform: translateX(100%);
+   411→    transition: transform var(--transition-slow);
+   412→    z-index: calc(var(--z-navbar) - 1);
+   413→  }
+   414→
+   415→  .navbar-collapse.is-open {
+   416→    transform: translateX(0);
+   417→  }
+   418→
+   419→  .navbar-collapse .nav-link {
+   420→    font-size: 1.125rem;
+   421→    padding: 1rem;
+   422→    width: 100%;
+   423→    justify-content: center;
+   424→    border-radius: var(--radius-md);
+   425→  }
+   426→
+   427→  .navbar-collapse .nav-link.active::after {
+   428→    display: none;
+   429→  }
+   430→
+   431→  .navbar-collapse .nav-link.active {
+   432→    background: rgba(212, 175, 55, 0.1);
+   433→  }
+   434→}
+   435→
+   436→/* Participant chip in navbar */
+   437→.participant-chip {
+   438→  display: inline-flex;
+   439→  align-items: center;
+   440→  gap: 0.375rem;
+   441→  padding: 0.375rem 0.75rem;
+   442→  background: rgba(212, 175, 55, 0.1);
+   443→  border: 1px solid var(--border-gold);
+   444→  border-radius: var(--radius-full);
+   445→  font-size: 0.8125rem;
+   446→  font-weight: 600;
+   447→  color: var(--gold-light);
+   448→  white-space: nowrap;
+   449→}
+   450→
+   451→.participant-chip .chip-avatar {
+   452→  width: 24px;
+   453→  height: 24px;
+   454→  border-radius: var(--radius-full);
+   455→  background: var(--gold-gradient);
+   456→  color: var(--bg-primary);
+   457→  display: flex;
+   458→  align-items: center;
+   459→  justify-content: center;
+   460→  font-size: 0.75rem;
+   461→  font-weight: 800;
+   462→}
+   463→
+   464→
+   465→/* --------------------------------------------------------------------------
+   466→   HERO SECTION
+   467→   -------------------------------------------------------------------------- */
+   468→.hero {
+   469→  position: relative;
+   470→  min-height: 100vh;
+   471→  display: flex;
+   472→  align-items: center;
+   473→  justify-content: center;
+   474→  text-align: center;
+   475→  padding: 6rem 1.5rem 4rem;
+   476→  overflow: hidden;
+   477→  background:
+   478→    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(212, 175, 55, 0.06) 0%, transparent 60%),
+   479→    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(212, 175, 55, 0.04) 0%, transparent 50%),
+   480→    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(212, 175, 55, 0.04) 0%, transparent 50%),
+   481→    var(--bg-primary);
+   482→}
+   483→
+   484→.hero::before {
+   485→  content: '';
+   486→  position: absolute;
+   487→  inset: 0;
+   488→  background:
+   489→    radial-gradient(circle 400px at 30% 20%, rgba(212, 175, 55, 0.05), transparent),
+   490→    radial-gradient(circle 400px at 70% 30%, rgba(212, 175, 55, 0.05), transparent);
+   491→  animation: stadiumLights 6s ease-in-out infinite alternate;
+   492→  pointer-events: none;
+   493→}
+   494→
+   495→.hero-content {
+   496→  position: relative;
+   497→  z-index: var(--z-base);
+   498→  max-width: 800px;
+   499→}
+   500→
+   501→.hero-trophy {
+   502→  font-size: 5rem;
+   503→  margin-bottom: 1.5rem;
+   504→  display: inline-block;
+   505→  animation: float 4s ease-in-out infinite;
+   506→  filter: drop-shadow(0 10px 30px rgba(212, 175, 55, 0.3));
+   507→}
+   508→
+   509→.hero-title {
+   510→  font-family: var(--font-display);
+   511→  font-size: clamp(2.25rem, 6vw, 4rem);
+   512→  font-weight: 900;
+   513→  line-height: 1.1;
+   514→  letter-spacing: -0.03em;
+   515→  margin-bottom: 0.75rem;
+   516→}
+   517→
+   518→.hero-title .text-gold {
+   519→  background: var(--gold-text-gradient);
+   520→  background-size: 200% auto;
+   521→  -webkit-background-clip: text;
+   522→  background-clip: text;
+   523→  -webkit-text-fill-color: transparent;
+   524→  animation: shimmer 4s linear infinite;
+   525→}
+   526→
+   527→.hero-subtitle {
+   528→  font-size: clamp(1rem, 2.5vw, 1.25rem);
+   529→  color: var(--text-secondary);
+   530→  font-weight: 400;
+   531→  margin-bottom: 2.5rem;
+   532→  max-width: 600px;
+   533→  margin-left: auto;
+   534→  margin-right: auto;
+   535→}
+   536→
+   537→.hero-actions {
+   538→  display: flex;
+   539→  flex-wrap: wrap;
+   540→  gap: 1rem;
+   541→  justify-content: center;
+   542→  margin-bottom: 3rem;
+   543→}
+   544→
+   545→/* Stadium lights pulsing overlay */
+   546→.hero-lights {
+   547→  position: absolute;
+   548→  top: 0;
+   549→  left: 0;
+   550→  right: 0;
+   551→  height: 300px;
+   552→  background:
+   553→    radial-gradient(ellipse 500px 200px at 15% 0%, rgba(255, 255, 255, 0.03), transparent),
+   554→    radial-gradient(ellipse 500px 200px at 85% 0%, rgba(255, 255, 255, 0.03), transparent);
+   555→  animation: stadiumLights 5s ease-in-out infinite alternate;
+   556→  pointer-events: none;
+   557→}
+   558→
+   559→
+   560→/* --------------------------------------------------------------------------
+   561→   COUNTDOWN TIMER
+   562→   -------------------------------------------------------------------------- */
+   563→.countdown-container {
+   564→  display: flex;
+   565→  align-items: center;
+   566→  justify-content: center;
+   567→  gap: 1rem;
+   568→  margin: 2rem 0;
+   569→}
+   570→
+   571→.countdown-block {
+   572→  display: flex;
+   573→  flex-direction: column;
+   574→  align-items: center;
+   575→  min-width: 72px;
+   576→}
+   577→
+   578→.countdown-number {
+   579→  font-family: var(--font-mono);
+   580→  font-size: clamp(2rem, 5vw, 3.5rem);
+   581→  font-weight: 800;
+   582→  color: var(--gold-light);
+   583→  line-height: 1;
+   584→  text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+   585→  transition: transform var(--transition-spring);
+   586→}
+   587→
+   588→.countdown-number.flip {
+   589→  animation: bounceIn 0.4s var(--transition-spring);
+   590→}
+   591→
+   592→.countdown-label {
+   593→  font-size: 0.75rem;
+   594→  font-weight: 600;
+   595→  color: var(--text-muted);
+   596→  text-transform: uppercase;
+   597→  letter-spacing: 0.1em;
+   598→  margin-top: 0.375rem;
+   599→}
+   600→
+   601→.countdown-separator {
+   602→  font-family: var(--font-mono);
+   603→  font-size: clamp(1.5rem, 4vw, 2.5rem);
+   604→  font-weight: 800;
+   605→  color: var(--gold);
+   606→  line-height: 1;
+   607→  animation: pulse 1s ease-in-out infinite;
+   608→  align-self: flex-start;
+   609→  padding-top: 0.25rem;
+   610→}
+   611→
+   612→@media (max-width: 575px) {
+   613→  .countdown-container {
+   614→    gap: 0.5rem;
+   615→  }
+   616→  .countdown-block {
+   617→    min-width: 56px;
+   618→  }
+   619→}
+   620→
+   621→
+   622→/* --------------------------------------------------------------------------
+   623→   GLASSMORPHISM CARDS
+   624→   -------------------------------------------------------------------------- */
+   625→.glass-card {
+   626→  background: var(--bg-glass);
+   627→  backdrop-filter: var(--glass-blur);
+   628→  -webkit-backdrop-filter: var(--glass-blur);
+   629→  border: 1px solid var(--border-gold);
+   630→  border-radius: var(--radius-lg);
+   631→  box-shadow: var(--shadow-card);
+   632→  padding: 1.5rem;
+   633→  transition:
+   634→    background var(--transition-base),
+   635→    border-color var(--transition-base),
+   636→    box-shadow var(--transition-base),
+   637→    transform var(--transition-base);
+   638→}
+   639→
+   640→.glass-card:hover {
+   641→  background: var(--bg-glass-hover);
+   642→  border-color: var(--border-gold-hover);
+   643→  box-shadow: var(--shadow-card-hover);
+   644→  transform: translateY(-2px);
+   645→}
+   646→
+   647→/* Gold variant */
+   648→.glass-card-gold {
+   649→  background: var(--bg-glass);
+   650→  backdrop-filter: var(--glass-blur);
+   651→  -webkit-backdrop-filter: var(--glass-blur);
+   652→  border: 1px solid rgba(212, 175, 55, 0.3);
+   653→  border-radius: var(--radius-lg);
+   654→  box-shadow:
+   655→    var(--shadow-card),
+   656→    var(--shadow-gold);
+   657→  padding: 1.5rem;
+   658→  transition:
+   659→    background var(--transition-base),
+   660→    border-color var(--transition-base),
+   661→    box-shadow var(--transition-base),
+   662→    transform var(--transition-base);
+   663→}
+   664→
+   665→.glass-card-gold:hover {
+   666→  background: var(--bg-glass-hover);
+   667→  border-color: rgba(212, 175, 55, 0.5);
+   668→  box-shadow:
+   669→    var(--shadow-card-hover),
+   670→    var(--shadow-gold-strong);
+   671→  transform: translateY(-2px);
+   672→}
+   673→
+   674→
+   675→/* --------------------------------------------------------------------------
+   676→   BUTTONS
+   677→   -------------------------------------------------------------------------- */
+   678→.btn {
+   679→  display: inline-flex;
+   680→  align-items: center;
+   681→  justify-content: center;
+   682→  gap: 0.5rem;
+   683→  font-family: var(--font-sans);
+   684→  font-weight: 700;
+   685→  font-size: 0.9375rem;
+   686→  line-height: 1;
+   687→  border-radius: var(--radius-md);
+   688→  padding: 0 1.5rem;
+   689→  min-height: var(--touch-preferred);
+   690→  cursor: pointer;
+   691→  transition:
+   692→    background var(--transition-fast),
+   693→    border-color var(--transition-fast),
+   694→    box-shadow var(--transition-fast),
+   695→    transform var(--transition-fast),
+   696→    opacity var(--transition-fast);
+   697→  text-decoration: none;
+   698→  white-space: nowrap;
+   699→  user-select: none;
+   700→  border: 2px solid transparent;
+   701→}
+   702→
+   703→.btn:active {
+   704→  transform: scale(0.97);
+   705→}
+   706→
+   707→.btn:disabled,
+   708→.btn[disabled] {
+   709→  opacity: 0.5;
+   710→  cursor: not-allowed;
+   711→  transform: none;
+   712→}
+   713→
+   714→/* Primary — gold gradient */
+   715→.btn-primary {
+   716→  background: var(--gold-gradient);
+   717→  color: var(--bg-primary);
+   718→  border-color: transparent;
+   719→  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+   720→}
+   721→
+   722→.btn-primary:hover:not(:disabled) {
+   723→  background: var(--gold-gradient-hover);
+   724→  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+   725→  color: var(--bg-primary);
+   726→  transform: translateY(-1px);
+   727→}
+   728→
+   729→.btn-primary:active:not(:disabled) {
+   730→  transform: translateY(0) scale(0.98);
+   731→}
+   732→
+   733→/* Secondary — transparent with gold border */
+   734→.btn-secondary {
+   735→  background: transparent;
+   736→  color: var(--gold-light);
+   737→  border-color: var(--gold);
+   738→}
+   739→
+   740→.btn-secondary:hover:not(:disabled) {
+   741→  background: rgba(212, 175, 55, 0.1);
+   742→  border-color: var(--gold-light);
+   743→  color: var(--gold-light);
+   744→}
+   745→
+   746→/* Ghost — subtle style */
+   747→.btn-ghost {
+   748→  background: transparent;
+   749→  color: var(--text-secondary);
+   750→  border-color: transparent;
+   751→}
+   752→
+   753→.btn-ghost:hover:not(:disabled) {
+   754→  background: rgba(255, 255, 255, 0.05);
+   755→  color: var(--text-primary);
+   756→}
+   757→
+   758→/* Danger */
+   759→.btn-danger {
+   760→  background: var(--danger);
+   761→  color: var(--text-primary);
+   762→  border-color: transparent;
+   763→}
+   764→
+   765→.btn-danger:hover:not(:disabled) {
+   766→  background: #dc2626;
+   767→  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+   768→}
+   769→
+   770→/* Success */
+   771→.btn-success {
+   772→  background: var(--success);
+   773→  color: var(--text-primary);
+   774→  border-color: transparent;
+   775→}
+   776→
+   777→.btn-success:hover:not(:disabled) {
+   778→  background: #059669;
+   779→  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+   780→}
+   781→
+   782→/* Size variants */
+   783→.btn-lg {
+   784→  font-size: 1.0625rem;
+   785→  padding: 0 2rem;
+   786→  min-height: 56px;
+   787→  border-radius: var(--radius-lg);
+   788→}
+   789→
+   790→.btn-sm {
+   791→  font-size: 0.8125rem;
+   792→  padding: 0 1rem;
+   793→  min-height: 36px;
+   794→  border-radius: var(--radius-sm);
+   795→}
+   796→
+   797→.btn-block {
+   798→  display: flex;
+   799→  width: 100%;
+   800→}
+   801→
+   802→
+   803→/* --------------------------------------------------------------------------
+   804→   FORMS & INPUTS
+   805→   -------------------------------------------------------------------------- */
+   806→.form-group {
+   807→  margin-bottom: 1.25rem;
+   808→}
+   809→
+   810→.form-label {
+   811→  display: block;
+   812→  font-size: 0.875rem;
+   813→  font-weight: 600;
+   814→  color: var(--text-secondary);
+   815→  margin-bottom: 0.5rem;
+   816→}
+   817→
+   818→.form-input,
+   819→.form-control {
+   820→  width: 100%;
+   821→  padding: 0.75rem 1rem;
+   822→  font-size: 1rem;
+   823→  line-height: 1.5;
+   824→  color: var(--text-primary);
+   825→  background: var(--bg-input);
+   826→  border: 1px solid var(--border-subtle);
+   827→  border-radius: var(--radius-md);
+   828→  transition:
+   829→    border-color var(--transition-fast),
+   830→    box-shadow var(--transition-fast),
+   831→    background var(--transition-fast);
+   832→  min-height: var(--touch-min);
+   833→}
+   834→
+   835→.form-input:focus,
+   836→.form-control:focus {
+   837→  outline: none;
+   838→  border-color: var(--gold);
+   839→  box-shadow: var(--shadow-input-focus);
+   840→  background: rgba(31, 41, 55, 0.9);
+   841→}
+   842→
+   843→.form-input::placeholder,
+   844→.form-control::placeholder {
+   845→  color: var(--text-muted);
+   846→}
+   847→
+   848→/* Validation states */
+   849→.form-input.is-valid {
+   850→  border-color: var(--success);
+   851→  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+   852→}
+   853→
+   854→.form-input.is-invalid {
+   855→  border-color: var(--danger);
+   856→  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+   857→}
+   858→
+   859→.form-error {
+   860→  font-size: 0.8125rem;
+   861→  color: var(--danger);
+   862→  margin-top: 0.375rem;
+   863→}
+   864→
+   865→.form-help-text {
+   866→  font-size: 0.8125rem;
+   867→  color: var(--text-muted);
+   868→  margin-top: 0.375rem;
+   869→}
+   870→
+   871→
+   872→/* --------------------------------------------------------------------------
+   873→   MATCH CARDS
+   874→   -------------------------------------------------------------------------- */
+   875→.match-card {
+   876→  background: var(--bg-glass);
+   877→  backdrop-filter: var(--glass-blur);
+   878→  -webkit-backdrop-filter: var(--glass-blur);
+   879→  border: 1px solid var(--border-gold);
+   880→  border-radius: var(--radius-lg);
+   881→  box-shadow: var(--shadow-card);
+   882→  padding: 1.5rem;
+   883→  transition:
+   884→    background var(--transition-base),
+   885→    border-color var(--transition-base),
+   886→    box-shadow var(--transition-base),
+   887→    transform var(--transition-base);
+   888→}
+   889→
+   890→.match-card:hover {
+   891→  background: var(--bg-glass-hover);
+   892→  border-color: var(--border-gold-hover);
+   893→  box-shadow: var(--shadow-card-hover);
+   894→  transform: translateY(-2px);
+   895→}
+   896→
+   897→.match-card-header {
+   898→  display: flex;
+   899→  align-items: center;
+   900→  justify-content: space-between;
+   901→  margin-bottom: 1rem;
+   902→}
+   903→
+   904→.match-day-header {
+   905→  display: flex;
+   906→  align-items: center;
+   907→  gap: 0.75rem;
+   908→  margin-bottom: 1.5rem;
+   909→}
+   910→
+   911→.match-day-header .date-text {
+   912→  font-size: 0.875rem;
+   913→  font-weight: 700;
+   914→  color: var(--gold-light);
+   915→  text-transform: uppercase;
+   916→  letter-spacing: 0.05em;
+   917→}
+   918→
+   919→.match-day-header .accent-line {
+   920→  flex: 1;
+   921→  height: 1px;
+   922→  background: linear-gradient(90deg, var(--border-gold), transparent);
+   923→}
+   924→
+   925→.match-teams {
+   926→  display: flex;
+   927→  align-items: center;
+   928→  justify-content: space-between;
+   929→  gap: 1rem;
+   930→}
+   931→
+   932→.match-team {
+   933→  display: flex;
+   934→  flex-direction: column;
+   935→  align-items: center;
+   936→  gap: 0.5rem;
+   937→  flex: 1;
+   938→  min-width: 0;
+   939→}
+   940→
+   941→.match-team-name {
+   942→  font-family: var(--font-display);
+   943→  font-size: clamp(0.9375rem, 2vw, 1.125rem);
+   944→  font-weight: 800;
+   945→  text-align: center;
+   946→  line-height: 1.2;
+   947→  color: var(--text-primary);
+   948→  overflow: hidden;
+   949→  text-overflow: ellipsis;
+   950→  white-space: nowrap;
+   951→  max-width: 100%;
+   952→}
+   953→
+   954→/* Flag placeholder */
+   955→.flag-placeholder {
+   956→  width: 48px;
+   957→  height: 48px;
+   958→  border-radius: var(--radius-full);
+   959→  display: flex;
+   960→  align-items: center;
+   961→  justify-content: center;
+   962→  font-size: 1.25rem;
+   963→  font-weight: 800;
+   964→  color: var(--text-primary);
+   965→  flex-shrink: 0;
+   966→  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+   967→  border: 2px solid rgba(255, 255, 255, 0.1);
+   968→}
+   969→
+   970→/* VS Badge */
+   971→.vs-badge {
+   972→  width: 48px;
+   973→  height: 48px;
+   974→  border-radius: var(--radius-full);
+   975→  background: var(--gold-gradient);
+   976→  color: var(--bg-primary);
+   977→  display: flex;
+   978→  align-items: center;
+   979→  justify-content: center;
+   980→  font-size: 0.875rem;
+   981→  font-weight: 900;
+   982→  letter-spacing: 0.05em;
+   983→  flex-shrink: 0;
+   984→  box-shadow: var(--shadow-gold);
+   985→}
+   986→
+   987→/* Match score area */
+   988→.match-score {
+   989→  display: flex;
+   990→  align-items: center;
+   991→  justify-content: center;
+   992→  gap: 0.75rem;
+   993→  margin-top: 1rem;
+   994→}
+   995→
+   996→.match-score-final {
+   997→  font-family: var(--font-mono);
+   998→  font-size: 1.5rem;
+   999→  font-weight: 800;
+  1000→  color: var(--gold-light);
+  1001→  text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  1002→}
+  1003→
+  1004→/* Score input */
+  1005→.score-input {
+  1006→  width: 72px;
+  1007→  min-height: 60px;
+  1008→  text-align: center;
+  1009→  font-family: var(--font-mono);
+  1010→  font-size: 1.75rem;
+  1011→  font-weight: 800;
+  1012→  color: var(--text-primary);
+  1013→  background: var(--bg-input);
+  1014→  border: 2px solid var(--border-subtle);
+  1015→  border-radius: var(--radius-md);
+  1016→  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  1017→  -moz-appearance: textfield;
+  1018→  padding: 0.25rem;
+  1019→}
+  1020→
+  1021→.score-input::-webkit-inner-spin-button,
+  1022→.score-input::-webkit-outer-spin-button {
+  1023→  -webkit-appearance: none;
+  1024→  margin: 0;
+  1025→}
+  1026→
+  1027→.score-input:focus {
+  1028→  outline: none;
+  1029→  border-color: var(--gold);
+  1030→  box-shadow: var(--shadow-input-focus), var(--shadow-gold);
+  1031→  background: rgba(31, 41, 55, 0.95);
+  1032→}
+  1033→
+  1034→.score-input:disabled {
+  1035→  opacity: 0.4;
+  1036→  cursor: not-allowed;
+  1037→}
+  1038→
+  1039→.score-separator {
+  1040→  font-family: var(--font-mono);
+  1041→  font-size: 1.5rem;
+  1042→  font-weight: 800;
+  1043→  color: var(--text-muted);
+  1044→}
+  1045→
+  1046→/* Status badges */
+  1047→.status-badge {
+  1048→  display: inline-flex;
+  1049→  align-items: center;
+  1050→  gap: 0.375rem;
+  1051→  padding: 0.25rem 0.75rem;
+  1052→  font-size: 0.75rem;
+  1053→  font-weight: 700;
+  1054→  border-radius: var(--radius-full);
+  1055→  text-transform: uppercase;
+  1056→  letter-spacing: 0.05em;
+  1057→  white-space: nowrap;
+  1058→}
+  1059→
+  1060→.status-badge-open {
+  1061→  background: var(--success-bg);
+  1062→  color: var(--success);
+  1063→  border: 1px solid rgba(16, 185, 129, 0.3);
+  1064→}
+  1065→
+  1066→.status-badge-locked {
+  1067→  background: var(--danger-bg);
+  1068→  color: var(--danger);
+  1069→  border: 1px solid rgba(239, 68, 68, 0.3);
+  1070→}
+  1071→
+  1072→.status-badge-live {
+  1073→  background: var(--warning-bg);
+  1074→  color: var(--warning);
+  1075→  border: 1px solid rgba(245, 158, 11, 0.3);
+  1076→  animation: pulse 2s ease-in-out infinite;
+  1077→}
+  1078→
+  1079→.status-badge-completed {
+  1080→  background: rgba(212, 175, 55, 0.1);
+  1081→  color: var(--gold-light);
+  1082→  border: 1px solid rgba(212, 175, 55, 0.3);
+  1083→}
+  1084→
+  1085→/* Prediction locked overlay */
+  1086→.prediction-locked {
+  1087→  position: relative;
+  1088→  pointer-events: none;
+  1089→  opacity: 0.6;
+  1090→}
+  1091→
+  1092→.prediction-locked::after {
+  1093→  content: '';
+  1094→  position: absolute;
+  1095→  inset: 0;
+  1096→  background: rgba(10, 14, 23, 0.5);
+  1097→  border-radius: var(--radius-lg);
+  1098→  z-index: 1;
+  1099→}
+  1100→
+  1101→.prediction-locked .lock-icon {
+  1102→  position: absolute;
+  1103→  top: 50%;
+  1104→  left: 50%;
+  1105→  transform: translate(-50%, -50%);
+  1106→  z-index: 2;
+  1107→  font-size: 2rem;
+  1108→  opacity: 0.8;
+  1109→}
+  1110→
+  1111→/* Match info footer */
+  1112→.match-meta {
+  1113→  display: flex;
+  1114→  align-items: center;
+  1115→  justify-content: space-between;
+  1116→  margin-top: 1rem;
+  1117→  padding-top: 0.75rem;
+  1118→  border-top: 1px solid var(--border-subtle);
+  1119→  font-size: 0.8125rem;
+  1120→  color: var(--text-muted);
+  1121→}
+  1122→
+  1123→.match-venue {
+  1124→  display: flex;
+  1125→  align-items: center;
+  1126→  gap: 0.25rem;
+  1127→}
+  1128→
+  1129→.match-kickoff {
+  1130→  display: flex;
+  1131→  align-items: center;
+  1132→  gap: 0.25rem;
+  1133→}
+  1134→
+  1135→
+  1136→/* --------------------------------------------------------------------------
+  1137→   PREDICTION FORM
+  1138→   -------------------------------------------------------------------------- */
+  1139→.prediction-form {
+  1140→  display: flex;
+  1141→  flex-direction: column;
+  1142→  align-items: center;
+  1143→  gap: 1rem;
+  1144→}
+  1145→
+  1146→.prediction-form .score-row {
+  1147→  display: flex;
+  1148→  align-items: center;
+  1149→  gap: 1rem;
+  1150→  width: 100%;
+  1151→  justify-content: center;
+  1152→}
+  1153→
+  1154→.prediction-form .team-label {
+  1155→  font-weight: 700;
+  1156→  font-size: 0.9375rem;
+  1157→  color: var(--text-secondary);
+  1158→  text-align: center;
+  1159→  min-width: 80px;
+  1160→}
+  1161→
+  1162→.prediction-form .submit-row {
+  1163→  width: 100%;
+  1164→  display: flex;
+  1165→  justify-content: center;
+  1166→  margin-top: 0.5rem;
+  1167→}
+  1168→
+  1169→
+  1170→/* --------------------------------------------------------------------------
+  1171→   LEADERBOARD
+  1172→   -------------------------------------------------------------------------- */
+  1173→.leaderboard {
+  1174→  width: 100%;
+  1175→}
+  1176→
+  1177→.leaderboard-item {
+  1178→  display: flex;
+  1179→  align-items: center;
+  1180→  gap: 1rem;
+  1181→  padding: 1rem 1.25rem;
+  1182→  background: var(--bg-glass);
+  1183→  backdrop-filter: var(--glass-blur);
+  1184→  -webkit-backdrop-filter: var(--glass-blur);
+  1185→  border: 1px solid var(--border-subtle);
+  1186→  border-radius: var(--radius-md);
+  1187→  margin-bottom: 0.75rem;
+  1188→  transition:
+  1189→    background var(--transition-base),
+  1190→    border-color var(--transition-base),
+  1191→    box-shadow var(--transition-base),
+  1192→    transform var(--transition-base);
+  1193→  animation: slideUp 0.5s ease-out both;
+  1194→}
+  1195→
+  1196→.leaderboard-item:hover {
+  1197→  background: var(--bg-glass-hover);
+  1198→  border-color: var(--border-gold);
+  1199→  transform: translateX(4px);
+  1200→}
+  1201→
+  1202→/* Staggered animation */
+  1203→.leaderboard-item:nth-child(1)  { animation-delay: 0.05s; }
+  1204→.leaderboard-item:nth-child(2)  { animation-delay: 0.10s; }
+  1205→.leaderboard-item:nth-child(3)  { animation-delay: 0.15s; }
+  1206→.leaderboard-item:nth-child(4)  { animation-delay: 0.20s; }
+  1207→.leaderboard-item:nth-child(5)  { animation-delay: 0.25s; }
+  1208→.leaderboard-item:nth-child(6)  { animation-delay: 0.30s; }
+  1209→.leaderboard-item:nth-child(7)  { animation-delay: 0.35s; }
+  1210→.leaderboard-item:nth-child(8)  { animation-delay: 0.40s; }
+  1211→.leaderboard-item:nth-child(9)  { animation-delay: 0.45s; }
+  1212→.leaderboard-item:nth-child(10) { animation-delay: 0.50s; }
+  1213→
+  1214→/* Rank badge */
+  1215→.rank-badge {
+  1216→  width: 40px;
+  1217→  height: 40px;
+  1218→  border-radius: var(--radius-full);
+  1219→  display: flex;
+  1220→  align-items: center;
+  1221→  justify-content: center;
+  1222→  font-size: 1rem;
+  1223→  font-weight: 900;
+  1224→  flex-shrink: 0;
+  1225→  background: var(--bg-input);
+  1226→  color: var(--text-secondary);
+  1227→  border: 2px solid var(--border-subtle);
+  1228→}
+  1229→
+  1230→/* #1 Gold */
+  1231→.leaderboard-item.rank-1 {
+  1232→  background: rgba(212, 175, 55, 0.08);
+  1233→  border-color: rgba(212, 175, 55, 0.3);
+  1234→  box-shadow: var(--shadow-gold);
+  1235→}
+  1236→
+  1237→.leaderboard-item.rank-1 .rank-badge {
+  1238→  background: linear-gradient(135deg, #FFD700, #f5d442);
+  1239→  color: var(--bg-primary);
+  1240→  border-color: var(--medal-gold);
+  1241→  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+  1242→  font-size: 1.125rem;
+  1243→  width: 48px;
+  1244→  height: 48px;
+  1245→}
+  1246→
+  1247→.leaderboard-item.rank-1 .participant-name {
+  1248→  font-size: 1.125rem;
+  1249→  color: var(--gold-light);
+  1250→}
+  1251→
+  1252→.leaderboard-item.rank-1 .participant-points {
+  1253→  font-size: 1.25rem;
+  1254→}
+  1255→
+  1256→.leaderboard-item.rank-1::before {
+  1257→  content: '';
+  1258→  position: absolute;
+  1259→  inset: -1px;
+  1260→  border-radius: var(--radius-md);
+  1261→  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), transparent, rgba(212, 175, 55, 0.15));
+  1262→  z-index: -1;
+  1263→  animation: glow 3s ease-in-out infinite alternate;
+  1264→}
+  1265→
+  1266→/* #2 Silver */
+  1267→.leaderboard-item.rank-2 {
+  1268→  background: rgba(192, 192, 192, 0.05);
+  1269→  border-color: rgba(192, 192, 192, 0.2);
+  1270→}
+  1271→
+  1272→.leaderboard-item.rank-2 .rank-badge {
+  1273→  background: linear-gradient(135deg, #C0C0C0, #e8e8e8);
+  1274→  color: var(--bg-primary);
+  1275→  border-color: var(--medal-silver);
+  1276→  box-shadow: 0 0 10px rgba(192, 192, 192, 0.3);
+  1277→  width: 44px;
+  1278→  height: 44px;
+  1279→}
+  1280→
+  1281→/* #3 Bronze */
+  1282→.leaderboard-item.rank-3 {
+  1283→  background: rgba(205, 127, 50, 0.05);
+  1284→  border-color: rgba(205, 127, 50, 0.2);
+  1285→}
+  1286→
+  1287→.leaderboard-item.rank-3 .rank-badge {
+  1288→  background: linear-gradient(135deg, #CD7F32, #e8a857);
+  1289→  color: var(--bg-primary);
+  1290→  border-color: var(--medal-bronze);
+  1291→  box-shadow: 0 0 10px rgba(205, 127, 50, 0.3);
+  1292→  width: 44px;
+  1293→  height: 44px;
+  1294→}
+  1295→
+  1296→.leaderboard-item .participant-info {
+  1297→  flex: 1;
+  1298→  min-width: 0;
+  1299→}
+  1300→
+  1301→.leaderboard-item .participant-name {
+  1302→  font-weight: 700;
+  1303→  font-size: 1rem;
+  1304→  color: var(--text-primary);
+  1305→  white-space: nowrap;
+  1306→  overflow: hidden;
+  1307→  text-overflow: ellipsis;
+  1308→}
+  1309→
+  1310→.leaderboard-item .participant-detail {
+  1311→  font-size: 0.8125rem;
+  1312→  color: var(--text-muted);
+  1313→}
+  1314→
+  1315→.leaderboard-item .participant-points {
+  1316→  font-family: var(--font-mono);
+  1317→  font-size: 1.125rem;
+  1318→  font-weight: 800;
+  1319→  color: var(--gold-light);
+  1320→  flex-shrink: 0;
+  1321→}
+  1322→
+  1323→.leaderboard-item .participant-points .points-label {
+  1324→  font-size: 0.6875rem;
+  1325→  font-weight: 600;
+  1326→  color: var(--text-muted);
+  1327→  text-transform: uppercase;
+  1328→  letter-spacing: 0.05em;
+  1329→}
+  1330→
+  1331→/* Trophy icon for #1 */
+  1332→.trophy-icon {
+  1333→  font-size: 1.25rem;
+  1334→  margin-right: 0.25rem;
+  1335→}
+  1336→
+  1337→
+  1338→/* --------------------------------------------------------------------------
+  1339→   MEDAL STYLING
+  1340→   -------------------------------------------------------------------------- */
+  1341→.medal {
+  1342→  display: inline-flex;
+  1343→  align-items: center;
+  1344→  justify-content: center;
+  1345→  width: 40px;
+  1346→  height: 40px;
+  1347→  border-radius: var(--radius-full);
+  1348→  font-weight: 900;
+  1349→  font-size: 1rem;
+  1350→  flex-shrink: 0;
+  1351→}
+  1352→
+  1353→.medal-gold {
+  1354→  background: linear-gradient(135deg, #FFD700, #f5d442);
+  1355→  color: var(--bg-primary);
+  1356→  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+  1357→  border: 2px solid #FFD700;
+  1358→  animation: glow 3s ease-in-out infinite alternate;
+  1359→}
+  1360→
+  1361→.medal-silver {
+  1362→  background: linear-gradient(135deg, #C0C0C0, #e8e8e8);
+  1363→  color: var(--bg-primary);
+  1364→  box-shadow: 0 0 15px rgba(192, 192, 192, 0.3);
+  1365→  border: 2px solid #C0C0C0;
+  1366→}
+  1367→
+  1368→.medal-bronze {
+  1369→  background: linear-gradient(135deg, #CD7F32, #e8a857);
+  1370→  color: var(--bg-primary);
+  1371→  box-shadow: 0 0 15px rgba(205, 127, 50, 0.3);
+  1372→  border: 2px solid #CD7F32;
+  1373→}
+  1374→
+  1375→
+  1376→/* --------------------------------------------------------------------------
+  1377→   PAGE HEADER / SECTION TITLES
+  1378→   -------------------------------------------------------------------------- */
+  1379→.page-header {
+  1380→  padding: 6rem 1.5rem 2rem;
+  1381→  text-align: center;
+  1382→}
+  1383→
+  1384→.page-title {
+  1385→  font-family: var(--font-display);
+  1386→  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  1387→  font-weight: 900;
+  1388→  letter-spacing: -0.02em;
+  1389→  margin-bottom: 0.5rem;
+  1390→}
+  1391→
+  1392→.page-title .text-gold {
+  1393→  background: var(--gold-text-gradient);
+  1394→  -webkit-background-clip: text;
+  1395→  background-clip: text;
+  1396→  -webkit-text-fill-color: transparent;
+  1397→}
+  1398→
+  1399→.page-description {
+  1400→  font-size: 1.0625rem;
+  1401→  color: var(--text-secondary);
+  1402→  max-width: 600px;
+  1403→  margin: 0 auto;
+  1404→}
+  1405→
+  1406→.section-title {
+  1407→  font-family: var(--font-display);
+  1408→  font-size: 1.5rem;
+  1409→  font-weight: 800;
+  1410→  color: var(--text-primary);
+  1411→  margin-bottom: 1.25rem;
+  1412→  display: flex;
+  1413→  align-items: center;
+  1414→  gap: 0.5rem;
+  1415→}
+  1416→
+  1417→.section-title .title-accent {
+  1418→  width: 4px;
+  1419→  height: 24px;
+  1420→  background: var(--gold-gradient);
+  1421→  border-radius: var(--radius-full);
+  1422→}
+  1423→
+  1424→
+  1425→/* --------------------------------------------------------------------------
+  1426→   LAYOUT HELPERS
+  1427→   -------------------------------------------------------------------------- */
+  1428→.container {
+  1429→  width: 100%;
+  1430→  max-width: 1280px;
+  1431→  margin: 0 auto;
+  1432→  padding: 0 1rem;
+  1433→}
+  1434→
+  1435→.container-narrow {
+  1436→  max-width: 720px;
+  1437→}
+  1438→
+  1439→.page-content {
+  1440→  padding: 2rem 0 4rem;
+  1441→  position: relative;
+  1442→  z-index: var(--z-base);
+  1443→}
+  1444→
+  1445→.grid {
+  1446→  display: grid;
+  1447→  gap: 1.5rem;
+  1448→}
+  1449→
+  1450→.grid-2 {
+  1451→  grid-template-columns: 1fr;
+  1452→}
+  1453→
+  1454→.grid-3 {
+  1455→  grid-template-columns: 1fr;
+  1456→}
+  1457→
+  1458→@media (min-width: 576px) {
+  1459→  .grid-2 {
+  1460→    grid-template-columns: repeat(2, 1fr);
+  1461→  }
+  1462→  .grid-3 {
+  1463→    grid-template-columns: repeat(2, 1fr);
+  1464→  }
+  1465→}
+  1466→
+  1467→@media (min-width: 768px) {
+  1468→  .grid-3 {
+  1469→    grid-template-columns: repeat(3, 1fr);
+  1470→  }
+  1471→}
+  1472→
+  1473→.flex-center {
+  1474→  display: flex;
+  1475→  align-items: center;
+  1476→  justify-content: center;
+  1477→}
+  1478→
+  1479→.text-center { text-align: center; }
+  1480→.text-gold   { color: var(--gold-light); }
+  1481→.text-muted  { color: var(--text-muted); }
+  1482→.text-success { color: var(--success); }
+  1483→.text-danger  { color: var(--danger); }
+  1484→
+  1485→.mt-1 { margin-top: 0.5rem; }
+  1486→.mt-2 { margin-top: 1rem; }
+  1487→.mt-3 { margin-top: 1.5rem; }
+  1488→.mt-4 { margin-top: 2rem; }
+  1489→.mb-1 { margin-bottom: 0.5rem; }
+  1490→.mb-2 { margin-bottom: 1rem; }
+  1491→.mb-3 { margin-bottom: 1.5rem; }
+  1492→.mb-4 { margin-bottom: 2rem; }
+  1493→
+  1494→.hidden { display: none !important; }
+  1495→.sr-only {
+  1496→  position: absolute;
+  1497→  width: 1px;
+  1498→  height: 1px;
+  1499→  padding: 0;
+  1500→  margin: -1px;
+  1501→  overflow: hidden;
+  1502→  clip: rect(0, 0, 0, 0);
+  1503→  white-space: nowrap;
+  1504→  border-width: 0;
+  1505→}
+  1506→
+  1507→
+  1508→/* --------------------------------------------------------------------------
+  1509→   CONFETTI EFFECT
+  1510→   -------------------------------------------------------------------------- */
+  1511→.confetti-container {
+  1512→  position: fixed;
+  1513→  top: 0;
+  1514→  left: 0;
+  1515→  width: 100%;
+  1516→  height: 100%;
+  1517→  pointer-events: none;
+  1518→  z-index: var(--z-confetti);
+  1519→  overflow: hidden;
+  1520→}
+  1521→
+  1522→.confetti-piece {
+  1523→  position: absolute;
+  1524→  width: 10px;
+  1525→  height: 10px;
+  1526→  top: -20px;
+  1527→  opacity: 0;
+  1528→}
+  1529→
+  1530→.confetti-piece.active {
+  1531→  animation: confettiFall 3s ease-out forwards;
+  1532→}
+  1533→
+  1534→.confetti-piece:nth-child(odd) {
+  1535→  background: var(--gold);
+  1536→  border-radius: 2px;
+  1537→}
+  1538→
+  1539→.confetti-piece:nth-child(even) {
+  1540→  background: var(--text-primary);
+  1541→  border-radius: var(--radius-full);
+  1542→}
+  1543→
+  1544→.confetti-piece:nth-child(3n) {
+  1545→  background: var(--gold-light);
+  1546→  width: 8px;
+  1547→  height: 8px;
+  1548→}
+  1549→
+  1550→/* Randomize horizontal positions and delays */
+  1551→.confetti-piece:nth-child(1)  { left: 10%; animation-delay: 0s; }
+  1552→.confetti-piece:nth-child(2)  { left: 20%; animation-delay: 0.1s; }
+  1553→.confetti-piece:nth-child(3)  { left: 30%; animation-delay: 0.2s; }
+  1554→.confetti-piece:nth-child(4)  { left: 40%; animation-delay: 0.05s; }
+  1555→.confetti-piece:nth-child(5)  { left: 50%; animation-delay: 0.15s; }
+  1556→.confetti-piece:nth-child(6)  { left: 60%; animation-delay: 0.25s; }
+  1557→.confetti-piece:nth-child(7)  { left: 70%; animation-delay: 0.08s; }
+  1558→.confetti-piece:nth-child(8)  { left: 80%; animation-delay: 0.18s; }
+  1559→.confetti-piece:nth-child(9)  { left: 15%; animation-delay: 0.3s; }
+  1560→.confetti-piece:nth-child(10) { left: 25%; animation-delay: 0.12s; }
+  1561→.confetti-piece:nth-child(11) { left: 35%; animation-delay: 0.22s; }
+  1562→.confetti-piece:nth-child(12) { left: 45%; animation-delay: 0.03s; }
+  1563→.confetti-piece:nth-child(13) { left: 55%; animation-delay: 0.28s; }
+  1564→.confetti-piece:nth-child(14) { left: 65%; animation-delay: 0.09s; }
+  1565→.confetti-piece:nth-child(15) { left: 75%; animation-delay: 0.19s; }
+  1566→.confetti-piece:nth-child(16) { left: 85%; animation-delay: 0.32s; }
+  1567→.confetti-piece:nth-child(17) { left: 5%;  animation-delay: 0.14s; }
+  1568→.confetti-piece:nth-child(18) { left: 95%; animation-delay: 0.24s; }
+  1569→.confetti-piece:nth-child(19) { left: 12%; animation-delay: 0.06s; }
+  1570→.confetti-piece:nth-child(20) { left: 88%; animation-delay: 0.16s; }
+  1571→
+  1572→
+  1573→/* --------------------------------------------------------------------------
+  1574→   SCROLL ANIMATIONS (AOS-compatible)
+  1575→   -------------------------------------------------------------------------- */
+  1576→.fade-up {
+  1577→  opacity: 0;
+  1578→  transform: translateY(30px);
+  1579→  transition: opacity 0.6s ease, transform 0.6s ease;
+  1580→}
+  1581→
+  1582→.fade-up.is-visible,
+  1583→.fade-up.aos-animate {
+  1584→  opacity: 1;
+  1585→  transform: translateY(0);
+  1586→}
+  1587→
+  1588→.fade-left {
+  1589→  opacity: 0;
+  1590→  transform: translateX(-30px);
+  1591→  transition: opacity 0.6s ease, transform 0.6s ease;
+  1592→}
+  1593→
+  1594→.fade-left.is-visible,
+  1595→.fade-left.aos-animate {
+  1596→  opacity: 1;
+  1597→  transform: translateX(0);
+  1598→}
+  1599→
+  1600→.fade-right {
+  1601→  opacity: 0;
+  1602→  transform: translateX(30px);
+  1603→  transition: opacity 0.6s ease, transform 0.6s ease;
+  1604→}
+  1605→
+  1606→.fade-right.is-visible,
+  1607→.fade-right.aos-animate {
+  1608→  opacity: 1;
+  1609→  transform: translateX(0);
+  1610→}
+  1611→
+  1612→.fade-in {
+  1613→  opacity: 0;
+  1614→  transition: opacity 0.6s ease;
+  1615→}
+  1616→
+  1617→.fade-in.is-visible,
+  1618→.fade-in.aos-animate {
+  1619→  opacity: 1;
+  1620→}
+  1621→
+  1622→/* Stagger delays for children */
+  1623→.stagger-children > *:nth-child(1)  { transition-delay: 0.05s; }
+  1624→.stagger-children > *:nth-child(2)  { transition-delay: 0.10s; }
+  1625→.stagger-children > *:nth-child(3)  { transition-delay: 0.15s; }
+  1626→.stagger-children > *:nth-child(4)  { transition-delay: 0.20s; }
+  1627→.stagger-children > *:nth-child(5)  { transition-delay: 0.25s; }
+  1628→.stagger-children > *:nth-child(6)  { transition-delay: 0.30s; }
+  1629→.stagger-children > *:nth-child(7)  { transition-delay: 0.35s; }
+  1630→.stagger-children > *:nth-child(8)  { transition-delay: 0.40s; }
+  1631→.stagger-children > *:nth-child(9)  { transition-delay: 0.45s; }
+  1632→.stagger-children > *:nth-child(10) { transition-delay: 0.50s; }
+  1633→
+  1634→
+  1635→/* --------------------------------------------------------------------------
+  1636→   LOADING STATES
+  1637→   -------------------------------------------------------------------------- */
+  1638→/* Skeleton pulse */
+  1639→.skeleton {
+  1640→  background: linear-gradient(
+  1641→    90deg,
+  1642→    var(--bg-input) 25%,
+  1643→    rgba(255, 255, 255, 0.08) 50%,
+  1644→    var(--bg-input) 75%
+  1645→  );
+  1646→  background-size: 200% 100%;
+  1647→  animation: skeletonPulse 1.5s ease-in-out infinite;
+  1648→  border-radius: var(--radius-sm);
+  1649→}
+  1650→
+  1651→.skeleton-text {
+  1652→  height: 1rem;
+  1653→  margin-bottom: 0.5rem;
+  1654→  width: 80%;
+  1655→}
+  1656→
+  1657→.skeleton-text-sm {
+  1658→  height: 0.75rem;
+  1659→  width: 60%;
+  1660→}
+  1661→
+  1662→.skeleton-title {
+  1663→  height: 1.5rem;
+  1664→  width: 50%;
+  1665→  margin-bottom: 0.75rem;
+  1666→}
+  1667→
+  1668→.skeleton-card {
+  1669→  height: 200px;
+  1670→  border-radius: var(--radius-lg);
+  1671→}
+  1672→
+  1673→/* Spinner */
+  1674→.spinner {
+  1675→  display: inline-block;
+  1676→  width: 40px;
+  1677→  height: 40px;
+  1678→  border: 3px solid rgba(212, 175, 55, 0.2);
+  1679→  border-top-color: var(--gold);
+  1680→  border-radius: var(--radius-full);
+  1681→  animation: spin 0.8s linear infinite;
+  1682→}
+  1683→
+  1684→.spinner-sm {
+  1685→  width: 20px;
+  1686→  height: 20px;
+  1687→  border-width: 2px;
+  1688→}
+  1689→
+  1690→.spinner-lg {
+  1691→  width: 56px;
+  1692→  height: 56px;
+  1693→  border-width: 4px;
+  1694→}
+  1695→
+  1696→/* Loading overlay */
+  1697→.loading-overlay {
+  1698→  position: fixed;
+  1699→  inset: 0;
+  1700→  background: rgba(10, 14, 23, 0.8);
+  1701→  backdrop-filter: blur(4px);
+  1702→  display: flex;
+  1703→  align-items: center;
+  1704→  justify-content: center;
+  1705→  z-index: var(--z-modal);
+  1706→  opacity: 0;
+  1707→  pointer-events: none;
+  1708→  transition: opacity var(--transition-base);
+  1709→}
+  1710→
+  1711→.loading-overlay.is-active {
+  1712→  opacity: 1;
+  1713→  pointer-events: auto;
+  1714→}
+  1715→
+  1716→
+  1717→/* --------------------------------------------------------------------------
+  1718→   ALERTS & MESSAGES
+  1719→   -------------------------------------------------------------------------- */
+  1720→.alert {
+  1721→  padding: 1rem 1.25rem;
+  1722→  border-radius: var(--radius-md);
+  1723→  font-size: 0.9375rem;
+  1724→  font-weight: 500;
+  1725→  display: flex;
+  1726→  align-items: center;
+  1727→  gap: 0.75rem;
+  1728→  margin-bottom: 1rem;
+  1729→  animation: slideUp 0.3s ease-out;
+  1730→}
+  1731→
+  1732→.alert-success {
+  1733→  background: var(--success-bg);
+  1734→  color: var(--success);
+  1735→  border: 1px solid rgba(16, 185, 129, 0.3);
+  1736→}
+  1737→
+  1738→.alert-danger {
+  1739→  background: var(--danger-bg);
+  1740→  color: var(--danger);
+  1741→  border: 1px solid rgba(239, 68, 68, 0.3);
+  1742→}
+  1743→
+  1744→.alert-warning {
+  1745→  background: var(--warning-bg);
+  1746→  color: var(--warning);
+  1747→  border: 1px solid rgba(245, 158, 11, 0.3);
+  1748→}
+  1749→
+  1750→.alert-info {
+  1751→  background: var(--info-bg);
+  1752→  color: #60a5fa;
+  1753→  border: 1px solid rgba(59, 130, 246, 0.3);
+  1754→}
+  1755→
+  1756→.alert .alert-icon {
+  1757→  font-size: 1.25rem;
+  1758→  flex-shrink: 0;
+  1759→}
+  1760→
+  1761→.alert .alert-close {
+  1762→  margin-left: auto;
+  1763→  background: none;
+  1764→  border: none;
+  1765→  color: inherit;
+  1766→  opacity: 0.6;
+  1767→  cursor: pointer;
+  1768→  padding: 0.25rem;
+  1769→  min-width: var(--touch-min);
+  1770→  min-height: var(--touch-min);
+  1771→  display: flex;
+  1772→  align-items: center;
+  1773→  justify-content: center;
+  1774→  border-radius: var(--radius-sm);
+  1775→  transition: opacity var(--transition-fast);
+  1776→}
+  1777→
+  1778→.alert .alert-close:hover {
+  1779→  opacity: 1;
+  1780→}
+  1781→
+  1782→
+  1783→/* --------------------------------------------------------------------------
+  1784→   TOOLTIPS
+  1785→   -------------------------------------------------------------------------- */
+  1786→.tooltip-trigger {
+  1787→  position: relative;
+  1788→  cursor: help;
+  1789→}
+  1790→
+  1791→.tooltip-trigger::after {
+  1792→  content: attr(data-tooltip);
+  1793→  position: absolute;
+  1794→  bottom: calc(100% + 8px);
+  1795→  left: 50%;
+  1796→  transform: translateX(-50%) translateY(4px);
+  1797→  padding: 0.5rem 0.75rem;
+  1798→  background: var(--bg-secondary);
+  1799→  color: var(--text-primary);
+  1800→  font-size: 0.8125rem;
+  1801→  font-weight: 500;
+  1802→  border-radius: var(--radius-sm);
+  1803→  border: 1px solid var(--border-gold);
+  1804→  box-shadow: var(--shadow-card);
+  1805→  white-space: nowrap;
+  1806→  opacity: 0;
+  1807→  pointer-events: none;
+  1808→  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  1809→  z-index: var(--z-tooltip);
+  1810→}
+  1811→
+  1812→.tooltip-trigger:hover::after {
+  1813→  opacity: 1;
+  1814→  transform: translateX(-50%) translateY(0);
+  1815→}
+  1816→
+  1817→
+  1818→/* --------------------------------------------------------------------------
+  1819→   TABS
+  1820→   -------------------------------------------------------------------------- */
+  1821→.tabs {
+  1822→  display: flex;
+  1823→  gap: 0.25rem;
+  1824→  border-bottom: 1px solid var(--border-subtle);
+  1825→  margin-bottom: 1.5rem;
+  1826→  overflow-x: auto;
+  1827→  -webkit-overflow-scrolling: touch;
+  1828→}
+  1829→
+  1830→.tab-link {
+  1831→  padding: 0.75rem 1.25rem;
+  1832→  font-size: 0.9375rem;
+  1833→  font-weight: 600;
+  1834→  color: var(--text-muted);
+  1835→  border-bottom: 2px solid transparent;
+  1836→  white-space: nowrap;
+  1837→  transition: color var(--transition-fast), border-color var(--transition-fast);
+  1838→  min-height: var(--touch-min);
+  1839→  display: flex;
+  1840→  align-items: center;
+  1841→}
+  1842→
+  1843→.tab-link:hover {
+  1844→  color: var(--text-secondary);
+  1845→}
+  1846→
+  1847→.tab-link.active {
+  1848→  color: var(--gold-light);
+  1849→  border-bottom-color: var(--gold);
+  1850→}
+  1851→
+  1852→.tab-content {
+  1853→  display: none;
+  1854→}
+  1855→
+  1856→.tab-content.active {
+  1857→  display: block;
+  1858→  animation: fadeIn 0.3s ease;
+  1859→}
+  1860→
+  1861→
+  1862→/* --------------------------------------------------------------------------
+  1863→   TABLES
+  1864→   -------------------------------------------------------------------------- */
+  1865→.table-container {
+  1866→  overflow-x: auto;
+  1867→  -webkit-overflow-scrolling: touch;
+  1868→  border-radius: var(--radius-lg);
+  1869→  border: 1px solid var(--border-subtle);
+  1870→}
+  1871→
+  1872→.table {
+  1873→  width: 100%;
+  1874→  border-collapse: collapse;
+  1875→  font-size: 0.9375rem;
+  1876→}
+  1877→
+  1878→.table th {
+  1879→  padding: 0.875rem 1rem;
+  1880→  text-align: left;
+  1881→  font-weight: 700;
+  1882→  font-size: 0.75rem;
+  1883→  color: var(--text-muted);
+  1884→  text-transform: uppercase;
+  1885→  letter-spacing: 0.05em;
+  1886→  background: rgba(255, 255, 255, 0.02);
+  1887→  border-bottom: 1px solid var(--border-subtle);
+  1888→  white-space: nowrap;
+  1889→}
+  1890→
+  1891→.table td {
+  1892→  padding: 0.875rem 1rem;
+  1893→  border-bottom: 1px solid var(--border-subtle);
+  1894→  color: var(--text-secondary);
+  1895→}
+  1896→
+  1897→.table tbody tr {
+  1898→  transition: background var(--transition-fast);
+  1899→}
+  1900→
+  1901→.table tbody tr:hover {
+  1902→  background: rgba(212, 175, 55, 0.03);
+  1903→}
+  1904→
+  1905→.table tbody tr:last-child td {
+  1906→  border-bottom: none;
+  1907→}
+  1908→
+  1909→
+  1910→/* --------------------------------------------------------------------------
+  1911→   BADGES & CHIPS
+  1912→   -------------------------------------------------------------------------- */
+  1913→.badge {
+  1914→  display: inline-flex;
+  1915→  align-items: center;
+  1916→  padding: 0.25rem 0.625rem;
+  1917→  font-size: 0.75rem;
+  1918→  font-weight: 700;
+  1919→  border-radius: var(--radius-full);
+  1920→  white-space: nowrap;
+  1921→}
+  1922→
+  1923→.badge-gold {
+  1924→  background: rgba(212, 175, 55, 0.15);
+  1925→  color: var(--gold-light);
+  1926→  border: 1px solid rgba(212, 175, 55, 0.3);
+  1927→}
+  1928→
+  1929→.badge-success {
+  1930→  background: var(--success-bg);
+  1931→  color: var(--success);
+  1932→  border: 1px solid rgba(16, 185, 129, 0.3);
+  1933→}
+  1934→
+  1935→.badge-danger {
+  1936→  background: var(--danger-bg);
+  1937→  color: var(--danger);
+  1938→  border: 1px solid rgba(239, 68, 68, 0.3);
+  1939→}
+  1940→
+  1941→.badge-warning {
+  1942→  background: var(--warning-bg);
+  1943→  color: var(--warning);
+  1944→  border: 1px solid rgba(245, 158, 11, 0.3);
+  1945→}
+  1946→
+  1947→/* Participant chip (inline) */
+  1948→.participant-chip-inline {
+  1949→  display: inline-flex;
+  1950→  align-items: center;
+  1951→  gap: 0.25rem;
+  1952→  padding: 0.125rem 0.5rem;
+  1953→  font-size: 0.75rem;
+  1954→  font-weight: 600;
+  1955→  color: var(--gold-light);
+  1956→  background: rgba(212, 175, 55, 0.08);
+  1957→  border-radius: var(--radius-full);
+  1958→}
+  1959→
+  1960→
+  1961→/* --------------------------------------------------------------------------
+  1962→   MODAL / DIALOG
+  1963→   -------------------------------------------------------------------------- */
+  1964→.modal-backdrop {
+  1965→  position: fixed;
+  1966→  inset: 0;
+  1967→  background: rgba(10, 14, 23, 0.85);
+  1968→  backdrop-filter: blur(4px);
+  1969→  z-index: var(--z-modal);
+  1970→  opacity: 0;
+  1971→  pointer-events: none;
+  1972→  transition: opacity var(--transition-base);
+  1973→}
+  1974→
+  1975→.modal-backdrop.is-active {
+  1976→  opacity: 1;
+  1977→  pointer-events: auto;
+  1978→}
+  1979→
+  1980→.modal {
+  1981→  position: fixed;
+  1982→  top: 50%;
+  1983→  left: 50%;
+  1984→  transform: translate(-50%, -50%) scale(0.95);
+  1985→  background: var(--bg-secondary);
+  1986→  border: 1px solid var(--border-gold);
+  1987→  border-radius: var(--radius-xl);
+  1988→  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+  1989→  max-width: 520px;
+  1990→  width: calc(100% - 2rem);
+  1991→  max-height: calc(100vh - 4rem);
+  1992→  overflow-y: auto;
+  1993→  z-index: calc(var(--z-modal) + 1);
+  1994→  opacity: 0;
+  1995→  pointer-events: none;
+  1996→  transition: opacity var(--transition-base), transform var(--transition-base);
+  1997→}
+  1998→
+  1999→.modal.is-active {
+  2000→  opacity: 1;
+
+[showing lines 1-2000 of 2428; use offset=2001 with limit to continue reading]

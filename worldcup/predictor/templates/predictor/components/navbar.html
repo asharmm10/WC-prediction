@@ -1,0 +1,58 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark-custom fixed-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'predictor:home' %}">
+            <span class="me-1" style="font-size: 1.4rem;">⚽</span>
+            <span class="gold-text fw-bold">WC2026</span>
+        </a>
+
+        <button class="navbar-toggler border-gold" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'predictor:home' %}">
+                        <i class="bi bi-house-door"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if '/today/' in request.path %}active{% endif %}" href="{% url 'predictor:today' %}">
+                        <i class="bi bi-calendar-event"></i> Today
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if '/matches/' in request.path %}active{% endif %}" href="{% url 'predictor:matches' %}">
+                        <i class="bi bi-trophy"></i> Matches
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if '/schedule/' in request.path %}active{% endif %}" href="{% url 'predictor:schedule' %}">
+                        <i class="bi bi-calendar3"></i> Schedule
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if '/leaderboard/' in request.path %}active{% endif %}" href="{% url 'predictor:leaderboard' %}">
+                        <i class="bi bi-bar-chart-fill"></i> Leaderboard
+                    </a>
+                </li>
+            </ul>
+
+            <div class="d-flex align-items-center gap-2">
+                {% if current_participant %}
+                    <span class="participant-chip me-2">
+                        <i class="bi bi-person-fill"></i> {{ current_participant.name }}
+                    </span>
+                    <a href="{% url 'predictor:logout' %}" class="btn btn-gold-outline btn-sm">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                {% else %}
+                    <a href="{% url 'predictor:login' %}" class="btn btn-gold btn-sm">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

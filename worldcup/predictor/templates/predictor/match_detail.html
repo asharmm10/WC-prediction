@@ -1,0 +1,300 @@
+{% extends "predictor/base.html" %}
+{% load static %}
+
+{% block title %}{{ match.home_team }} vs {{ match.away_team }} | WC2026{% endblock %}
+
+{% block nav_matches %} active{% endblock %}
+
+{% block content %}
+<section class="page-header" data-aos="fade-down">
+  <nav aria-label="breadcrumb" style="margin-bottom:0.5rem;">
+    <ol class="breadcrumb justify-content-center mb-0" style="font-size:0.8125rem;">
+      <li class="breadcrumb-item"><a href="{% url 'predictor:matches' %}" style="color:var(--text-muted);">Matches</a></li>
+      <li class="breadcrumb-item active" aria-current="page" style="color:var(--gold-light);">{{ match.home_team }} vs {{ match.away_team }}</li>
+    </ol>
+  </nav>
+</section>
+
+<div class="container page-content">
+  <div class="container-narrow mx-auto">
+
+    <!-- ============================================================
+         MATCH HEADER CARD
+         ============================================================ -->
+    <div class="match-card mb-4" data-aos="fade-up" data-aos-duration="700">
+      <!-- Group & Status Header -->
+      <div class="match-card-header">
+        {% if match.group_stage %}
+        <span class="status-badge" style="background:var(--info-bg);color:var(--info);border:1px solid rgba(59,130,246,0.3);">
+          Group {{ match.group_stage }}
+        </span>
+        {% endif %}
+
+        {% if match.status == 'completed' %}
+        <span class="status-badge status-badge-completed">
+          <span>&#10003;</span> Completed
+        </span>
+        {% elif match.status == 'live' %}
+        <span class="status-badge status-badge-live">
+          <span>&#128308;</span> Live
+        </span>
+        {% elif match.is_locked %}
+        <span class="status-badge status-badge-locked">
+          <span>&#128274;</span> Locked
+        </span>
+        {% else %}
+        <span class="status-badge status-badge-open">
+          <span>&#128994;</span> Open
+        </span>
+        {% endif %}
+      </div>
+
+      <!-- Teams & VS -->
+      <div class="match-teams py-3">
+        <!-- Home Team -->
+        <div class="match-team">
+          <div class="flag-placeholder" style="background:linear-gradient(135deg,#1e3a5f,#2d5a8e);">
+            {{ match.home_team|make_list|first|upper }}
+          </div>
+          <div class="match-team-name">{{ match.home_team }}</div>
+        </div>
+
+        <!-- VS Badge -->
+        <div class="d-flex flex-column align-items-center">
+          <div class="vs-badge">VS</div>
+          {% if match.status == 'completed' and match.home_score is not None %}
+          <div class="match-score-final mt-2" style="font-size:2rem;letter-spacing:0.05em;">
+            {{ match.home_score }} &ndash; {{ match.away_score }}
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Away Team -->
+        <div class="match-team">
+          <div class="flag-placeholder" style="background:linear-gradient(135deg,#1e3a5f,#2d5a8e);">
+            {{ match.away_team|make_list|first|upper }}
+          </div>
+          <div class="match-team-name">{{ match.away_team }}</div>
+        </div>
+      </div>
+
+      <!-- Match Meta -->
+      <div class="match-meta">
+        <div class="match-venue">
+          <span>&#128205;</span>
+          <span>{{ match.venue|default:"TBD" }}</span>
+        </div>
+        <div class="match-kickoff">
+          <span>&#128197;</span>
+          <span>{{ match.kickoff_datetime|date:"M d, Y" }} &middot; {{ match.kickoff_datetime|date:"g:i A" }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         PREDICTION SECTION
+         ============================================================ -->
+    <div class="mb-4" data-aos="fade-up" data-aos-delay="150">
+      {% if not match.is_locked and match.status != 'completed' %}
+        {% if current_participant %}
+          {% if has_predicted %}
+          <!-- Already Predicted -->
+          <div class="glass-card text-center p-4">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">&#9989;</div>
+            <h4 style="color:var(--success);margin-bottom:0.5rem;">You've predicted this match</h4>
+            {% for pred in predictions %}
+              {% if pred.participant.id == current_participant.id %}
+              <p style="font-family:var(--font-mono);font-size:1.25rem;font-weight:800;color:var(--gold-light);margin-bottom:1rem;">
+                {{ match.home_team }} {{ pred.home_score }} &ndash; {{ pred.away_score }} {{ match.away_team }}
+              </p>
+              {% endif %}
+            {% endfor %}
+            <a href="{% url 'predictor:edit_prediction' match.id %}" class="btn btn-secondary">
+              <span>&#9998;</span> Edit Prediction
+            </a>
+          </div>
+          {% else %}
+          <!-- Not Yet Predicted -->
+          <div class="glass-card text-center p-4">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">&#127922;</div>
+            <h4 style="color:var(--text-primary);margin-bottom:0.5rem;">Make Your Prediction</h4>
+            <p class="text-muted mb-3">This match is still open for predictions!</p>
+            <a href="{% url 'predictor:submit_prediction' match.id %}" class="btn btn-primary btn-lg">
+              <span>&#9917;</span> Predict Now
+            </a>
+          </div>
+          {% endif %}
+        {% else %}
+        <!-- Not Logged In -->
+        <div class="glass-card text-center p-4">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">&#128274;</div>
+          <h4 style="color:var(--text-secondary);margin-bottom:0.5rem;">Login to Predict</h4>
+          <p class="text-muted mb-3">Sign in with your name and secret code to make predictions.</p>
+          <a href="{% url 'predictor:login' %}" class="btn btn-primary">
+            <span>&#128100;</span> Login
+          </a>
+        </div>
+        {% endif %}
+      {% elif match.is_locked and match.status != 'completed' %}
+      <!-- Locked -->
+      <div class="glass-card text-center p-4 prediction-locked">
+        <span class="lock-icon">&#128274;</span>
+        <h4 style="color:var(--danger);margin-bottom:0.5rem;">Predictions are locked</h4>
+        <p class="text-muted mb-0">This match has kicked off &mdash; no more predictions accepted.</p>
+      </div>
+      {% elif match.status == 'completed' %}
+      <!-- Completed -->
+      <div class="glass-card-gold text-center p-4">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">&#127942;</div>
+        <h4 style="color:var(--gold-light);margin-bottom:0.5rem;">Match Completed</h4>
+        <p style="font-family:var(--font-mono);font-size:1.5rem;font-weight:900;color:var(--gold-light);margin-bottom:0;">
+          Final Score: {{ match.home_score }} &ndash; {{ match.away_score }}
+        </p>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- ============================================================
+         ALL PREDICTIONS TABLE
+         ============================================================ -->
+    {% if predictions %}
+    <section data-aos="fade-up" data-aos-delay="250">
+      <h2 class="section-title mb-3">
+        <span class="title-accent"></span>
+        All Predictions
+      </h2>
+
+      <!-- Desktop Table -->
+      <div class="d-none d-md-block">
+        <div class="glass-card p-0 overflow-hidden">
+          <table class="table table-dark table-borderless mb-0" style="background:transparent;">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border-gold);">
+                <th class="ps-4 py-3" style="color:var(--text-muted);font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.05em;">Participant</th>
+                <th class="text-center py-3" style="color:var(--text-muted);font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.05em;">Predicted Score</th>
+                {% if match.status == 'completed' %}
+                <th class="text-center pe-4 py-3" style="color:var(--text-muted);font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.05em;">Points</th>
+                {% endif %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for pred in predictions|dictsort:"participant.name" %}
+              <tr style="border-bottom:1px solid var(--border-subtle);
+                         {% if match.status == 'completed' and pred.is_exact %}background:rgba(16,185,129,0.08);{% elif current_participant and pred.participant.id == current_participant.id %}background:rgba(212,175,55,0.06);{% endif %}">
+                <td class="ps-4 py-3 align-middle">
+                  <span style="font-weight:700;color:{% if current_participant and pred.participant.id == current_participant.id %}var(--gold-light){% else %}var(--text-primary){% endif %};">
+                    {{ pred.participant.name }}
+                    {% if current_participant and pred.participant.id == current_participant.id %}
+                    <span style="font-size:0.75rem;color:var(--text-muted);">(You)</span>
+                    {% endif %}
+                  </span>
+                </td>
+                <td class="text-center py-3 align-middle">
+                  <span style="font-family:var(--font-mono);font-weight:800;font-size:1.125rem;color:var(--text-primary);">
+                    {{ pred.home_score }} &ndash; {{ pred.away_score }}
+                  </span>
+                </td>
+                {% if match.status == 'completed' %}
+                <td class="text-center pe-4 py-3 align-middle">
+                  {% if pred.is_exact %}
+                  <span style="color:var(--gold-light);font-weight:800;font-size:1.125rem;">
+                    &#9989; 3 pts
+                  </span>
+                  {% else %}
+                  <span style="color:var(--danger);font-weight:600;font-size:0.9375rem;">
+                    &#10060; 0 pts
+                  </span>
+                  {% endif %}
+                </td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Mobile Card Layout -->
+      <div class="d-md-none">
+        {% for pred in predictions|dictsort:"participant.name" %}
+        <div class="glass-card mb-2 p-3"
+             data-aos="fade-up"
+             data-aos-delay="{{ forloop.counter0|divisibleby:20|yesno:'0,0' }}"
+             style="{% if match.status == 'completed' and pred.is_exact %}border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.08);{% elif current_participant and pred.participant.id == current_participant.id %}border-color:rgba(212,175,55,0.3);{% endif %}">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div style="font-weight:700;color:{% if current_participant and pred.participant.id == current_participant.id %}var(--gold-light){% else %}var(--text-primary){% endif %};">
+                {{ pred.participant.name }}
+                {% if current_participant and pred.participant.id == current_participant.id %}
+                <span style="font-size:0.75rem;color:var(--text-muted);">(You)</span>
+                {% endif %}
+              </div>
+              <div style="font-family:var(--font-mono);font-weight:800;font-size:1.125rem;color:var(--text-primary);">
+                {{ pred.home_score }} &ndash; {{ pred.away_score }}
+              </div>
+            </div>
+            {% if match.status == 'completed' %}
+            <div class="text-end">
+              {% if pred.is_exact %}
+              <span style="color:var(--gold-light);font-weight:800;">
+                &#9989; 3 pts
+              </span>
+              {% else %}
+              <span style="color:var(--danger);font-weight:600;">
+                &#10060; 0 pts
+              </span>
+              {% endif %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Prediction Summary -->
+      {% if match.status == 'completed' %}
+      <div class="glass-card mt-3 p-3 text-center" data-aos="fade-up">
+        <div class="row g-2">
+          <div class="col-4">
+            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Total</div>
+            <div style="font-family:var(--font-mono);font-weight:800;color:var(--text-primary);font-size:1.25rem;">{{ predictions|length }}</div>
+          </div>
+          <div class="col-4">
+            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Exact</div>
+            <div style="font-family:var(--font-mono);font-weight:800;color:var(--success);font-size:1.25rem;">
+              {% widthratio predictions|length 1 1 %}{% comment %}Count exacts below{% endcomment %}
+              {% regroup predictions|dictsort:"is_exact" by is_exact as exact_list %}
+              {% for group in exact_list %}
+                {% if group.grouper == True %}{{ group.list|length }}{% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="col-4">
+            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Missed</div>
+            <div style="font-family:var(--font-mono);font-weight:800;color:var(--danger);font-size:1.25rem;">
+              {% for group in exact_list %}
+                {% if group.grouper == False %}{{ group.list|length }}{% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </section>
+    {% else %}
+    <div class="glass-card text-center py-4" data-aos="fade-up">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">&#128172;</div>
+      <p style="color:var(--text-secondary);margin-bottom:0;">No predictions yet for this match.</p>
+    </div>
+    {% endif %}
+
+    <!-- Back to Matches -->
+    <div class="text-center mt-4" data-aos="fade-up">
+      <a href="{% url 'predictor:matches' %}" class="btn btn-ghost">
+        <span>&#8592;</span> Back to All Matches
+      </a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,242 @@
+{% extends "predictor/base.html" %}
+{% load static %}
+
+{% block title %}Leaderboard | WC2026{% endblock %}
+
+{% block nav_leaderboard %} active{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header" data-aos="fade-down">
+  <h1 class="page-title">
+    <span class="text-gold">&#127942; Leaderboard</span>
+  </h1>
+  <p class="page-description">Family Prediction League Standings</p>
+  <p class="mt-1">
+    <span class="status-badge status-badge-completed">
+      {{ leaderboard|length }} Participant{{ leaderboard|length|pluralize }}
+    </span>
+  </p>
+</section>
+
+<div class="container page-content">
+
+  <!-- ============================================================
+       TOP 3 PODIUM — Awards Ceremony Layout
+       ============================================================ -->
+  {% if leaderboard|length >= 1 %}
+  <section class="podium-section mb-5" data-aos="fade-up" data-aos-duration="800">
+    <div class="row justify-content-center align-items-end g-3">
+
+      <!-- 2nd Place — Silver (left) -->
+      {% if leaderboard|length >= 2 %}
+      <div class="col-4 col-md-3 order-1 order-md-1" data-aos="fade-up" data-aos-delay="200">
+        <div class="glass-card text-center p-3 position-relative silver-card">
+          <div class="medal medal-silver mx-auto mb-2" style="width:56px;height:56px;font-size:1.5rem;">
+            &#129352;
+          </div>
+          <h3 class="participant-name mb-1" style="color:var(--medal-silver);font-size:1.125rem;">
+            {{ leaderboard.1.participant.name }}
+          </h3>
+          <div class="participant-points" style="font-size:1.5rem;font-weight:900;color:var(--gold-light);">
+            {{ leaderboard.1.points }}
+          </div>
+          <div class="participant-detail">
+            {{ leaderboard.1.exact_predictions }} exact prediction{{ leaderboard.1.exact_predictions|pluralize }}
+          </div>
+          <div class="rank-badge mx-auto mt-2" style="width:36px;height:36px;background:linear-gradient(135deg, #C0C0C0, #e8e8e8);color:var(--bg-primary);border-color:var(--medal-silver);font-size:0.9rem;">
+            2
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- 1st Place — Gold (center, larger) -->
+      <div class="col-6 col-md-4 order-0 order-md-2" data-aos="fade-up" data-aos-delay="0">
+        <div class="glass-card-gold text-center p-4 position-relative celebrate champion-card" style="transform:scale(1.05);">
+          <!-- Trophy glow -->
+          <div class="trophy-icon mb-1" style="font-size:2.5rem;">
+            &#127942;
+          </div>
+          <div class="medal medal-gold mx-auto mb-2" style="width:64px;height:64px;font-size:1.75rem;">
+            &#129351;
+          </div>
+          <h2 class="participant-name mb-1" style="color:var(--gold-light);font-size:1.5rem;font-weight:900;">
+            {{ leaderboard.0.participant.name }}
+          </h2>
+          <div class="participant-points" style="font-size:2rem;font-weight:900;color:var(--gold-light);text-shadow:0 0 20px rgba(212,175,55,0.4);">
+            {{ leaderboard.0.points }}
+          </div>
+          <div class="participant-detail" style="color:var(--text-secondary);">
+            {{ leaderboard.0.exact_predictions }} exact prediction{{ leaderboard.0.exact_predictions|pluralize }}
+          </div>
+          <div class="rank-badge mx-auto mt-2" style="width:44px;height:44px;background:linear-gradient(135deg, #FFD700, #f5d442);color:var(--bg-primary);border-color:var(--medal-gold);box-shadow:0 0 15px rgba(255,215,0,0.4);font-size:1.125rem;">
+            1
+          </div>
+        </div>
+      </div>
+
+      <!-- 3rd Place — Bronze (right) -->
+      {% if leaderboard|length >= 3 %}
+      <div class="col-4 col-md-3 order-2 order-md-3" data-aos="fade-up" data-aos-delay="400">
+        <div class="glass-card text-center p-3 position-relative bronze-card">
+          <div class="medal medal-bronze mx-auto mb-2" style="width:56px;height:56px;font-size:1.5rem;">
+            &#129353;
+          </div>
+          <h3 class="participant-name mb-1" style="color:var(--medal-bronze);font-size:1.125rem;">
+            {{ leaderboard.2.participant.name }}
+          </h3>
+          <div class="participant-points" style="font-size:1.5rem;font-weight:900;color:var(--gold-light);">
+            {{ leaderboard.2.points }}
+          </div>
+          <div class="participant-detail">
+            {{ leaderboard.2.exact_predictions }} exact prediction{{ leaderboard.2.exact_predictions|pluralize }}
+          </div>
+          <div class="rank-badge mx-auto mt-2" style="width:36px;height:36px;background:linear-gradient(135deg, #CD7F32, #e8a857);color:var(--bg-primary);border-color:var(--medal-bronze);font-size:0.9rem;">
+            3
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+  </section>
+
+  <!-- Divider -->
+  <div class="text-center mb-4" data-aos="fade-in">
+    <div style="height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);max-width:400px;margin:0 auto;"></div>
+  </div>
+  {% endif %}
+
+  <!-- ============================================================
+       FULL LEADERBOARD TABLE
+       ============================================================ -->
+  <section class="leaderboard-full" data-aos="fade-up" data-aos-delay="100">
+    <h2 class="section-title mb-3">
+      <span class="title-accent"></span>
+      Full Standings
+    </h2>
+
+    {% if leaderboard %}
+    <!-- Desktop Table -->
+    <div class="d-none d-md-block">
+      <div class="glass-card p-0 overflow-hidden">
+        <table class="table table-dark table-borderless mb-0" style="background:transparent;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border-gold);">
+              <th class="ps-4 py-3" style="color:var(--text-muted);font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.05em;width:60px;">Rank</th>
+              <th class="py-3" style="color:var(--text-muted);font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.05em;">Name</th>
+              <th class="text-center py-3" style="color:var(--text-muted);font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.05em;width:120px;">Points</th>
+              <th class="text-center py-3" style="color:var(--text-muted);font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.05em;width:140px;">Exact Predictions</th>
+              <th class="text-center pe-4 py-3" style="color:var(--text-muted);font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.05em;width:140px;">Matches Predicted</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entry in leaderboard %}
+            <tr class="leaderboard-row
+                        {% if entry.rank == 1 %}rank-1{% elif entry.rank == 2 %}rank-2{% elif entry.rank == 3 %}rank-3{% endif %}"
+                data-aos="fade-up"
+                data-aos-delay="{{ forloop.counter0|divisibleby:20|yesno:'0,0' }}"
+                style="border-bottom:1px solid var(--border-subtle);
+                       {% if entry.rank == 1 %}background:rgba(212,175,55,0.08);border-color:rgba(212,175,55,0.2);
+                       {% elif entry.rank == 2 %}background:rgba(192,192,192,0.04);
+                       {% elif entry.rank == 3 %}background:rgba(205,127,50,0.04);{% endif %}">
+              <td class="ps-4 py-3 align-middle">
+                <div class="rank-badge
+                            {% if entry.rank == 1 %}rank-gold{% elif entry.rank == 2 %}rank-silver{% elif entry.rank == 3 %}rank-bronze{% endif %}"
+                     style="{% if entry.rank == 1 %}background:linear-gradient(135deg,#FFD700,#f5d442);color:var(--bg-primary);border-color:var(--medal-gold);box-shadow:0 0 15px rgba(255,215,0,0.4);width:48px;height:48px;font-size:1.125rem;
+                            {% elif entry.rank == 2 %}background:linear-gradient(135deg,#C0C0C0,#e8e8e8);color:var(--bg-primary);border-color:var(--medal-silver);width:44px;height:44px;
+                            {% elif entry.rank == 3 %}background:linear-gradient(135deg,#CD7F32,#e8a857);color:var(--bg-primary);border-color:var(--medal-bronze);width:44px;height:44px;
+                            {% endif %}">
+                  {% if entry.rank == 1 %}&#127942;{% else %}{{ entry.rank }}{% endif %}
+                </div>
+              </td>
+              <td class="py-3 align-middle">
+                <div class="participant-name" style="font-weight:700;font-size:1rem;{% if entry.rank == 1 %}color:var(--gold-light);font-size:1.125rem;{% elif entry.rank <= 3 %}color:var(--text-primary);{% else %}color:var(--text-primary);{% endif %}">
+                  {% if entry.rank == 1 %}<span class="trophy-icon">&#127942;</span> {% endif %}
+                  {{ entry.participant.name }}
+                  {% if entry.rank == 1 %}<span class="medal medal-gold" style="width:24px;height:24px;font-size:0.7rem;margin-left:0.5rem;">&#129351;</span>
+                  {% elif entry.rank == 2 %}<span class="medal medal-silver" style="width:24px;height:24px;font-size:0.7rem;margin-left:0.5rem;">&#129352;</span>
+                  {% elif entry.rank == 3 %}<span class="medal medal-bronze" style="width:24px;height:24px;font-size:0.7rem;margin-left:0.5rem;">&#129353;</span>
+                  {% endif %}
+                </div>
+              </td>
+              <td class="text-center py-3 align-middle">
+                <span class="gold-text" style="font-family:var(--font-mono);font-size:{% if entry.rank <= 3 %}1.25rem{% else %}1.125rem{% endif %};font-weight:800;color:var(--gold-light);">
+                  {{ entry.points }}
+                </span>
+                <span class="points-label" style="display:block;font-size:0.6875rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">
+                  pts
+                </span>
+              </td>
+              <td class="text-center py-3 align-middle" style="color:var(--text-secondary);font-weight:600;">
+                {{ entry.exact_predictions }}
+              </td>
+              <td class="text-center pe-4 py-3 align-middle" style="color:var(--text-secondary);font-weight:600;">
+                {{ entry.matches_predicted }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Mobile Card Layout -->
+    <div class="d-md-none">
+      {% for entry in leaderboard %}
+      <div class="leaderboard-item
+                  {% if entry.rank == 1 %}rank-1{% elif entry.rank == 2 %}rank-2{% elif entry.rank == 3 %}rank-3{% endif %}"
+           data-aos="fade-up"
+           data-aos-delay="{{ forloop.counter0|divisibleby:20|yesno:'0,0' }}">
+        <div class="rank-badge
+                    {% if entry.rank == 1 %}rank-gold{% elif entry.rank == 2 %}rank-silver{% elif entry.rank == 3 %}rank-bronze{% endif %}"
+             style="{% if entry.rank == 1 %}background:linear-gradient(135deg,#FFD700,#f5d442);color:var(--bg-primary);border-color:var(--medal-gold);box-shadow:0 0 15px rgba(255,215,0,0.4);width:48px;height:48px;font-size:1.125rem;
+                    {% elif entry.rank == 2 %}background:linear-gradient(135deg,#C0C0C0,#e8e8e8);color:var(--bg-primary);border-color:var(--medal-silver);width:44px;height:44px;
+                    {% elif entry.rank == 3 %}background:linear-gradient(135deg,#CD7F32,#e8a857);color:var(--bg-primary);border-color:var(--medal-bronze);width:44px;height:44px;
+                    {% endif %}">
+          {% if entry.rank == 1 %}&#127942;{% else %}{{ entry.rank }}{% endif %}
+        </div>
+        <div class="participant-info">
+          <div class="participant-name">
+            {% if entry.rank == 1 %}<span class="trophy-icon">&#127942;</span> {% endif %}
+            {{ entry.participant.name }}
+          </div>
+          <div class="participant-detail">
+            {{ entry.exact_predictions }} exact &middot; {{ entry.matches_predicted }} predicted
+          </div>
+        </div>
+        <div class="participant-points">
+          {{ entry.points }}
+          <span class="points-label">pts</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="glass-card text-center py-5" data-aos="fade-up">
+      <div style="font-size:3rem;margin-bottom:1rem;">&#128202;</div>
+      <h3 style="color:var(--text-secondary);">No participants yet</h3>
+      <p class="text-muted">The leaderboard will populate once predictions are made.</p>
+    </div>
+    {% endif %}
+  </section>
+
+</div>
+
+<!-- Champion Celebration Script -->
+{% if leaderboard|length >= 1 %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Trigger confetti for the champion
+  var championCard = document.querySelector('.celebrate');
+  if (championCard && typeof triggerConfetti === 'function') {
+    setTimeout(function() {
+      triggerConfetti();
+    }, 800);
+  }
+});
+</script>
+{% endif %}
+{% endblock %}
