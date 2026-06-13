@@ -20,11 +20,13 @@
         position: absolute;
         inset: 0;
         background:
-            radial-gradient(ellipse at 20% 50%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 50%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.04) 0%, transparent 60%);
+            radial-gradient(ellipse at 20% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.03) 0%, transparent 60%);
         pointer-events: none;
     }
+
+    /* Login card - ultra liquid glass */
     .login-card {
         max-width: 460px;
         width: 100%;
@@ -32,15 +34,50 @@
         padding: 2.5rem 2rem;
         position: relative;
         z-index: 1;
+        background: rgba(10, 14, 24, 0.35);
+        backdrop-filter: blur(40px) saturate(1.6) brightness(1.15);
+        -webkit-backdrop-filter: blur(40px) saturate(1.6) brightness(1.15);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(255, 255, 255, 0.03),
+            inset 0 1px 0 rgba(255, 255, 255, 0.06),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.1);
     }
     .login-card::before {
         content: '';
         position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 50%;
+        background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
+        border-radius: 1.5rem 1.5rem 0 0;
+        pointer-events: none;
+        z-index: 0;
+    }
+    .login-card::after {
+        content: '';
+        position: absolute;
+        top: -1px; left: 15%; right: 15%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    /* Gold border accent around card */
+    .login-card-border {
+        position: absolute;
         top: -1px; left: -1px; right: -1px; bottom: -1px;
         border-radius: 1.5rem;
-        background: linear-gradient(135deg, rgba(212,175,55,0.3), rgba(212,175,55,0.05), rgba(212,175,55,0.2));
+        background: linear-gradient(135deg, rgba(212,175,55,0.25), rgba(212,175,55,0.03), rgba(212,175,55,0.15));
         z-index: -1;
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask-composite: exclude;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        padding: 1px;
     }
+
     .trophy-icon {
         font-size: 3.5rem;
         display: block;
@@ -52,28 +89,31 @@
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(-10px); }
     }
-    .form-control:focus, .form-select:focus {
-        border-color: var(--gold);
-        box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25), 0 0 20px rgba(212,175,55,0.1);
-        background-color: var(--bg-input);
-        color: var(--text-primary);
-    }
+
     .form-control, .form-select {
-        background-color: var(--bg-input);
+        background-color: rgba(15, 22, 38, 0.8);
         color: var(--text-primary);
-        border: 2px solid rgba(212,175,55,0.15);
-        border-radius: 10px;
-        padding: 12px 16px;
+        border: 2px solid rgba(212,175,55,0.12);
+        border-radius: 12px;
+        padding: 14px 18px;
         font-size: 1rem;
         transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: rgba(212,175,55,0.35);
+        box-shadow: 0 0 0 3px rgba(212,175,55,0.15), 0 0 25px rgba(212,175,55,0.08);
+        background-color: rgba(20, 28, 48, 0.9);
+        color: var(--text-primary);
     }
     .form-control:hover, .form-select:hover {
-        border-color: rgba(212,175,55,0.3);
+        border-color: rgba(212,175,55,0.25);
     }
     .form-select option {
         background-color: var(--bg-secondary);
         color: var(--text-primary);
     }
+
     .secret-wrapper {
         position: relative;
     }
@@ -94,6 +134,7 @@
     .secret-wrapper .toggle-password:hover {
         color: var(--gold);
     }
+
     .shake {
         animation: shake 0.5s ease-in-out;
     }
@@ -102,45 +143,23 @@
         10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
         20%, 40%, 60%, 80% { transform: translateX(5px); }
     }
+
     .login-btn {
-        min-height: 52px;
-        font-size: 1.1rem;
+        min-height: 54px;
+        font-size: 1.15rem;
         font-weight: 700;
         letter-spacing: 0.5px;
-        border-radius: 12px;
-    }
-    .login-bg-player {
-        position: absolute;
-        bottom: 0;
-        opacity: 0.04;
-        pointer-events: none;
-        z-index: 0;
-    }
-    .login-bg-player.left {
-        left: -60px;
-    }
-    .login-bg-player.right {
-        right: -60px;
-    }
-    .login-bg-player img {
-        height: 400px;
-        width: auto;
+        border-radius: 14px;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="login-page">
-    <!-- Decorative Players -->
-    <div class="login-bg-player left">
-        <img src="https://sfile.chatglm.cn/images-ppt/e9ed09cc5680.png" alt="">
-    </div>
-    <div class="login-bg-player right">
-        <img src="https://sfile.chatglm.cn/images-ppt/2b8d7d4c570a.png" alt="">
-    </div>
+    <div class="login-card" data-aos="zoom-in" data-aos-duration="600">
+        <div class="login-card-border"></div>
 
-    <div class="login-card glass-card-premium" data-aos="zoom-in" data-aos-duration="600">
-        <div class="text-center mb-4">
+        <div class="text-center mb-4" style="position:relative;z-index:2;">
             <span class="trophy-icon">&#127942;</span>
             <h2 class="gold-text fw-bold mb-1" style="font-size:1.6rem;">Enter the Arena</h2>
             <p class="text-secondary" style="font-size:0.95rem;">Sign in to make your predictions</p>
@@ -148,14 +167,14 @@
 
         {% if form.errors %}
         <div class="shake">
-            <div class="alert glass-card py-2 px-3 mb-3" style="font-size: 0.9rem; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#f87171;">
+            <div class="alert py-2 px-3 mb-3" style="font-size:0.9rem;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:#f87171;border-radius:10px;backdrop-filter:blur(10px);">
                 <i class="bi bi-exclamation-triangle-fill me-1"></i>
                 Invalid name or secret code. Please try again.
             </div>
         </div>
         {% endif %}
 
-        <form method="post" action="{% url 'predictor:login' %}" id="login-form" novalidate>
+        <form method="post" action="{% url 'predictor:login' %}" id="login-form" novalidate style="position:relative;z-index:2;">
             {% csrf_token %}
             <!-- Hidden next field for redirect -->
             <input type="hidden" name="next" value="{{ next_url|default:'' }}">
@@ -166,7 +185,7 @@
                 </label>
                 {{ form.name }}
                 {% for error in form.name.errors %}
-                <div class="text-danger mt-1" style="font-size: 0.8rem;">{{ error }}</div>
+                <div class="text-danger mt-1" style="font-size:0.8rem;">{{ error }}</div>
                 {% endfor %}
             </div>
 
@@ -181,17 +200,17 @@
                     </button>
                 </div>
                 {% for error in form.secret_code.errors %}
-                <div class="text-danger mt-1" style="font-size: 0.8rem;">{{ error }}</div>
+                <div class="text-danger mt-1" style="font-size:0.8rem;">{{ error }}</div>
                 {% endfor %}
             </div>
 
-            <button type="submit" class="btn btn-gold w-100 login-btn btn-glow">
+            <button type="submit" class="btn btn-gold w-100 login-btn btn-glow btn-cta-pulse">
                 <i class="bi bi-box-arrow-in-right me-2"></i> Sign In
             </button>
         </form>
 
-        <div class="text-center mt-3">
-            <p class="text-muted" style="font-size: 0.8rem;">
+        <div class="text-center mt-3" style="position:relative;z-index:2;">
+            <p class="text-muted" style="font-size:0.8rem;">
                 <i class="bi bi-shield-lock me-1"></i>
                 Ask the family admin if you need your secret code
             </p>
@@ -203,7 +222,6 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Toggle password visibility
         var toggleBtn = document.getElementById('toggle-password');
         var secretField = document.getElementById('id_secret_code');
         if (toggleBtn && secretField) {
@@ -221,7 +239,6 @@
             });
         }
 
-        // Add shake animation on form errors
         {% if form.errors %}
         var loginCard = document.querySelector('.login-card');
         if (loginCard) {

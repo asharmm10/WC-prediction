@@ -1,0 +1,1438 @@
+     1→/**
+     2→ * FIFA World Cup 2026 Family Prediction League — Main JavaScript
+     3→ * ================================================================
+     4→ * Vanilla JS interactive & animated features for the premium
+     5→ * football prediction site. No external libraries required.
+     6→ *
+     7→ * Features:
+     8→ *  1. Countdown Timer with flip animation
+     9→ *  2. Confetti Effect
+    10→ *  3. Floating Footballs background
+    11→ *  4. Stadium Lights Effect
+    12→ *  5. Scroll Animations (AOS-like via IntersectionObserver)
+    13→ *  6. Navbar Mobile Toggle & active-link highlighting
+    14→ *  7. Prediction Form Enhancements (AJAX, auto-save indicator)
+    15→ *  8. Toast Notifications
+    16→ *  9. Leaderboard Animations
+    17→ * 10. Match Card Interactions
+    18→ * 11. Login Form Enhancement
+    19→ * 12. Page Load Animation
+    20→ * 13. Live Match Updates (Polling)
+    21→ * 14. Score Picker (+/- buttons)
+    22→ * 15. CSRF Token Helper
+    23→ */
+    24→
+    25→(function () {
+    26→  'use strict';
+    27→
+    28→  // ------------------------------------------------------------------
+    29→  // Utility: prefers-reduced-motion check
+    30→  // ------------------------------------------------------------------
+    31→  const prefersReducedMotion = window.matchMedia(
+    32→    '(prefers-reduced-motion: reduce)'
+    33→  ).matches;
+    34→
+    35→  // ------------------------------------------------------------------
+    36→  // Utility: Debounce
+    37→  // ------------------------------------------------------------------
+    38→  function debounce(fn, delay) {
+    39→    let timer = null;
+    40→    return function () {
+    41→      const ctx = this;
+    42→      const args = arguments;
+    43→      clearTimeout(timer);
+    44→      timer = setTimeout(function () {
+    45→        fn.apply(ctx, args);
+    46→      }, delay);
+    47→    };
+    48→  }
+    49→
+    50→  // ------------------------------------------------------------------
+    51→  // CSRF Token Helper
+    52→  // ------------------------------------------------------------------
+    53→  function getCSRFToken() {
+    54→    // Try cookie first
+    55→    const cookie = document.cookie
+    56→      .split(';')
+    57→      .filter(function (c) {
+    58→        return c.trim().startsWith('csrftoken=');
+    59→      });
+    60→    if (cookie.length) return cookie[0].split('=')[1];
+    61→    // Fallback to meta tag
+    62→    const meta = document.querySelector('meta[name="csrf-token"]');
+    63→    return meta ? meta.getAttribute('content') : '';
+    64→  }
+    65→
+    66→  // ==================================================================
+    67→  // 1. COUNTDOWN TIMER
+    68→  // ==================================================================
+    69→  let countdownInterval = null;
+    70→
+    71→  function initCountdown() {
+    72→    const container = document.getElementById('countdown');
+    73→    if (!container) return;
+    74→
+    75→    // Build digit boxes if they don't already exist in the markup
+    76→    if (!container.querySelector('.countdown-digit')) {
+    77→      container.innerHTML = buildCountdownHTML();
+    78→    }
+    79→
+    80→    fetchCountdown();
+    81→
+    82→    // Refresh from server every 60 s to stay in sync
+    83→    setInterval(fetchCountdown, 60000);
+    84→
+    85→    // Client-side tick every second
+    86→    countdownInterval = setInterval(tickCountdown, 1000);
+    87→  }
+    88→
+    89→  function buildCountdownHTML() {
+    90→    const units = ['days', 'hours', 'minutes', 'seconds'];
+    91→    const labels = ['Days', 'Hours', 'Minutes', 'Seconds'];
+    92→    let html = '';
+    93→    units.forEach(function (unit, i) {
+    94→      html +=
+    95→        '<div class="countdown-unit">' +
+    96→        '  <div class="countdown-digit" data-unit="' + unit + '">' +
+    97→        '    <span class="digit-current">00</span>' +
+    98→        '    <span class="digit-next">00</span>' +
+    99→        '  </div>' +
+   100→        '  <div class="countdown-label">' + labels[i] + '</div>' +
+   101→        '</div>';
+   102→      if (i < units.length - 1) {
+   103→        html += '<div class="countdown-separator">:</div>';
+   104→      }
+   105→    });
+   106→    return html;
+   107→  }
+   108→
+   109→  let countdownSeconds = 0;
+   110→  let countdownMatch = '';
+   111→
+   112→  function fetchCountdown() {
+   113→    fetch('/api/countdown/', { credentials: 'same-origin' })
+   114→      .then(function (res) { return res.json(); })
+   115→      .then(function (data) {
+   116→        countdownSeconds = data.seconds_remaining || 0;
+   117→        countdownMatch = data.match || '';
+   118→        renderCountdown(countdownSeconds);
+   119→      })
+   120→      .catch(function () {
+   121→        // Silently fail — client-side tick will keep running
+   122→      });
+   123→  }
+   124→
+   125→  function tickCountdown() {
+   126→    if (countdownSeconds > 0) {
+   127→      countdownSeconds -= 1;
+   128→    }
+   129→    renderCountdown(countdownSeconds);
+   130→  }
+   131→
+   132→  function renderCountdown(totalSec) {
+   133→    const container = document.getElementById('countdown');
+   134→    if (!container) return;
+   135→
+   136→    if (totalSec <= 0) {
+   137→      container.innerHTML =
+   138→        '<div class="countdown-match-day">MATCH DAY!</div>';
+   139→      if (countdownInterval) clearInterval(countdownInterval);
+   140→      return;
+   141→    }
+   142→
+   143→    const d = Math.floor(totalSec / 86400);
+   144→    const h = Math.floor((totalSec % 86400) / 3600);
+   145→    const m = Math.floor((totalSec % 3600) / 60);
+   146→    const s = totalSec % 60;
+   147→
+   148→    updateDigit('days', pad(d));
+   149→    updateDigit('hours', pad(h));
+   150→    updateDigit('minutes', pad(m));
+   151→    updateDigit('seconds', pad(s));
+   152→  }
+   153→
+   154→  function pad(n) {
+   155→    return n < 10 ? '0' + n : '' + n;
+   156→  }
+   157→
+   158→  /**
+   159→   * Flip-style animation: compare current value with new value,
+   160→   * animate only when they differ.
+   161→   */
+   162→  function updateDigit(unit, value) {
+   163→    const digitEl = document.querySelector(
+   164→      '.countdown-digit[data-unit="' + unit + '"]'
+   165→    );
+   166→    if (!digitEl) return;
+   167→
+   168→    const current = digitEl.querySelector('.digit-current');
+   169→    if (!current) return;
+   170→
+   171→    if (current.textContent !== value) {
+   172→      // Add flip class for CSS animation
+   173→      digitEl.classList.add('flipping');
+   174→      current.textContent = value;
+   175→      setTimeout(function () {
+   176→        digitEl.classList.remove('flipping');
+   177→      }, 300);
+   178→    }
+   179→  }
+   180→
+   181→  // ==================================================================
+   182→  // 2. CONFETTI EFFECT
+   183→  // ==================================================================
+   184→  function triggerConfetti() {
+   185→    if (prefersReducedMotion) return;
+   186→
+   187→    const canvas = document.createElement('canvas');
+   188→    canvas.id = 'confetti-canvas';
+   189→    canvas.style.cssText =
+   190→      'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
+   191→    document.body.appendChild(canvas);
+   192→
+   193→    const ctx = canvas.getContext('2d');
+   194→    canvas.width = window.innerWidth;
+   195→    canvas.height = window.innerHeight;
+   196→
+   197→    const colors = [
+   198→      '#FFD700', '#FFFFFF', '#F5C518', '#E6C200',
+   199→      '#FFF8DC', '#DAA520', '#F0E68C', '#FAFAD2',
+   200→      '#C5A028', '#B8860B'
+   201→    ];
+   202→    const PIECE_COUNT = 150;
+   203→    const pieces = [];
+   204→
+   205→    for (let i = 0; i < PIECE_COUNT; i++) {
+   206→      pieces.push({
+   207→        x: Math.random() * canvas.width,
+   208→        y: Math.random() * -canvas.height,          // start above viewport
+   209→        w: Math.random() * 8 + 4,
+   210→        h: Math.random() * 6 + 3,
+   211→        color: colors[Math.floor(Math.random() * colors.length)],
+   212→        rotation: Math.random() * 360,
+   213→        rotSpeed: (Math.random() - 0.5) * 8,
+   214→        drift: (Math.random() - 0.5) * 2,
+   215→        speed: Math.random() * 3 + 2,
+   216→        opacity: Math.random() * 0.5 + 0.5
+   217→      });
+   218→    }
+   219→
+   220→    let startTime = Date.now();
+   221→    const DURATION = 5000; // auto-cleanup after 5 seconds
+   222→
+   223→    function animate() {
+   224→      const elapsed = Date.now() - startTime;
+   225→      if (elapsed > DURATION) {
+   226→        // Fade out
+   227→        ctx.clearRect(0, 0, canvas.width, canvas.height);
+   228→        document.body.removeChild(canvas);
+   229→        return;
+   230→      }
+   231→
+   232→      ctx.clearRect(0, 0, canvas.width, canvas.height);
+   233→
+   234→      // Fade pieces in the last second
+   235→      const fadeFactor = elapsed > DURATION - 1000
+   236→        ? (DURATION - elapsed) / 1000
+   237→        : 1;
+   238→
+   239→      for (let i = 0; i < pieces.length; i++) {
+   240→        const p = pieces[i];
+   241→        p.y += p.speed;
+   242→        p.x += p.drift;
+   243→        p.rotation += p.rotSpeed;
+   244→
+   245→        // Wrap horizontally
+   246→        if (p.x > canvas.width + 20) p.x = -20;
+   247→        if (p.x < -20) p.x = canvas.width + 20;
+   248→
+   249→        ctx.save();
+   250→        ctx.translate(p.x, p.y);
+   251→        ctx.rotate((p.rotation * Math.PI) / 180);
+   252→        ctx.globalAlpha = p.opacity * fadeFactor;
+   253→        ctx.fillStyle = p.color;
+   254→        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+   255→        ctx.restore();
+   256→      }
+   257→
+   258→      requestAnimationFrame(animate);
+   259→    }
+   260→
+   261→    requestAnimationFrame(animate);
+   262→  }
+   263→
+   264→  // ==================================================================
+   265→  // 3. FLOATING FOOTBALLS
+   266→  // ==================================================================
+   267→  function initFloatingFootballs() {
+   268→    if (prefersReducedMotion) return;
+   269→
+   270→    const container = document.querySelector('.floating-footballs');
+   271→    if (!container) {
+   272→      // Auto-create a container at the start of body
+   273→      const wrapper = document.createElement('div');
+   274→      wrapper.className = 'floating-footballs';
+   275→      wrapper.setAttribute('aria-hidden', 'true');
+   276→      wrapper.style.cssText =
+   277→        'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:0;';
+   278→      document.body.prepend(wrapper);
+   279→    }
+   280→
+   281→    const host = document.querySelector('.floating-footballs');
+   282→    const COUNT = 6;
+   283→
+   284→    for (let i = 0; i < COUNT; i++) {
+   285→      const ball = document.createElement('div');
+   286→      ball.className = 'floating-football';
+   287→
+   288→      const size = Math.random() * 30 + 20;  // 20-50px
+   289→      const left = Math.random() * 100;        // 0-100%
+   290→      const top = Math.random() * 100;
+   291→      const duration = Math.random() * 20 + 30; // 30-50s for parallax
+   292→      const delay = Math.random() * -30;
+   293→      const opacity = Math.random() * 0.05 + 0.1; // 0.1-0.15
+   294→
+   295→      ball.style.cssText =
+   296→        'position:absolute;' +
+   297→        'left:' + left + '%;' +
+   298→        'top:' + top + '%;' +
+   299→        'width:' + size + 'px;' +
+   300→        'height:' + size + 'px;' +
+   301→        'opacity:' + opacity + ';' +
+   302→        'background-image:url("data:image/svg+xml,' + footballSVG() + '");' +
+   303→        'background-size:contain;' +
+   304→        'background-repeat:no-repeat;' +
+   305→        'animation:floatBall ' + duration + 's ' + delay + 's infinite ease-in-out alternate;';
+   306→
+   307→      host.appendChild(ball);
+   308→    }
+   309→
+   310→    // Inject the keyframes if not already present
+   311→    if (!document.getElementById('floating-football-styles')) {
+   312→      const style = document.createElement('style');
+   313→      style.id = 'floating-football-styles';
+   314→      style.textContent =
+   315→        '@keyframes floatBall {' +
+   316→        '  0%   { transform: translate(0, 0) rotate(0deg); }' +
+   317→        '  25%  { transform: translate(30px, -40px) rotate(90deg); }' +
+   318→        '  50%  { transform: translate(-20px, 20px) rotate(180deg); }' +
+   319→        '  75%  { transform: translate(40px, 30px) rotate(270deg); }' +
+   320→        '  100% { transform: translate(-10px, -20px) rotate(360deg); }' +
+   321→        '}';
+   322→      document.head.appendChild(style);
+   323→    }
+   324→  }
+   325→
+   326→  /** Inline SVG data URI for a simple football icon */
+   327→  function footballSVG() {
+   328→    return encodeURIComponent(
+   329→      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">' +
+   330→        '<circle cx="32" cy="32" r="30" fill="%23fff" stroke="%23333" stroke-width="2"/>' +
+   331→        '<path d="M32 2 L38 18 L54 18 L41 28 L46 44 L32 35 L18 44 L23 28 L10 18 L26 18Z" ' +
+   332→        'fill="%23333" stroke="%23333" stroke-width="0.5"/>' +
+   333→      '</svg>'
+   334→    );
+   335→  }
+   336→
+   337→  // ==================================================================
+   338→  // 4. STADIUM LIGHTS EFFECT
+   339→  // ==================================================================
+   340→  function initStadiumLights() {
+   341→    if (prefersReducedMotion) return;
+   342→
+   343→    const container = document.querySelector('.stadium-lights');
+   344→    if (!container) {
+   345→      const wrapper = document.createElement('div');
+   346→      wrapper.className = 'stadium-lights';
+   347→      wrapper.setAttribute('aria-hidden', 'true');
+   348→      wrapper.style.cssText =
+   349→        'position:fixed;top:0;left:0;width:100%;height:60px;pointer-events:none;z-index:1;overflow:hidden;';
+   350→      document.body.prepend(wrapper);
+   351→    }
+   352→
+   353→    const host = document.querySelector('.stadium-lights');
+   354→    const BEAM_COUNT = 4;
+   355→
+   356→    for (let i = 0; i < BEAM_COUNT; i++) {
+   357→      const beam = document.createElement('div');
+   358→      beam.className = 'stadium-beam';
+   359→
+   360→      const leftPos = (i + 0.5) * (100 / BEAM_COUNT);
+   361→      beam.style.cssText =
+   362→        'position:absolute;' +
+   363→        'top:0;' +
+   364→        'left:' + leftPos + '%;' +
+   365→        'width:120px;' +
+   366→        'height:300px;' +
+   367→        'margin-left:-60px;' +
+   368→        'background:linear-gradient(180deg, rgba(255,215,0,0.12) 0%, rgba(255,215,0,0) 100%);' +
+   369→        'transform-origin:top center;' +
+   370→        'animation:stadiumSweep ' + (6 + i * 2) + 's ease-in-out infinite alternate;' +
+   371→        'animation-delay:' + (i * -1.5) + 's;';
+   372→
+   373→      host.appendChild(beam);
+   374→    }
+   375→
+   376→    // Inject keyframes
+   377→    if (!document.getElementById('stadium-light-styles')) {
+   378→      const style = document.createElement('style');
+   379→      style.id = 'stadium-light-styles';
+   380→      style.textContent =
+   381→        '@keyframes stadiumSweep {' +
+   382→        '  0%   { transform: rotate(-15deg); opacity: 0.4; }' +
+   383→        '  50%  { transform: rotate(0deg);   opacity: 0.7; }' +
+   384→        '  100% { transform: rotate(15deg);  opacity: 0.4; }' +
+   385→        '}';
+   386→      document.head.appendChild(style);
+   387→    }
+   388→  }
+   389→
+   390→  // ==================================================================
+   391→  // 5. SCROLL ANIMATIONS (AOS-like via IntersectionObserver)
+   392→  // ==================================================================
+   393→  function initScrollAnimations() {
+   394→    const elements = document.querySelectorAll('[data-aos]');
+   395→    if (!elements.length) return;
+   396→
+   397→    // Map of animation types to their initial & final states
+   398→    const animMap = {
+   399→      'fade-up':    { init: 'translateY(40px)',  final: 'translateY(0)' },
+   400→      'fade-down':  { init: 'translateY(-40px)', final: 'translateY(0)' },
+   401→      'fade-left':  { init: 'translateX(-40px)', final: 'translateX(0)' },
+   402→      'fade-right': { init: 'translateX(40px)',  final: 'translateX(0)' },
+   403→      'zoom-in':    { init: 'scale(0.8)',        final: 'scale(1)' },
+   404→      'fade':       { init: 'none',              final: 'none' }
+   405→    };
+   406→
+   407→    // Set initial hidden state
+   408→    elements.forEach(function (el) {
+   409→      const type = el.getAttribute('data-aos') || 'fade-up';
+   410→      const map = animMap[type] || animMap['fade-up'];
+   411→
+   412→      el.style.opacity = '0';
+   413→      if (map.init !== 'none') {
+   414→        el.style.transform = map.init;
+   415→      }
+   416→      el.style.transition =
+   417→        'opacity 0.6s ease, transform 0.6s ease';
+   418→    });
+   419→
+   420→    if (prefersReducedMotion) {
+   421→      // Show everything immediately
+   422→      elements.forEach(function (el) { el.style.opacity = '1'; el.style.transform = 'none'; });
+   423→      return;
+   424→    }
+   425→
+   426→    const observer = new IntersectionObserver(
+   427→      function (entries) {
+   428→        entries.forEach(function (entry) {
+   429→          if (!entry.isIntersecting) return;
+   430→
+   431→          const el = entry.target;
+   432→          const delay = parseInt(el.getAttribute('data-aos-delay') || '0', 10);
+   433→          const type = el.getAttribute('data-aos') || 'fade-up';
+   434→          const map = animMap[type] || animMap['fade-up'];
+   435→
+   436→          setTimeout(function () {
+   437→            el.style.opacity = '1';
+   438→            if (map.final !== 'none') {
+   439→              el.style.transform = map.final;
+   440→            }
+   441→            el.classList.add('aos-animate');
+   442→          }, delay);
+   443→
+   444→          observer.unobserve(el);
+   445→        });
+   446→      },
+   447→      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+   448→    );
+   449→
+   450→    elements.forEach(function (el) { observer.observe(el); });
+   451→  }
+   452→
+   453→  // ==================================================================
+   454→  // 6. NAVBAR MOBILE TOGGLE
+   455→  // ==================================================================
+   456→  function initNavbar() {
+   457→    const navbar = document.querySelector('.navbar');
+   458→    if (!navbar) return;
+   459→
+   460→    const toggler = navbar.querySelector('.navbar-toggler');
+   461→    const collapse = navbar.querySelector('.navbar-collapse');
+   462→    if (!toggler || !collapse) return;
+   463→
+   464→    // Toggle on button click
+   465→    toggler.addEventListener('click', function () {
+   466→      collapse.classList.toggle('show');
+   467→      toggler.setAttribute(
+   468→        'aria-expanded',
+   469→        collapse.classList.contains('show')
+   470→      );
+   471→    });
+   472→
+   473→    // Close on outside click
+   474→    document.addEventListener('click', function (e) {
+   475→      if (
+   476→        collapse.classList.contains('show') &&
+   477→        !collapse.contains(e.target) &&
+   478→        !toggler.contains(e.target)
+   479→      ) {
+   480→        collapse.classList.remove('show');
+   481→        toggler.setAttribute('aria-expanded', 'false');
+   482→      }
+   483→    });
+   484→
+   485→    // Close on nav-link click (for single-page sections)
+   486→    const navLinks = collapse.querySelectorAll('.nav-link');
+   487→    navLinks.forEach(function (link) {
+   488→      link.addEventListener('click', function () {
+   489→        collapse.classList.remove('show');
+   490→        toggler.setAttribute('aria-expanded', 'false');
+   491→      });
+   492→    });
+   493→
+   494→    // Smooth scroll for hash links
+   495→    navLinks.forEach(function (link) {
+   496→      const href = link.getAttribute('href');
+   497→      if (href && href.startsWith('#') && href.length > 1) {
+   498→        link.addEventListener('click', function (e) {
+   499→          const target = document.querySelector(href);
+   500→          if (target) {
+   501→            e.preventDefault();
+   502→            target.scrollIntoView({ behavior: 'smooth' });
+   503→          }
+   504→        });
+   505→      }
+   506→    });
+   507→
+   508→    // Active link highlighting based on scroll position
+   509→    const sections = document.querySelectorAll('section[id]');
+   510→    if (sections.length) {
+   511→      const handleScroll = debounce(function () {
+   512→        const scrollY = window.scrollY + 100;
+   513→        sections.forEach(function (section) {
+   514→          const top = section.offsetTop;
+   515→          const height = section.offsetHeight;
+   516→          const id = section.getAttribute('id');
+   517→          const link = navbar.querySelector('.nav-link[href="#' + id + '"]');
+   518→          if (link) {
+   519→            if (scrollY >= top && scrollY < top + height) {
+   520→              link.classList.add('active');
+   521→            } else {
+   522→              link.classList.remove('active');
+   523→            }
+   524→          }
+   525→        });
+   526→      }, 50);
+   527→
+   528→      window.addEventListener('scroll', handleScroll, { passive: true });
+   529→    }
+   530→  }
+   531→
+   532→  // ==================================================================
+   533→  // 7. PREDICTION FORM ENHANCEMENTS
+   534→  // ==================================================================
+   535→  function initPredictionForms() {
+   536→    const forms = document.querySelectorAll('.prediction-form');
+   537→    if (!forms.length) return;
+   538→
+   539→    forms.forEach(function (form) {
+   540→      const matchId = form.getAttribute('data-match-id');
+   541→      const isLocked = form.classList.contains('locked');
+   542→
+   543→      if (isLocked) {
+   544→        disableForm(form);
+   545→        return;
+   546→      }
+   547→
+   548→      // AJAX form submission
+   549→      form.addEventListener('submit', function (e) {
+   550→        e.preventDefault();
+   551→        submitPredictionForm(form, matchId);
+   552→      });
+   553→
+   554→      // Auto-save indicator
+   555→      const inputs = form.querySelectorAll('input[type="number"]');
+   556→      let autoSaveTimer = null;
+   557→      inputs.forEach(function (input) {
+   558→        input.addEventListener('input', function () {
+   559→          clearTimeout(autoSaveTimer);
+   560→          showAutoSaveIndicator(form, 'typing...');
+   561→          autoSaveTimer = setTimeout(function () {
+   562→            showAutoSaveIndicator(form, 'auto-saving...');
+   563→            submitPredictionForm(form, matchId, true);
+   564→          }, 2000);
+   565→        });
+   566→      });
+   567→    });
+   568→  }
+   569→
+   570→  function submitPredictionForm(form, matchId, isAutoSave) {
+   571→    const formData = new FormData(form);
+   572→    formData.append('csrfmiddlewaretoken', getCSRFToken());
+   573→
+   574→    const url = form.getAttribute('action') ||
+   575→      '/predict/' + matchId + '/';
+   576→
+   577→    fetch(url, {
+   578→      method: 'POST',
+   579→      body: formData,
+   580→      credentials: 'same-origin',
+   581→      headers: {
+   582→        'X-Requested-With': 'XMLHttpRequest'
+   583→      }
+   584→    })
+   585→      .then(function (res) {
+   586→        if (res.ok) {
+   587→          return res.json().catch(function () {
+   588→            // Server may return a redirect (non-JSON) on success
+   589→            return { success: true };
+   590→          });
+   591→        }
+   592→        throw new Error('Server returned ' + res.status);
+   593→      })
+   594→      .then(function (data) {
+   595→        if (isAutoSave) {
+   596→          showAutoSaveIndicator(form, 'saved');
+   597→        } else {
+   598→          showToast('Prediction saved!', 'success');
+   599→        }
+   600→        // Brief green flash on form
+   601→        form.classList.add('form-saved');
+   602→        setTimeout(function () {
+   603→          form.classList.remove('form-saved');
+   604→        }, 1000);
+   605→      })
+   606→      .catch(function (err) {
+   607→        if (isAutoSave) {
+   608→          showAutoSaveIndicator(form, 'save failed');
+   609→        } else {
+   610→          showToast('Error saving prediction. Please try again.', 'error');
+   611→        }
+   612→      });
+   613→  }
+   614→
+   615→  function showAutoSaveIndicator(form, text) {
+   616→    let indicator = form.querySelector('.auto-save-indicator');
+   617→    if (!indicator) {
+   618→      indicator = document.createElement('span');
+   619→      indicator.className = 'auto-save-indicator';
+   620→      indicator.style.cssText =
+   621→        'font-size:0.75rem;color:#888;margin-left:8px;transition:color 0.3s;';
+   622→      const submitBtn = form.querySelector('button[type="submit"]');
+   623→      if (submitBtn) {
+   624→        submitBtn.parentNode.insertBefore(indicator, submitBtn.nextSibling);
+   625→      } else {
+   626→        form.appendChild(indicator);
+   627→      }
+   628→    }
+   629→    indicator.textContent = text;
+   630→    if (text === 'saved') {
+   631→      indicator.style.color = '#28a745';
+   632→    } else if (text === 'save failed') {
+   633→      indicator.style.color = '#dc3545';
+   634→    } else {
+   635→      indicator.style.color = '#888';
+   636→    }
+   637→  }
+   638→
+   639→  function disableForm(form) {
+   640→    const inputs = form.querySelectorAll('input, button, select, textarea');
+   641→    inputs.forEach(function (el) {
+   642→      el.disabled = true;
+   643→    });
+   644→    form.classList.add('form-locked');
+   645→
+   646→    // Add lock overlay
+   647→    const overlay = document.createElement('div');
+   648→    overlay.className = 'lock-overlay';
+   649→    overlay.innerHTML =
+   650→      '<span class="lock-icon" aria-hidden="true">&#128274;</span>' +
+   651→      '<span class="lock-text">Predictions locked</span>';
+   652→    overlay.style.cssText =
+   653→      'position:absolute;top:0;left:0;right:0;bottom:0;display:flex;' +
+   654→      'flex-direction:column;align-items:center;justify-content:center;' +
+   655→      'background:rgba(0,0,0,0.5);border-radius:8px;z-index:5;color:#fff;';
+   656→    form.style.position = 'relative';
+   657→    form.appendChild(overlay);
+   658→  }
+   659→
+   660→  // ==================================================================
+   661→  // 8. TOAST NOTIFICATIONS
+   662→  // ==================================================================
+   663→  let toastContainer = null;
+   664→
+   665→  function ensureToastContainer() {
+   666→    if (!toastContainer) {
+   667→      toastContainer = document.createElement('div');
+   668→      toastContainer.id = 'toast-container';
+   669→      toastContainer.style.cssText =
+   670→        'position:fixed;top:20px;right:20px;z-index:10000;display:flex;' +
+   671→        'flex-direction:column;gap:10px;pointer-events:none;';
+   672→      document.body.appendChild(toastContainer);
+   673→    }
+   674→    return toastContainer;
+   675→  }
+   676→
+   677→  function showToast(message, type) {
+   678→    type = type || 'success';
+   679→    const container = ensureToastContainer();
+   680→
+   681→    const colorMap = {
+   682→      success: { bg: '#1a1a2e', border: '#FFD700', text: '#FFD700', icon: '\u2705' },
+   683→      error:   { bg: '#1a1a2e', border: '#dc3545', text: '#dc3545', icon: '\u274C' },
+   684→      warning: { bg: '#1a1a2e', border: '#ffc107', text: '#ffc107', icon: '\u26A0\uFE0F' },
+   685→      info:    { bg: '#1a1a2e', border: '#17a2b8', text: '#17a2b8', icon: '\u2139\uFE0F' }
+   686→    };
+   687→
+   688→    const colors = colorMap[type] || colorMap.success;
+   689→
+   690→    const toast = document.createElement('div');
+   691→    toast.className = 'toast-notification toast-' + type;
+   692→    toast.style.cssText =
+   693→      'pointer-events:auto;padding:12px 20px;border-radius:8px;' +
+   694→      'background:' + colors.bg + ';border-left:4px solid ' + colors.border + ';' +
+   695→      'color:' + colors.text + ';font-size:0.9rem;max-width:360px;' +
+   696→      'box-shadow:0 4px 20px rgba(0,0,0,0.3);cursor:pointer;' +
+   697→      'transform:translateX(120%);transition:transform 0.4s ease,opacity 0.4s ease;' +
+   698→      'display:flex;align-items:center;gap:8px;';
+   699→    toast.innerHTML =
+   700→      '<span class="toast-icon">' + colors.icon + '</span>' +
+   701→      '<span class="toast-message">' + message + '</span>';
+   702→
+   703→    // Slide in
+   704→    container.appendChild(toast);
+   705→    requestAnimationFrame(function () {
+   706→      toast.style.transform = 'translateX(0)';
+   707→    });
+   708→
+   709→    // Auto-dismiss after 4 seconds
+   710→    const dismissTimer = setTimeout(function () {
+   711→      dismissToast(toast);
+   712→    }, 4000);
+   713→
+   714→    // Manual dismiss on click
+   715→    toast.addEventListener('click', function () {
+   716→      clearTimeout(dismissTimer);
+   717→      dismissToast(toast);
+   718→    });
+   719→  }
+   720→
+   721→  function dismissToast(toast) {
+   722→    toast.style.transform = 'translateX(120%)';
+   723→    toast.style.opacity = '0';
+   724→    setTimeout(function () {
+   725→      if (toast.parentNode) toast.parentNode.removeChild(toast);
+   726→    }, 400);
+   727→  }
+   728→
+   729→  // ==================================================================
+   730→  // 9. LEADERBOARD ANIMATIONS
+   731→  // ==================================================================
+   732→  function initLeaderboard() {
+   733→    const board = document.querySelector('.leaderboard');
+   734→    if (!board) return;
+   735→
+   736→    const rows = board.querySelectorAll('.leaderboard-row');
+   737→    if (!rows.length) return;
+   738→
+   739→    if (prefersReducedMotion) {
+   740→      rows.forEach(function (row) { row.style.opacity = '1'; });
+   741→      return;
+   742→    }
+   743→
+   744→    // Staggered entry animation
+   745→    rows.forEach(function (row, index) {
+   746→      row.style.opacity = '0';
+   747→      row.style.transform = 'translateX(-30px)';
+   748→      row.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+   749→
+   750→      setTimeout(function () {
+   751→        row.style.opacity = '1';
+   752→        row.style.transform = 'translateX(0)';
+   753→        row.classList.add('visible');
+   754→      }, 100 + index * 80);
+   755→    });
+   756→
+   757→    // Number counting animation for points
+   758→    rows.forEach(function (row) {
+   759→      const pointsEl = row.querySelector('.points-value');
+   760→      if (!pointsEl) return;
+   761→
+   762→      const targetValue = parseInt(pointsEl.textContent, 10);
+   763→      if (isNaN(targetValue) || targetValue === 0) return;
+   764→
+   765→      animateCounter(pointsEl, 0, targetValue, 1200);
+   766→    });
+   767→
+   768→    // Trophy animation for #1
+   769→    const firstRow = rows[0];
+   770→    if (firstRow) {
+   771→      const trophy = firstRow.querySelector('.trophy-icon');
+   772→      if (trophy) {
+   773→        trophy.classList.add('trophy-bounce');
+   774→      }
+   775→    }
+   776→
+   777→    // Medal shine for top 3
+   778→    for (let i = 0; i < Math.min(3, rows.length); i++) {
+   779→      const medal = rows[i].querySelector('.medal');
+   780→      if (medal) {
+   781→        medal.classList.add('medal-shine');
+   782→      }
+   783→    }
+   784→  }
+   785→
+   786→  /**
+   787→   * Animate a numeric counter from start to end over the given duration.
+   788→   */
+   789→  function animateCounter(el, start, end, duration) {
+   790→    const startTime = performance.now();
+   791→
+   792→    function step(now) {
+   793→      const elapsed = now - startTime;
+   794→      const progress = Math.min(elapsed / duration, 1);
+   795→      // Ease-out cubic
+   796→      const eased = 1 - Math.pow(1 - progress, 3);
+   797→      const current = Math.round(start + (end - start) * eased);
+   798→      el.textContent = current;
+   799→      if (progress < 1) {
+   800→        requestAnimationFrame(step);
+   801→      }
+   802→    }
+   803→
+   804→    requestAnimationFrame(step);
+   805→  }
+   806→
+   807→  // Inject leaderboard-specific animations
+   808→  (function injectLeaderboardStyles() {
+   809→    if (document.getElementById('leaderboard-anim-styles')) return;
+   810→    const style = document.createElement('style');
+   811→    style.id = 'leaderboard-anim-styles';
+   812→    style.textContent =
+   813→      '@keyframes trophyBounce {' +
+   814→      '  0%, 100% { transform: scale(1); }' +
+   815→      '  50%      { transform: scale(1.25) rotate(-5deg); }' +
+   816→      '}' +
+   817→      '.trophy-bounce { animation: trophyBounce 1.5s ease-in-out infinite; }' +
+   818→      '@keyframes medalShine {' +
+   819→      '  0%   { background-position: -100px 0; }' +
+   820→      '  100% { background-position: 200px 0; }' +
+   821→      '}' +
+   822→      '.medal-shine {' +
+   823→      '  background-image: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);' +
+   824→      '  background-size: 200px 100%;' +
+   825→      '  animation: medalShine 3s ease-in-out infinite;' +
+   826→      '}';
+   827→    document.head.appendChild(style);
+   828→  })();
+   829→
+   830→  // ==================================================================
+   831→  // 10. MATCH CARD INTERACTIONS
+   832→  // ==================================================================
+   833→  function initMatchCards() {
+   834→    const cards = document.querySelectorAll('.match-card');
+   835→    if (!cards.length) return;
+   836→
+   837→    cards.forEach(function (card) {
+   838→      // Hover tilt/glow effect
+   839→      if (!prefersReducedMotion) {
+   840→        card.addEventListener('mousemove', function (e) {
+   841→          const rect = card.getBoundingClientRect();
+   842→          const x = e.clientX - rect.left;
+   843→          const y = e.clientY - rect.top;
+   844→          const centerX = rect.width / 2;
+   845→          const centerY = rect.height / 2;
+   846→
+   847→          const rotateX = ((y - centerY) / centerY) * -4; // subtle tilt
+   848→          const rotateY = ((x - centerX) / centerX) * 4;
+   849→
+   850→          card.style.transform =
+   851→            'perspective(600px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg)';
+   852→          card.classList.add('card-hover');
+   853→        });
+   854→
+   855→        card.addEventListener('mouseleave', function () {
+   856→          card.style.transform = '';
+   857→          card.classList.remove('card-hover');
+   858→        });
+   859→      }
+   860→
+   861→      // Click to expand prediction form
+   862→      const expandBtn = card.querySelector('.expand-prediction');
+   863→      const predForm = card.querySelector('.prediction-form-wrapper');
+   864→      if (expandBtn && predForm) {
+   865→        expandBtn.addEventListener('click', function () {
+   866→          predForm.classList.toggle('expanded');
+   867→          expandBtn.setAttribute(
+   868→            'aria-expanded',
+   869→            predForm.classList.contains('expanded')
+   870→          );
+   871→        });
+   872→      }
+   873→
+   874→      // Status badge pulse for live matches
+   875→      if (card.classList.contains('match-live')) {
+   876→        const badge = card.querySelector('.match-status-badge');
+   877→        if (badge) badge.classList.add('pulse-live');
+   878→      }
+   879→
+   880→      // Lock animation when match is expired
+   881→      if (card.classList.contains('match-locked')) {
+   882→        card.classList.add('locked-animate');
+   883→      }
+   884→    });
+   885→
+   886→    // Inject match-card styles
+   887→    if (!document.getElementById('match-card-anim-styles')) {
+   888→      const style = document.createElement('style');
+   889→      style.id = 'match-card-anim-styles';
+   890→      style.textContent =
+   891→        '.match-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }' +
+   892→        '.card-hover { box-shadow: 0 8px 30px rgba(255,215,0,0.15) !important; }' +
+   893→        '@keyframes pulseLive {' +
+   894→        '  0%, 100% { opacity: 1; transform: scale(1); }' +
+   895→        '  50%      { opacity: 0.6; transform: scale(1.1); }' +
+   896→        '}' +
+   897→        '.pulse-live { animation: pulseLive 1.5s ease-in-out infinite; }' +
+   898→        '.prediction-form-wrapper { max-height:0;overflow:hidden;transition:max-height 0.4s ease; }' +
+   899→        '.prediction-form-wrapper.expanded { max-height:400px; }' +
+   900→        '@keyframes lockShake {' +
+   901→        '  0%, 100% { transform: rotate(0); }' +
+   902→        '  25%      { transform: rotate(-3deg); }' +
+   903→        '  75%      { transform: rotate(3deg); }' +
+   904→        '}' +
+   905→        '.locked-animate { animation: lockShake 0.4s ease; }';
+   906→      document.head.appendChild(style);
+   907→    }
+   908→  }
+   909→
+   910→  // ==================================================================
+   911→  // 11. LOGIN FORM ENHANCEMENT
+   912→  // ==================================================================
+   913→  function initLoginForm() {
+   914→    const form = document.querySelector('.login-form');
+   915→    if (!form) return;
+   916→
+   917→    // Secret code show/hide toggle
+   918→    const secretInput = form.querySelector('input[name="secret_code"]');
+   919→    if (secretInput) {
+   920→      const toggleBtn = document.createElement('button');
+   921→      toggleBtn.type = 'button';
+   922→      toggleBtn.className = 'secret-toggle';
+   923→      toggleBtn.innerHTML = '&#128065;'; // eye emoji
+   924→      toggleBtn.setAttribute('aria-label', 'Toggle secret code visibility');
+   925→      toggleBtn.style.cssText =
+   926→        'position:absolute;right:10px;top:50%;transform:translateY(-50%);' +
+   927→        'background:none;border:none;cursor:pointer;font-size:1.1rem;color:#888;';
+   928→
+   929→      const wrapper = document.createElement('div');
+   930→      wrapper.style.position = 'relative';
+   931→      secretInput.parentNode.insertBefore(wrapper, secretInput);
+   932→      wrapper.appendChild(secretInput);
+   933→      wrapper.appendChild(toggleBtn);
+   934→
+   935→      toggleBtn.addEventListener('click', function () {
+   936→        if (secretInput.type === 'password') {
+   937→          secretInput.type = 'text';
+   938→          toggleBtn.innerHTML = '&#128064;'; // eye-with-line emoji
+   939→        } else {
+   940→          secretInput.type = 'password';
+   941→          toggleBtn.innerHTML = '&#128065;';
+   942→        }
+   943→      });
+   944→    }
+   945→
+   946→    // Loading state on submit
+   947→    form.addEventListener('submit', function () {
+   948→      const btn = form.querySelector('button[type="submit"]');
+   949→      if (btn) {
+   950→        btn.disabled = true;
+   951→        btn.dataset.originalText = btn.textContent;
+   952→        btn.innerHTML =
+   953→          '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ' +
+   954→          'Signing in...';
+   955→      }
+   956→    });
+   957→
+   958→    // Error shake — triggered if .login-error is present
+   959→    const errorEl = form.querySelector('.login-error');
+   960→    if (errorEl) {
+   961→      form.classList.add('shake');
+   962→      setTimeout(function () {
+   963→        form.classList.remove('shake');
+   964→      }, 600);
+   965→    }
+   966→
+   967→    // Success celebration
+   968→    const successEl = form.querySelector('.login-success');
+   969→    if (successEl) {
+   970→      setTimeout(triggerConfetti, 300);
+   971→    }
+   972→
+   973→    // Inject login styles
+   974→    if (!document.getElementById('login-anim-styles')) {
+   975→      const style = document.createElement('style');
+   976→      style.id = 'login-anim-styles';
+   977→      style.textContent =
+   978→        '@keyframes shakeForm {' +
+   979→        '  0%, 100% { transform: translateX(0); }' +
+   980→        '  10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }' +
+   981→        '  20%, 40%, 60%, 80% { transform: translateX(6px); }' +
+   982→        '}' +
+   983→        '.shake { animation: shakeForm 0.5s ease; }';
+   984→      document.head.appendChild(style);
+   985→    }
+   986→  }
+   987→
+   988→  // ==================================================================
+   989→  // 12. PAGE LOAD ANIMATION
+   990→  // ==================================================================
+   991→  function initPageLoad() {
+   992→    // Loading bar at top
+   993→    const bar = document.createElement('div');
+   994→    bar.id = 'page-load-bar';
+   995→    bar.style.cssText =
+   996→      'position:fixed;top:0;left:0;height:3px;width:0;z-index:9999;' +
+   997→      'background:linear-gradient(90deg, #FFD700, #F5C518);transition:width 0.4s ease;';
+   998→    document.body.appendChild(bar);
+   999→
+  1000→    // Animate bar
+  1001→    requestAnimationFrame(function () { bar.style.width = '60%'; });
+  1002→
+  1003→    window.addEventListener('load', function () {
+  1004→      bar.style.width = '100%';
+  1005→      setTimeout(function () {
+  1006→        bar.style.opacity = '0';
+  1007→        setTimeout(function () {
+  1008→          if (bar.parentNode) bar.parentNode.removeChild(bar);
+  1009→        }, 300);
+  1010→      }, 200);
+  1011→    });
+  1012→
+  1013→    // Fade in page content
+  1014→    const main = document.querySelector('main') || document.querySelector('.main-content');
+  1015→    if (main) {
+  1016→      main.style.opacity = '0';
+  1017→      main.style.transition = 'opacity 0.6s ease';
+  1018→      requestAnimationFrame(function () {
+  1019→        main.style.opacity = '1';
+  1020→      });
+  1021→    }
+  1022→
+  1023→    // Stagger navbar items
+  1024→    const navItems = document.querySelectorAll('.navbar .nav-item');
+  1025→    navItems.forEach(function (item, i) {
+  1026→      item.style.opacity = '0';
+  1027→      item.style.transform = 'translateY(-10px)';
+  1028→      item.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+  1029→      setTimeout(function () {
+  1030→        item.style.opacity = '1';
+  1031→        item.style.transform = 'translateY(0)';
+  1032→      }, 150 + i * 80);
+  1033→    });
+  1034→
+  1035→    // Hero section special entrance
+  1036→    const hero = document.querySelector('.hero');
+  1037→    if (hero && !prefersReducedMotion) {
+  1038→      hero.style.opacity = '0';
+  1039→      hero.style.transform = 'translateY(30px)';
+  1040→      hero.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+  1041→      setTimeout(function () {
+  1042→        hero.style.opacity = '1';
+  1043→        hero.style.transform = 'translateY(0)';
+  1044→      }, 300);
+  1045→    }
+  1046→  }
+  1047→
+  1048→  // ==================================================================
+  1049→  // 13. LIVE MATCH UPDATES (POLLING)
+  1050→  // ==================================================================
+  1051→  let liveUpdateInterval = null;
+  1052→
+  1053→  function initLiveUpdates() {
+  1054→    // Poll every 60 seconds
+  1055→    liveUpdateInterval = setInterval(pollLiveUpdates, 60000);
+  1056→    // Also poll once after 5 seconds to catch up on initial load
+  1057→    setTimeout(pollLiveUpdates, 5000);
+  1058→  }
+  1059→
+  1060→  function pollLiveUpdates() {
+  1061→    fetch('/api/countdown/', { credentials: 'same-origin' })
+  1062→      .then(function (res) { return res.json(); })
+  1063→      .then(function (data) {
+  1064→        // Update countdown if present
+  1065→        if (data.seconds_remaining !== undefined) {
+  1066→          countdownSeconds = data.seconds_remaining;
+  1067→          countdownMatch = data.match || '';
+  1068→        }
+  1069→
+  1070→        // Update match cards on the page
+  1071→        updateMatchCardsFromServer();
+  1072→      })
+  1073→      .catch(function () {
+  1074→        // Silent failure
+  1075→      });
+  1076→  }
+  1077→
+  1078→  function updateMatchCardsFromServer() {
+  1079→    // Fetch the current page's match data via a lightweight API
+  1080→    // We'll parse the matches page HTML to detect changes
+  1081→    // A more robust solution would use a dedicated JSON API,
+  1082→    // but we work with what we have.
+  1083→    const matchCards = document.querySelectorAll('.match-card[data-match-id]');
+  1084→    if (!matchCards.length) return;
+  1085→
+  1086→    // For each visible match card, fetch its detail via AJAX
+  1087→    matchCards.forEach(function (card) {
+  1088→      const matchId = card.getAttribute('data-match-id');
+  1089→      fetch('/match/' + matchId + '/', {
+  1090→        credentials: 'same-origin',
+  1091→        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+  1092→      })
+  1093→        .then(function (res) {
+  1094→          if (!res.ok) return null;
+  1095→          return res.text();
+  1096→        })
+  1097→        .then(function (html) {
+  1098→          if (!html) return;
+  1099→
+  1100→          // Parse the returned HTML to extract status & scores
+  1101→          const parser = new DOMParser();
+  1102→          const doc = parser.parseFromString(html, 'text/html');
+  1103→
+  1104→          // Update status badge
+  1105→          const newStatus = doc.querySelector('.match-status-badge');
+  1106→          const oldStatus = card.querySelector('.match-status-badge');
+  1107→          if (newStatus && oldStatus) {
+  1108→            const newStatusText = newStatus.textContent.trim();
+  1109→            const oldStatusText = oldStatus.textContent.trim();
+  1110→            if (newStatusText !== oldStatusText) {
+  1111→              oldStatus.textContent = newStatus.textContent;
+  1112→              oldStatus.className = newStatus.className;
+  1113→
+  1114→              // Notify user
+  1115→              if (newStatusText.toLowerCase() === 'live') {
+  1116→                showToast('A match has gone LIVE!', 'info');
+  1117→                oldStatus.classList.add('pulse-live');
+  1118→              } else if (newStatusText.toLowerCase() === 'completed') {
+  1119→                showToast('Match result is in!', 'success');
+  1120→              }
+  1121→
+  1122→              // Update card classes
+  1123→              card.classList.remove('match-upcoming', 'match-live', 'match-completed');
+  1124→              card.classList.add('match-' + newStatusText.toLowerCase());
+  1125→            }
+  1126→          }
+  1127→
+  1128→          // Update scores
+  1129→          const newHomeScore = doc.querySelector('.home-score');
+  1130→          const newAwayScore = doc.querySelector('.away-score');
+  1131→          if (newHomeScore && newAwayScore) {
+  1132→            const oldHome = card.querySelector('.home-score');
+  1133→            const oldAway = card.querySelector('.away-score');
+  1134→            if (oldHome && oldAway) {
+  1135→              if (oldHome.textContent !== newHomeScore.textContent ||
+  1136→                  oldAway.textContent !== newAwayScore.textContent) {
+  1137→                oldHome.textContent = newHomeScore.textContent;
+  1138→                oldAway.textContent = newAwayScore.textContent;
+  1139→                oldHome.classList.add('score-updated');
+  1140→                oldAway.classList.add('score-updated');
+  1141→                setTimeout(function () {
+  1142→                  oldHome.classList.remove('score-updated');
+  1143→                  oldAway.classList.remove('score-updated');
+  1144→                }, 2000);
+  1145→              }
+  1146→            }
+  1147→          }
+  1148→
+  1149→          // Recalculate leaderboard if on that page
+  1150→          const leaderboardPage = document.querySelector('.leaderboard');
+  1151→          if (leaderboardPage) {
+  1152→            refreshLeaderboard();
+  1153→          }
+  1154→        })
+  1155→        .catch(function () {
+  1156→          // Silent
+  1157→        });
+  1158→    });
+  1159→  }
+  1160→
+  1161→  function refreshLeaderboard() {
+  1162→    fetch('/leaderboard/', {
+  1163→      credentials: 'same-origin',
+  1164→      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+  1165→    })
+  1166→      .then(function (res) { return res.text(); })
+  1167→      .then(function (html) {
+  1168→        const parser = new DOMParser();
+  1169→        const doc = parser.parseFromString(html, 'text/html');
+  1170→        const newBoard = doc.querySelector('.leaderboard');
+  1171→        const oldBoard = document.querySelector('.leaderboard');
+  1172→        if (newBoard && oldBoard) {
+  1173→          // Check for position changes
+  1174→          const oldRows = oldBoard.querySelectorAll('.leaderboard-row');
+  1175→          const newRows = newBoard.querySelectorAll('.leaderboard-row');
+  1176→
+  1177→          oldRows.forEach(function (oldRow, idx) {
+  1178→            if (newRows[idx]) {
+  1179→              const oldPoints = oldRow.querySelector('.points-value');
+  1180→              const newPoints = newRows[idx].querySelector('.points-value');
+  1181→              if (oldPoints && newPoints) {
+  1182→                if (oldPoints.textContent !== newPoints.textContent) {
+  1183→                  oldPoints.textContent = newPoints.textContent;
+  1184→                  oldRow.classList.add('position-changed');
+  1185→                  setTimeout(function () {
+  1186→                    oldRow.classList.remove('position-changed');
+  1187→                  }, 3000);
+  1188→                }
+  1189→              }
+  1190→            }
+  1191→          });
+  1192→        }
+  1193→      })
+  1194→      .catch(function () {
+  1195→        // Silent
+  1196→      });
+  1197→  }
+  1198→
+  1199→  // Inject live-update styles
+  1200→  (function injectLiveUpdateStyles() {
+  1201→    if (document.getElementById('live-update-styles')) return;
+  1202→    const style = document.createElement('style');
+  1203→    style.id = 'live-update-styles';
+  1204→    style.textContent =
+  1205→      '@keyframes scoreFlash {' +
+  1206→      '  0%   { color: #FFD700; transform: scale(1.3); }' +
+  1207→      '  100% { color: inherit; transform: scale(1); }' +
+  1208→      '}' +
+  1209→      '.score-updated { animation: scoreFlash 0.6s ease; }' +
+  1210→      '.position-changed { background: rgba(255,215,0,0.1) !important; transition: background 0.5s ease; }';
+  1211→    document.head.appendChild(style);
+  1212→  })();
+  1213→
+  1214→  // ==================================================================
+  1215→  // 14. SCORE PICKER (Number Wheel / +/- Buttons)
+  1216→  // ==================================================================
+  1217→  function initScorePicker() {
+  1218→    const inputs = document.querySelectorAll(
+  1219→      '.prediction-form input[type="number"][name$="_score"]'
+  1220→    );
+  1221→    if (!inputs.length) return;
+  1222→
+  1223→    inputs.forEach(function (input) {
+  1224→      // Skip if already enhanced
+  1225→      if (input.parentNode.classList.contains('score-picker')) return;
+  1226→
+  1227→      const maxVal = parseInt(input.getAttribute('max') || '20', 10);
+  1228→      const minVal = parseInt(input.getAttribute('min') || '0', 10);
+  1229→
+  1230→      // Wrapper
+  1231→      const wrapper = document.createElement('div');
+  1232→      wrapper.className = 'score-picker';
+  1233→      wrapper.style.cssText =
+  1234→        'display:inline-flex;align-items:center;gap:4px;';
+  1235→
+  1236→      // Minus button
+  1237→      const minusBtn = document.createElement('button');
+  1238→      minusBtn.type = 'button';
+  1239→      minusBtn.className = 'score-btn score-btn-minus';
+  1240→      minusBtn.innerHTML = '&minus;';
+  1241→      minusBtn.setAttribute('aria-label', 'Decrease score');
+  1242→      minusBtn.style.cssText =
+  1243→        'width:36px;height:36px;border-radius:50%;border:2px solid #FFD700;' +
+  1244→        'background:transparent;color:#FFD700;font-size:1.2rem;cursor:pointer;' +
+  1245→        'display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;';
+  1246→
+  1247→      // Plus button
+  1248→      const plusBtn = document.createElement('button');
+  1249→      plusBtn.type = 'button';
+  1250→      plusBtn.className = 'score-btn score-btn-plus';
+  1251→      plusBtn.innerHTML = '&plus;';
+  1252→      plusBtn.setAttribute('aria-label', 'Increase score');
+  1253→      plusBtn.style.cssText =
+  1254→        'width:36px;height:36px;border-radius:50%;border:2px solid #FFD700;' +
+  1255→        'background:transparent;color:#FFD700;font-size:1.2rem;cursor:pointer;' +
+  1256→        'display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;';
+  1257→
+  1258→      // Style the input
+  1259→      input.style.cssText =
+  1260→        'width:50px;height:50px;text-align:center;font-size:1.5rem;font-weight:bold;' +
+  1261→        'border:2px solid #333;border-radius:8px;background:#1a1a2e;color:#FFD700;' +
+  1262→        'transition:transform 0.15s ease;-moz-appearance:textfield;';
+  1263→      input.classList.add('score-input');
+  1264→
+  1265→      // Remove spinner arrows
+  1266→      const arrowStyle = document.createElement('style');
+  1267→      arrowStyle.textContent =
+  1268→        '.score-input::-webkit-inner-spin-button,' +
+  1269→        '.score-input::-webkit-outer-spin-button { -webkit-appearance:none;margin:0; }';
+  1270→      if (!document.getElementById('score-picker-arrow-fix')) {
+  1271→        arrowStyle.id = 'score-picker-arrow-fix';
+  1272→        document.head.appendChild(arrowStyle);
+  1273→      }
+  1274→
+  1275→      // Wrap the input
+  1276→      input.parentNode.insertBefore(wrapper, input);
+  1277→      wrapper.appendChild(minusBtn);
+  1278→      wrapper.appendChild(input);
+  1279→      wrapper.appendChild(plusBtn);
+  1280→
+  1281→      // Event handlers
+  1282→      function updateValue(delta) {
+  1283→        let val = parseInt(input.value, 10);
+  1284→        if (isNaN(val)) val = 0;
+  1285→        val = Math.max(minVal, Math.min(maxVal, val + delta));
+  1286→        input.value = val;
+  1287→
+  1288→        // Scale animation
+  1289→        input.style.transform = 'scale(1.2)';
+  1290→        setTimeout(function () {
+  1291→          input.style.transform = 'scale(1)';
+  1292→        }, 150);
+  1293→
+  1294→        // Trigger input event for auto-save
+  1295→        input.dispatchEvent(new Event('input', { bubbles: true }));
+  1296→
+  1297→        // Haptic feedback
+  1298→        if (navigator.vibrate) {
+  1299→          navigator.vibrate(10);
+  1300→        }
+  1301→      }
+  1302→
+  1303→      minusBtn.addEventListener('click', function () {
+  1304→        updateValue(-1);
+  1305→        minusBtn.style.background = 'rgba(255,215,0,0.2)';
+  1306→        setTimeout(function () { minusBtn.style.background = 'transparent'; }, 150);
+  1307→      });
+  1308→
+  1309→      plusBtn.addEventListener('click', function () {
+  1310→        updateValue(1);
+  1311→        plusBtn.style.background = 'rgba(255,215,0,0.2)';
+  1312→        setTimeout(function () { plusBtn.style.background = 'transparent'; }, 150);
+  1313→      });
+  1314→
+  1315→      // Hover effects
+  1316→      [minusBtn, plusBtn].forEach(function (btn) {
+  1317→        btn.addEventListener('mouseenter', function () {
+  1318→          btn.style.background = 'rgba(255,215,0,0.15)';
+  1319→          btn.style.transform = 'scale(1.1)';
+  1320→        });
+  1321→        btn.addEventListener('mouseleave', function () {
+  1322→          btn.style.background = 'transparent';
+  1323→          btn.style.transform = 'scale(1)';
+  1324→        });
+  1325→      });
+  1326→    });
+  1327→  }
+  1328→
+  1329→  // ==================================================================
+  1330→  // 15. INITIALIZATION
+  1331→  // ==================================================================
+  1332→  document.addEventListener('DOMContentLoaded', function () {
+  1333→    initPageLoad();
+  1334→    initNavbar();
+  1335→    initCountdown();
+  1336→    initFloatingFootballs();
+  1337→    initStadiumLights();
+  1338→    initScrollAnimations();
+  1339→    initPredictionForms();
+  1340→    initScorePicker();
+  1341→    initMatchCards();
+  1342→    initLeaderboard();
+  1343→    initLoginForm();
+  1344→    initLiveUpdates();
+  1345→    initParticles();
+  1346→
+  1347→    // Trigger confetti if there's a celebration flag in the page
+  1348→    if (document.querySelector('.celebrate')) {
+  1349→      setTimeout(triggerConfetti, 500);
+  1350→    }
+  1351→  });
+  1352→
+  1353→  // ------------------------------------------------------------------
+  1354→  // Particles Canvas Effect
+  1355→  // ------------------------------------------------------------------
+  1356→  function initParticles() {
+  1357→    var canvas = document.getElementById('particles-canvas');
+  1358→    if (!canvas || prefersReducedMotion) return;
+  1359→
+  1360→    var ctx = canvas.getContext('2d');
+  1361→    var particles = [];
+  1362→    var maxParticles = 40;
+  1363→
+  1364→    function resize() {
+  1365→      canvas.width = window.innerWidth;
+  1366→      canvas.height = window.innerHeight;
+  1367→    }
+  1368→    resize();
+  1369→    window.addEventListener('resize', debounce(resize, 200));
+  1370→
+  1371→    // Style the canvas
+  1372→    canvas.style.position = 'fixed';
+  1373→    canvas.style.top = '0';
+  1374→    canvas.style.left = '0';
+  1375→    canvas.style.width = '100%';
+  1376→    canvas.style.height = '100%';
+  1377→    canvas.style.pointerEvents = 'none';
+  1378→    canvas.style.zIndex = '0';
+  1379→    canvas.style.opacity = '0.4';
+  1380→
+  1381→    for (var i = 0; i < maxParticles; i++) {
+  1382→      particles.push({
+  1383→        x: Math.random() * canvas.width,
+  1384→        y: Math.random() * canvas.height,
+  1385→        radius: Math.random() * 1.5 + 0.5,
+  1386→        speedX: (Math.random() - 0.5) * 0.3,
+  1387→        speedY: (Math.random() - 0.5) * 0.3,
+  1388→        opacity: Math.random() * 0.5 + 0.1
+  1389→      });
+  1390→    }
+  1391→
+  1392→    function animate() {
+  1393→      ctx.clearRect(0, 0, canvas.width, canvas.height);
+  1394→
+  1395→      for (var i = 0; i < particles.length; i++) {
+  1396→        var p = particles[i];
+  1397→        p.x += p.speedX;
+  1398→        p.y += p.speedY;
+  1399→
+  1400→        // Wrap around
+  1401→        if (p.x < 0) p.x = canvas.width;
+  1402→        if (p.x > canvas.width) p.x = 0;
+  1403→        if (p.y < 0) p.y = canvas.height;
+  1404→        if (p.y > canvas.height) p.y = 0;
+  1405→
+  1406→        ctx.beginPath();
+  1407→        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+  1408→        ctx.fillStyle = 'rgba(212, 175, 55, ' + p.opacity + ')';
+  1409→        ctx.fill();
+  1410→      }
+  1411→
+  1412→      // Draw connections
+  1413→      for (var i = 0; i < particles.length; i++) {
+  1414→        for (var j = i + 1; j < particles.length; j++) {
+  1415→          var dx = particles[i].x - particles[j].x;
+  1416→          var dy = particles[i].y - particles[j].y;
+  1417→          var dist = Math.sqrt(dx * dx + dy * dy);
+  1418→          if (dist < 120) {
+  1419→            ctx.beginPath();
+  1420→            ctx.moveTo(particles[i].x, particles[i].y);
+  1421→            ctx.lineTo(particles[j].x, particles[j].y);
+  1422→            ctx.strokeStyle = 'rgba(212, 175, 55, ' + (0.06 * (1 - dist / 120)) + ')';
+  1423→            ctx.lineWidth = 0.5;
+  1424→            ctx.stroke();
+  1425→          }
+  1426→        }
+  1427→      }
+  1428→
+  1429→      requestAnimationFrame(animate);
+  1430→    }
+  1431→    animate();
+  1432→  }
+  1433→
+  1434→  // Expose showToast globally for use in inline scripts or other modules
+  1435→  window.showToast = showToast;
+  1436→  window.triggerConfetti = triggerConfetti;
+  1437→})();
+  1438→

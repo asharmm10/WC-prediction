@@ -16,7 +16,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.06) 0%, transparent 70%);
+        background: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.05) 0%, transparent 70%);
         pointer-events: none;
     }
     .today-date {
@@ -31,7 +31,7 @@
         gap: 10px;
         margin-bottom: 20px;
         padding-bottom: 12px;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid rgba(255,255,255,0.04);
     }
     .match-section-title .icon {
         font-size: 1.5rem;
@@ -42,45 +42,48 @@
         margin: 0;
     }
 
-    /* Enhanced match card for today */
+    /* Enhanced match card for today — liquid glass */
     .today-match-card {
-        border-radius: 16px;
-        padding: 20px;
+        border-radius: 18px;
+        padding: 22px;
         margin-bottom: 16px;
         position: relative;
-        transition: all 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        overflow: hidden;
     }
     .today-match-card:hover {
-        transform: translateY(-2px);
+        transform: translateY(-3px);
     }
     .today-match-card.locked-match {
-        opacity: 0.75;
+        opacity: 0.7;
     }
     .today-match-card.completed-match {
-        border-color: rgba(212,175,55,0.25);
+        border-color: rgba(212,175,55,0.2);
     }
 
-    /* Score inputs enhanced */
+    /* Score inputs — glass enhanced */
     .score-input-enhanced {
         width: 56px;
         height: 56px;
         font-size: 1.5rem;
         font-weight: 800;
         text-align: center;
-        background: rgba(31,41,55,0.8);
-        border: 2px solid rgba(212,175,55,0.25);
+        background: rgba(15, 22, 38, 0.7);
+        border: 2px solid rgba(212,175,55,0.2);
         color: #f5d442;
-        border-radius: 12px;
+        border-radius: 14px;
         font-family: 'JetBrains Mono', monospace;
         transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
     }
     .score-input-enhanced:focus {
-        border-color: #d4af37;
-        box-shadow: 0 0 0 3px rgba(212,175,55,0.2), 0 0 20px rgba(212,175,55,0.1);
+        border-color: rgba(212,175,55,0.5);
+        box-shadow: 0 0 0 3px rgba(212,175,55,0.15), 0 0 25px rgba(212,175,55,0.08);
+        background: rgba(20, 28, 48, 0.8);
         outline: none;
     }
     .score-input-enhanced::placeholder {
-        color: rgba(212,175,55,0.3);
+        color: rgba(212,175,55,0.25);
     }
 
     /* Team display */
@@ -99,7 +102,7 @@
         font-size: 1.2rem;
         font-weight: 800;
         color: #fff;
-        border: 2px solid rgba(255,255,255,0.15);
+        border: 2px solid rgba(255,255,255,0.12);
     }
     .team-name {
         font-weight: 700;
@@ -118,16 +121,16 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 0 15px rgba(212,175,55,0.3);
+        box-shadow: 0 0 15px rgba(212,175,55,0.25);
     }
 
-    /* Prediction submit button enhanced */
+    /* Prediction submit button — prominent */
     .btn-predict {
         min-height: 52px;
-        min-width: 180px;
-        font-size: 1.1rem;
+        min-width: 200px;
+        font-size: 1.05rem;
         font-weight: 700;
-        border-radius: 12px;
+        border-radius: 14px;
         letter-spacing: 0.3px;
     }
     .btn-predict-edit {
@@ -147,8 +150,8 @@
         }
         .team-name { font-size: 0.95rem; }
         .btn-predict {
-            min-width: 150px;
-            font-size: 1rem;
+            min-width: 160px;
+            font-size: 0.95rem;
         }
     }
 </style>
@@ -161,7 +164,7 @@
     </h1>
     <p class="today-date">{{ today_date|date:"l, F j, Y" }}</p>
     {% if current_participant %}
-    <span class="badge rounded-pill px-3 py-2" style="background:rgba(17,24,39,0.6);border:1px solid rgba(212,175,55,0.3);color:#f5d442;backdrop-filter:blur(8px);">
+    <span class="badge rounded-pill px-3 py-2" style="background:rgba(12,18,32,0.5);border:1px solid rgba(212,175,55,0.2);color:#f5d442;backdrop-filter:blur(15px);">
         &#128100; {{ current_participant.name }}
     </span>
     {% endif %}
@@ -184,7 +187,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span class="status-badge status-open">OPEN</span>
                 {% if match.group_stage %}
-                <span class="badge rounded-pill" style="background:rgba(59,130,246,0.12);color:#3b82f6;border:1px solid rgba(59,130,246,0.25);">{{ match.group_stage }}</span>
+                <span class="badge rounded-pill" style="background:rgba(59,130,246,0.08);color:#3b82f6;border:1px solid rgba(59,130,246,0.15);">{{ match.group_stage }}</span>
                 {% endif %}
             </div>
 
@@ -226,7 +229,7 @@
                 </div>
 
                 <!-- Match Info & Action -->
-                <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3" style="border-top:1px solid rgba(255,255,255,0.06);">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3" style="border-top:1px solid rgba(255,255,255,0.04);">
                     <div class="text-secondary small">
                         <span class="me-3">&#128336; {{ match.kickoff_datetime|date:"H:i" }}</span>
                         {% if match.venue %}
@@ -236,17 +239,17 @@
                     <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
                         {% if current_participant %}
                             {% if match.has_predicted %}
-                            <span class="badge rounded-pill px-3 py-2" style="background:rgba(16,185,129,0.12);color:#10b981;border:1px solid rgba(16,185,129,0.25);">Predicted &#10003;</span>
+                            <span class="badge rounded-pill px-3 py-2" style="background:rgba(16,185,129,0.08);color:#10b981;border:1px solid rgba(16,185,129,0.15);">Predicted &#10003;</span>
                             <a href="{% url 'predictor:edit_prediction' match.id %}" class="btn btn-gold-outline btn-sm btn-predict-edit">
                                 &#9999;&#65039; Edit
                             </a>
                             {% else %}
-                            <button type="submit" class="btn btn-gold btn-sm btn-predict btn-glow">
+                            <button type="submit" class="btn btn-gold btn-sm btn-predict btn-glow btn-cta-pulse">
                                 &#9917; Submit Prediction
                             </button>
                             {% endif %}
                         {% else %}
-                            <a href="{% url 'predictor:login' %}?next={{ request.path }}" class="btn btn-gold btn-sm btn-predict btn-glow">
+                            <a href="{% url 'predictor:login' %}?next={{ request.path }}" class="btn btn-gold btn-sm btn-predict btn-glow btn-cta-pulse">
                                 &#128273; Login to Predict
                             </a>
                         {% endif %}
@@ -284,7 +287,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span class="status-badge status-locked">LOCKED</span>
                 {% if match.group_stage %}
-                <span class="badge rounded-pill" style="background:rgba(59,130,246,0.12);color:#3b82f6;border:1px solid rgba(59,130,246,0.25);">{{ match.group_stage }}</span>
+                <span class="badge rounded-pill" style="background:rgba(59,130,246,0.08);color:#3b82f6;border:1px solid rgba(59,130,246,0.15);">{{ match.group_stage }}</span>
                 {% endif %}
             </div>
 
@@ -306,12 +309,12 @@
                 </div>
             </div>
 
-            <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3" style="border-top:1px solid rgba(255,255,255,0.06);">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3" style="border-top:1px solid rgba(255,255,255,0.04);">
                 <div class="text-secondary small">
                     <span>&#128336; {{ match.kickoff_datetime|date:"H:i" }}</span>
                     {% if match.venue %} <span class="ms-2">&#128205; {{ match.venue }}</span> {% endif %}
                 </div>
-                <span class="badge rounded-pill px-3 py-2 mt-2 mt-md-0" style="background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);">
+                <span class="badge rounded-pill px-3 py-2 mt-2 mt-md-0" style="background:rgba(239,68,68,0.06);color:#f87171;border:1px solid rgba(239,68,68,0.12);">
                     &#128274; Kickoff in progress
                 </span>
             </div>
@@ -335,7 +338,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span class="status-badge status-completed">COMPLETED</span>
                 {% if match.group_stage %}
-                <span class="badge rounded-pill" style="background:rgba(59,130,246,0.12);color:#3b82f6;border:1px solid rgba(59,130,246,0.25);">{{ match.group_stage }}</span>
+                <span class="badge rounded-pill" style="background:rgba(59,130,246,0.08);color:#3b82f6;border:1px solid rgba(59,130,246,0.15);">{{ match.group_stage }}</span>
                 {% endif %}
             </div>
 
@@ -361,12 +364,12 @@
                 </div>
             </div>
 
-            <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3" style="border-top:1px solid rgba(212,175,55,0.1);">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3" style="border-top:1px solid rgba(212,175,55,0.08);">
                 <div class="text-secondary small">
                     <span>&#128336; {{ match.kickoff_datetime|date:"H:i" }}</span>
                     {% if match.venue %} <span class="ms-2">&#128205; {{ match.venue }}</span> {% endif %}
                 </div>
-                <a href="{% url 'predictor:match_detail' match.id %}" class="btn btn-gold-outline btn-sm" style="min-height:44px;border-radius:10px;">
+                <a href="{% url 'predictor:match_detail' match.id %}" class="btn btn-gold-outline btn-sm" style="min-height:44px;border-radius:12px;">
                     &#128202; View Details
                 </a>
             </div>
@@ -378,7 +381,7 @@
     <!-- Empty State -->
     {% if not open_matches and not locked_matches and not completed_matches %}
     <div class="text-center py-5" data-aos="fade-up">
-        <div class="glass-card-premium p-5 mx-auto" style="max-width:500px;">
+        <div class="glass-ultra p-5 mx-auto" style="max-width:500px;">
             <div class="mb-3" style="font-size:4rem;">&#9917;</div>
             <h3 class="gold-text mb-2">No Matches Today</h3>
             <p class="text-secondary mb-4">There are no matches scheduled for today. Check back later or browse the full schedule!</p>

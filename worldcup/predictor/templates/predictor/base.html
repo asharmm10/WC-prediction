@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <meta name="description" content="FIFA World Cup 2026 Family Prediction League">
   <meta name="csrf-token" content="{{ csrf_token }}">
-  <meta name="theme-color" content="#0a0e17">
+  <meta name="theme-color" content="#060a12">
   <title>{% block title %}WC2026 Prediction League{% endblock %}</title>
 
   <!-- Google Fonts -->
@@ -27,13 +27,57 @@
   <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
   <!-- Custom Dark Theme -->
-  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2{% if xtransformport_param %}&{{ xtransformport_param }}{% endif %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=3{% if xtransformport_param %}&{{ xtransformport_param }}{% endif %}">
 
   {% block extra_css %}{% endblock %}
 </head>
 <body>
-  <!-- Stadium Lights Effect -->
+  <!-- ============================================================
+       MULTI-LAYER PARALLAX BACKGROUND SYSTEM
+       Each layer has a different scroll speed / parallax factor
+       to create depth. Player images react to scroll position.
+       ============================================================ -->
+
+  <!-- Layer 1: Deep gradient base -->
+  <div class="bg-layer-base"></div>
+
+  <!-- Layer 2: Stadium background image (very subtle) -->
+  <div class="bg-layer-stadium" data-parallax="0.02"></div>
+
+  <!-- Layer 3: Hexagonal pattern overlay -->
+  <div class="bg-layer-pattern" data-parallax="0.01"></div>
+
+  <!-- Layer 4: Animated gradient orbs -->
+  <div class="bg-layer-orbs">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+    <div class="bg-orb bg-orb-4"></div>
+  </div>
+
+  <!-- Layer 5: Parallax Player Silhouettes -->
+  <div class="bg-player-parallax bg-player-left-1" data-parallax-player="0.08" data-parallax-direction="up">
+    <img src="{% static 'images/bg/messi.png' %}" alt="" loading="lazy">
+  </div>
+  <div class="bg-player-parallax bg-player-right-1" data-parallax-player="0.06" data-parallax-direction="down">
+    <img src="{% static 'images/bg/ronaldo.png' %}" alt="" loading="lazy">
+  </div>
+  <div class="bg-player-parallax bg-player-left-2" data-parallax-player="0.04" data-parallax-direction="up">
+    <img src="{% static 'images/bg/neymar.png' %}" alt="" loading="lazy">
+  </div>
+  <div class="bg-player-parallax bg-player-right-2" data-parallax-player="0.05" data-parallax-direction="down">
+    <img src="{% static 'images/bg/mbappe.png' %}" alt="" loading="lazy">
+  </div>
+
+  <!-- Layer 6: WC Logo & Trophy watermarks -->
+  <img src="{% static 'images/bg/wc2026_logo.png' %}" alt="" class="bg-watermark bg-watermark-logo" loading="lazy">
+  <img src="{% static 'images/bg/trophy.png' %}" alt="" class="bg-watermark bg-watermark-trophy" loading="lazy">
+
+  <!-- Layer 7: Stadium lights effect -->
   <div class="stadium-lights"></div>
+
+  <!-- Layer 8: Subtle grid lines -->
+  <div class="bg-layer-grid"></div>
 
   <!-- Floating Footballs Container -->
   <div id="floating-footballs"></div>
@@ -47,7 +91,9 @@
   <!-- Loading Bar -->
   <div class="loading-bar" id="loading-bar"></div>
 
-  <!-- Navbar -->
+  <!-- ============================================================
+       NAVBAR — Liquid Glass
+       ============================================================ -->
   <nav class="navbar navbar-expand-lg navbar-dark-custom fixed-top" id="mainNavbar">
     <div class="container">
       <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'predictor:home' %}">
@@ -94,7 +140,7 @@
             <i class="bi bi-box-arrow-right"></i> Logout
           </a>
           {% else %}
-          <a href="{% url 'predictor:login' %}" class="btn btn-gold btn-sm btn-glow">
+          <a href="{% url 'predictor:login' %}{% if request.path %}?next={{ request.path }}{% endif %}" class="btn btn-gold btn-sm btn-glow">
             <i class="bi bi-box-arrow-in-right"></i> Login
           </a>
           {% endif %}
@@ -105,7 +151,7 @@
 
   <!-- Flash Messages -->
   {% if messages %}
-  <div class="container mt-5 pt-3">
+  <div class="container mt-5 pt-3" style="position:relative;z-index:10;">
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }} alert-dismissible fade show animate__animated animate__fadeInDown glass-card" role="alert">
       {{ message }}
@@ -157,7 +203,7 @@
   </script>
 
   <!-- Custom JS -->
-  <script src="{% static 'js/main.js' %}?v=2{% if xtransformport_param %}&{{ xtransformport_param }}{% endif %}"></script>
+  <script src="{% static 'js/main.js' %}?v=3{% if xtransformport_param %}&{{ xtransformport_param }}{% endif %}"></script>
 
   <!-- Gateway Integration -->
   <script>

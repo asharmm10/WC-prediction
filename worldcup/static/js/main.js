@@ -1327,28 +1327,13 @@
   }
 
   // ==================================================================
-  // 15. INITIALIZATION
+  // 15. CONFETTI TRIGGER
   // ==================================================================
-  document.addEventListener('DOMContentLoaded', function () {
-    initPageLoad();
-    initNavbar();
-    initCountdown();
-    initFloatingFootballs();
-    initStadiumLights();
-    initScrollAnimations();
-    initPredictionForms();
-    initScorePicker();
-    initMatchCards();
-    initLeaderboard();
-    initLoginForm();
-    initLiveUpdates();
-    initParticles();
-
-    // Trigger confetti if there's a celebration flag in the page
+  function initConfettiOnCelebrate() {
     if (document.querySelector('.celebrate')) {
       setTimeout(triggerConfetti, 500);
     }
-  });
+  }
 
   // ------------------------------------------------------------------
   // Particles Canvas Effect
@@ -1429,6 +1414,151 @@
       requestAnimationFrame(animate);
     }
     animate();
+  }
+
+  // ==================================================================
+  // 16. PARALLAX BACKGROUND SYSTEM
+  // Multi-layer parallax: player images, watermarks, and background
+  // layers react to scroll position for depth effect
+  // ==================================================================
+  function initParallaxBackground() {
+    if (prefersReducedMotion) return;
+
+    const playerEls = document.querySelectorAll('[data-parallax-player]');
+    const bgLayers = document.querySelectorAll('[data-parallax]');
+    let ticking = false;
+    let lastScrollY = 0;
+
+    // Fade in player images after they load
+    playerEls.forEach(function(el) {
+      const img = el.querySelector('img');
+      if (img) {
+        if (img.complete) {
+          el.classList.add('visible');
+        } else {
+          img.addEventListener('load', function() {
+            el.classList.add('visible');
+          });
+        }
+      } else {
+        el.classList.add('visible');
+      }
+    });
+
+    // Parallax on scroll with requestAnimationFrame for performance
+    function updateParallax() {
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+      // Update player parallax elements
+      playerEls.forEach(function(el) {
+        const factor = parseFloat(el.getAttribute('data-parallax-player')) || 0.05;
+        const direction = el.getAttribute('data-parallax-direction') || 'up';
+        const offset = scrollY * factor;
+        const transformY = direction === 'up' ? -offset : offset;
+        const opacityBase = 0.06;
+        const opacityMax = 0.12;
+        // Fade based on scroll position (more visible as user scrolls)
+        const scrollProgress = Math.min(scrollY / 800, 1);
+        const opacity = opacityBase + (opacityMax - opacityBase) * scrollProgress;
+
+        el.style.transform = 'translateY(' + transformY + 'px)';
+        el.style.opacity = opacity;
+      });
+
+      // Update background layers parallax
+      bgLayers.forEach(function(el) {
+        const factor = parseFloat(el.getAttribute('data-parallax')) || 0.02;
+        const offset = scrollY * factor;
+        el.style.transform = 'translateY(' + offset + 'px)';
+      });
+
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function() {
+      lastScrollY = window.pageYOffset;
+      if (!ticking) {
+        requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    // Initial update
+    updateParallax();
+  }
+
+  // ==================================================================
+  // 17. SCROLL-REVEAL PLAYER ANIMATIONS
+  // Players slide in from the sides when they become visible
+  // ==================================================================
+  function initPlayerScrollReveal() {
+    if (prefersReducedMotion) return;
+
+    const players = document.querySelectorAll('.bg-player-parallax');
+
+    // Set initial off-screen positions
+    players.forEach(function(el) {
+      if (el.classList.contains('bg-player-left-1') || el.classList.contains('bg-player-left-2')) {
+        el.style.transform = 'translateX(-80px)';
+      } else {
+        el.style.transform = 'translateX(80px)';
+      }
+    });
+
+    // Reveal with a delay on first scroll
+    let revealed = false;
+    function revealPlayers() {
+      if (revealed) return;
+      revealed = true;
+
+      players.forEach(function(el, index) {
+        setTimeout(function() {
+          el.style.transition = 'transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1.5s ease';
+          if (el.classList.contains('bg-player-left-1') || el.classList.contains('bg-player-left-2')) {
+            el.style.transform = 'translateX(0)';
+          } else {
+            el.style.transform = 'translateX(0)';
+          }
+          el.classList.add('visible');
+        }, index * 300 + 500);
+      });
+    }
+
+    // Reveal after a small scroll or after 2 seconds
+    let scrollTimeout = setTimeout(revealPlayers, 2000);
+    window.addEventListener('scroll', function() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(revealPlayers, 300);
+    }, { passive: true, once: false });
+  }
+
+  // ==================================================================
+  // INIT ALL — runs on DOMContentLoaded
+  // ==================================================================
+  function initAll() {
+    initCountdown();
+    initFloatingFootballs();
+    initStadiumLights();
+    initScrollAnimations();
+    initNavbar();
+    initPredictionForms();
+    initToastSystem();
+    initLeaderboardAnimations();
+    initMatchCardInteractions();
+    initLoginForm();
+    initPageLoadAnimation();
+    initLiveUpdates();
+    initScorePicker();
+    initParticles();
+    initParallaxBackground();
+    initPlayerScrollReveal();
+    initConfettiOnCelebrate();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAll);
+  } else {
+    initAll();
   }
 
   // Expose showToast globally for use in inline scripts or other modules

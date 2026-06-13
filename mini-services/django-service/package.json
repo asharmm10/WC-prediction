@@ -2,7 +2,7 @@
   "name": "django-service",
   "version": "1.0.0",
   "scripts": {
-    "dev": "cd /home/z/my-project/worldcup && python3 -u manage.py runserver 0.0.0.0:8000 --noreload",
+    "dev": "cd /home/z/my-project/worldcup && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 300 --reload",
     "start": "cd /home/z/my-project/worldcup && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 300"
   }
 }

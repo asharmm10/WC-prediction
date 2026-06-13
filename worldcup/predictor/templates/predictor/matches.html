@@ -26,20 +26,23 @@
         transition: all 0.3s ease;
     }
     .filter-btn.active {
-        box-shadow: 0 0 15px rgba(212,175,55,0.3);
+        box-shadow: 0 0 15px rgba(212,175,55,0.25);
     }
+
+    /* Match grid card — liquid glass */
     .match-grid-card {
-        border-radius: 16px;
-        padding: 20px;
+        border-radius: 18px;
+        padding: 22px;
         height: 100%;
-        transition: all 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         position: relative;
         text-decoration: none;
         color: inherit;
         display: block;
+        overflow: hidden;
     }
     .match-grid-card:hover {
-        transform: translateY(-4px);
+        transform: translateY(-5px);
         color: inherit;
     }
     .match-grid-card .team-flag-sm {
@@ -47,7 +50,7 @@
         border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
         font-size: 0.85rem; font-weight: 700; color: #fff;
-        border: 2px solid rgba(255,255,255,0.12);
+        border: 2px solid rgba(255,255,255,0.1);
     }
     .match-grid-card .vs-sm {
         width: 32px; height: 32px;
@@ -63,7 +66,7 @@
     }
     .match-grid-card .action-btn {
         min-height: 42px;
-        border-radius: 10px;
+        border-radius: 12px;
         font-weight: 600;
         font-size: 0.85rem;
         width: 100%;
@@ -80,6 +83,7 @@
         justify-content: center;
         font-size: 0.8rem;
         box-shadow: 0 0 10px rgba(16,185,129,0.3);
+        z-index: 3;
     }
 </style>
 {% endblock %}
@@ -116,7 +120,7 @@
                         <span class="status-badge status-open">{{ match.status|upper }}</span>
                     {% endif %}
                     {% if match.group_stage %}
-                    <span class="badge rounded-pill" style="background:rgba(59,130,246,0.1);color:#3b82f6;border:1px solid rgba(59,130,246,0.2);font-size:0.65rem;">{{ match.group_stage }}</span>
+                    <span class="badge rounded-pill" style="background:rgba(59,130,246,0.08);color:#3b82f6;border:1px solid rgba(59,130,246,0.12);font-size:0.65rem;">{{ match.group_stage }}</span>
                     {% endif %}
                 </div>
 
@@ -161,21 +165,21 @@
                 {% endif %}
 
                 <!-- Action -->
-                <div class="text-center pt-2" style="border-top:1px solid rgba(255,255,255,0.05);">
+                <div class="text-center pt-2" style="border-top:1px solid rgba(255,255,255,0.04);">
                     {% if match.status == 'completed' %}
                         <span class="btn btn-sm btn-gold-outline action-btn" style="pointer-events:none;">&#128202; View Result</span>
                     {% elif match.status == 'live' %}
-                        <span class="btn btn-sm action-btn" style="background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);pointer-events:none;">&#128308; Live Now</span>
+                        <span class="btn btn-sm action-btn" style="background:rgba(239,68,68,0.06);color:#f87171;border:1px solid rgba(239,68,68,0.12);pointer-events:none;">&#128308; Live Now</span>
                     {% elif current_participant and not match.is_locked %}
                         {% if match.has_predicted %}
-                        <span class="btn btn-sm action-btn" style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.2);pointer-events:none;">&#9989; Predicted</span>
+                        <span class="btn btn-sm action-btn" style="background:rgba(16,185,129,0.06);color:#10b981;border:1px solid rgba(16,185,129,0.12);pointer-events:none;">&#9989; Predicted</span>
                         {% else %}
                         <span class="btn btn-sm btn-gold action-btn btn-glow">&#9917; Predict</span>
                         {% endif %}
                     {% elif not current_participant and not match.is_locked %}
                         <span class="btn btn-sm btn-gold-outline action-btn">&#128273; Login to Predict</span>
                     {% else %}
-                        <span class="btn btn-sm action-btn" style="background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);pointer-events:none;">&#128274; Locked</span>
+                        <span class="btn btn-sm action-btn" style="background:rgba(239,68,68,0.06);color:#f87171;border:1px solid rgba(239,68,68,0.12);pointer-events:none;">&#128274; Locked</span>
                     {% endif %}
                 </div>
 
@@ -187,7 +191,7 @@
         </div>
         {% empty %}
         <div class="col-12 text-center py-5" data-aos="fade-up">
-            <div class="glass-card-premium p-5 mx-auto" style="max-width:500px;">
+            <div class="glass-ultra p-5 mx-auto" style="max-width:500px;">
                 <div class="mb-3" style="font-size:4rem;">&#9917;</div>
                 <h3 class="gold-text mb-2">No Matches Found</h3>
                 <p class="text-secondary">There are no matches in the system yet.</p>

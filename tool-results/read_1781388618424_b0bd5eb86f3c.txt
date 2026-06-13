@@ -1,0 +1,2002 @@
+     1→/* ==========================================================================
+     2→   FIFA World Cup 2026 Family Prediction League
+     3→   Premium Liquid Glass Theme — Dark Navy & Gold
+     4→   ========================================================================== */
+     5→
+     6→/* --------------------------------------------------------------------------
+     7→   CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+     8→   -------------------------------------------------------------------------- */
+     9→:root {
+    10→  /* — Backgrounds — */
+    11→  --bg-primary:           #0a0e17;
+    12→  --bg-secondary:         #111827;
+    13→  --bg-tertiary:          #0f1520;
+    14→  --bg-card:              rgba(17, 24, 39, 0.75);
+    15→  --bg-card-hover:        rgba(17, 24, 39, 0.92);
+    16→  --bg-glass:             rgba(17, 24, 39, 0.55);
+    17→  --bg-glass-light:       rgba(25, 35, 55, 0.45);
+    18→  --bg-glass-hover:       rgba(25, 35, 55, 0.7);
+    19→  --bg-glass-premium:     rgba(20, 28, 45, 0.6);
+    20→  --bg-input:             #1a2236;
+    21→  --bg-input-focus:       #1f2b42;
+    22→
+    23→  /* — Gold Accent — */
+    24→  --gold:                 #d4af37;
+    25→  --gold-light:           #f5d442;
+    26→  --gold-dark:            #b8960c;
+    27→  --gold-gradient:        linear-gradient(135deg, #d4af37, #f5d442, #d4af37);
+    28→  --gold-gradient-hover:  linear-gradient(135deg, #e6c44e, #fde68a, #e6c44e);
+    29→  --gold-text-gradient:   linear-gradient(135deg, #d4af37 0%, #f5d442 50%, #d4af37 100%);
+    30→  --gold-shimmer:         linear-gradient(
+    31→                            115deg,
+    32→                            transparent 30%,
+    33→                            rgba(245, 212, 66, 0.12) 45%,
+    34→                            rgba(245, 212, 66, 0.25) 50%,
+    35→                            rgba(245, 212, 66, 0.12) 55%,
+    36→                            transparent 70%
+    37→                          );
+    38→
+    39→  /* — Text — */
+    40→  --text-primary:         #ffffff;
+    41→  --text-secondary:       #9ca3af;
+    42→  --text-muted:           #6b7280;
+    43→  --text-gold:            #f5d442;
+    44→
+    45→  /* — Glass — */
+    46→  --glass-border:         rgba(255, 255, 255, 0.08);
+    47→  --glass-border-hover:   rgba(255, 255, 255, 0.15);
+    48→  --glass-border-gold:    rgba(212, 175, 55, 0.25);
+    49→  --glass-shadow:         0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+    50→  --glass-shadow-hover:   0 12px 40px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.4);
+    51→  --glass-glow:           0 0 20px rgba(212, 175, 55, 0.08);
+    52→  --glass-glow-hover:     0 0 30px rgba(212, 175, 55, 0.15);
+    53→  --glass-inner-glow:     inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    54→  --glass-inner-glow-strong: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    55→
+    56→  /* — Borders — */
+    57→  --border-subtle:        rgba(255, 255, 255, 0.06);
+    58→  --border-gold:          rgba(212, 175, 55, 0.3);
+    59→
+    60→  /* — Status Colors — */
+    61→  --success:              #10b981;
+    62→  --success-bg:           rgba(16, 185, 129, 0.12);
+    63→  --danger:               #ef4444;
+    64→  --danger-bg:            rgba(239, 68, 68, 0.12);
+    65→  --warning:              #f59e0b;
+    66→  --warning-bg:           rgba(245, 158, 11, 0.12);
+    67→  --info:                 #3b82f6;
+    68→  --info-bg:              rgba(59, 130, 246, 0.12);
+    69→
+    70→  /* — Fonts — */
+    71→  --font-sans:            'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    72→  --font-mono:            'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    73→  --font-display:         'Inter', var(--font-sans);
+    74→
+    75→  /* — Medals — */
+    76→  --medal-gold:           #FFD700;
+    77→  --medal-silver:         #C0C0C0;
+    78→  --medal-bronze:         #CD7F32;
+    79→
+    80→  /* — Radius — */
+    81→  --radius-sm:            0.5rem;
+    82→  --radius-md:            0.75rem;
+    83→  --radius-lg:            1rem;
+    84→  --radius-xl:            1.25rem;
+    85→  --radius-2xl:           1.5rem;
+    86→
+    87→  /* — Transitions — */
+    88→  --transition-fast:      150ms ease;
+    89→  --transition-normal:    250ms ease;
+    90→  --transition-slow:      400ms cubic-bezier(0.4, 0, 0.2, 1);
+    91→}
+    92→
+    93→
+    94→/* ==========================================================================
+    95→   BASE RESET & BODY
+    96→   ========================================================================== */
+    97→*,
+    98→*::before,
+    99→*::after {
+   100→  box-sizing: border-box;
+   101→}
+   102→
+   103→html {
+   104→  scroll-behavior: smooth;
+   105→  -webkit-font-smoothing: antialiased;
+   106→  -moz-osx-font-smoothing: grayscale;
+   107→}
+   108→
+   109→body {
+   110→  font-family: var(--font-sans);
+   111→  background-color: var(--bg-primary);
+   112→  color: var(--text-primary);
+   113→  line-height: 1.6;
+   114→  overflow-x: hidden;
+   115→  min-height: 100vh;
+   116→  position: relative;
+   117→}
+   118→
+   119→/* Subtle global background gradient */
+   120→body::before {
+   121→  content: '';
+   122→  position: fixed;
+   123→  inset: 0;
+   124→  background:
+   125→    radial-gradient(ellipse at 50% -20%, rgba(212, 175, 55, 0.04) 0%, transparent 60%),
+   126→    radial-gradient(ellipse at 0% 100%, rgba(59, 130, 246, 0.02) 0%, transparent 50%),
+   127→    radial-gradient(ellipse at 100% 100%, rgba(212, 175, 55, 0.02) 0%, transparent 50%);
+   128→  pointer-events: none;
+   129→  z-index: 0;
+   130→}
+   131→
+   132→main, .main-content {
+   133→  position: relative;
+   134→  z-index: 1;
+   135→}
+   136→
+   137→::selection {
+   138→  background: rgba(212, 175, 55, 0.3);
+   139→  color: var(--text-primary);
+   140→}
+   141→
+   142→
+   143→/* ==========================================================================
+   144→   STADIUM LIGHTS EFFECT
+   145→   ========================================================================== */
+   146→.stadium-lights {
+   147→  position: fixed;
+   148→  top: 0;
+   149→  left: 0;
+   150→  width: 100%;
+   151→  height: 100%;
+   152→  pointer-events: none;
+   153→  z-index: 0;
+   154→  overflow: hidden;
+   155→}
+   156→
+   157→.stadium-lights::before {
+   158→  content: '';
+   159→  position: absolute;
+   160→  top: -20%;
+   161→  left: 10%;
+   162→  width: 35%;
+   163→  height: 60%;
+   164→  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.02) 0%, transparent 70%);
+   165→  transform: rotate(-15deg);
+   166→  animation: stadiumLightSway1 12s ease-in-out infinite;
+   167→}
+   168→
+   169→.stadium-lights::after {
+   170→  content: '';
+   171→  position: absolute;
+   172→  top: -15%;
+   173→  right: 10%;
+   174→  width: 30%;
+   175→  height: 55%;
+   176→  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.015) 0%, transparent 70%);
+   177→  transform: rotate(15deg);
+   178→  animation: stadiumLightSway2 14s ease-in-out infinite;
+   179→}
+   180→
+   181→@keyframes stadiumLightSway1 {
+   182→  0%, 100% { transform: rotate(-15deg) translateX(0); opacity: 0.7; }
+   183→  50% { transform: rotate(-10deg) translateX(3%); opacity: 1; }
+   184→}
+   185→
+   186→@keyframes stadiumLightSway2 {
+   187→  0%, 100% { transform: rotate(15deg) translateX(0); opacity: 0.6; }
+   188→  50% { transform: rotate(12deg) translateX(-3%); opacity: 1; }
+   189→}
+   190→
+   191→
+   192→/* ==========================================================================
+   193→   FLOATING FOOTBALLS ANIMATION
+   194→   ========================================================================== */
+   195→#floating-footballs {
+   196→  position: fixed;
+   197→  inset: 0;
+   198→  pointer-events: none;
+   199→  z-index: 0;
+   200→  overflow: hidden;
+   201→}
+   202→
+   203→.floating-football {
+   204→  position: absolute;
+   205→  font-size: 1.5rem;
+   206→  opacity: 0;
+   207→  animation: floatUp linear infinite;
+   208→  will-change: transform, opacity;
+   209→}
+   210→
+   211→@keyframes floatUp {
+   212→  0% {
+   213→    transform: translateY(100vh) rotate(0deg) scale(0.5);
+   214→    opacity: 0;
+   215→  }
+   216→  10% {
+   217→    opacity: 0.15;
+   218→  }
+   219→  90% {
+   220→    opacity: 0.1;
+   221→  }
+   222→  100% {
+   223→    transform: translateY(-10vh) rotate(360deg) scale(1);
+   224→    opacity: 0;
+   225→  }
+   226→}
+   227→
+   228→
+   229→/* ==========================================================================
+   230→   BACKGROUND PARTICLE EFFECTS
+   231→   ========================================================================== */
+   232→.particle {
+   233→  position: fixed;
+   234→  width: 2px;
+   235→  height: 2px;
+   236→  border-radius: 50%;
+   237→  background: rgba(212, 175, 55, 0.3);
+   238→  pointer-events: none;
+   239→  z-index: 0;
+   240→  animation: particleDrift linear infinite;
+   241→}
+   242→
+   243→@keyframes particleDrift {
+   244→  0% {
+   245→    transform: translateY(0) translateX(0);
+   246→    opacity: 0;
+   247→  }
+   248→  20% {
+   249→    opacity: 0.6;
+   250→  }
+   251→  80% {
+   252→    opacity: 0.4;
+   253→  }
+   254→  100% {
+   255→    transform: translateY(-100vh) translateX(50px);
+   256→    opacity: 0;
+   257→  }
+   258→}
+   259→
+   260→
+   261→/* ==========================================================================
+   262→   CUSTOM SCROLLBAR
+   263→   ========================================================================== */
+   264→::-webkit-scrollbar {
+   265→  width: 8px;
+   266→}
+   267→
+   268→::-webkit-scrollbar-track {
+   269→  background: var(--bg-primary);
+   270→}
+   271→
+   272→::-webkit-scrollbar-thumb {
+   273→  background: linear-gradient(180deg, var(--gold-dark), var(--gold));
+   274→  border-radius: 4px;
+   275→  border: 1px solid var(--bg-primary);
+   276→}
+   277→
+   278→::-webkit-scrollbar-thumb:hover {
+   279→  background: linear-gradient(180deg, var(--gold), var(--gold-light));
+   280→}
+   281→
+   282→/* Firefox */
+   283→* {
+   284→  scrollbar-width: thin;
+   285→  scrollbar-color: var(--gold-dark) var(--bg-primary);
+   286→}
+   287→
+   288→
+   289→/* ==========================================================================
+   290→   LOADING BAR
+   291→   ========================================================================== */
+   292→.loading-bar {
+   293→  position: fixed;
+   294→  top: 0;
+   295→  left: 0;
+   296→  width: 0%;
+   297→  height: 3px;
+   298→  background: var(--gold-gradient);
+   299→  z-index: 9999;
+   300→  transition: width 0.3s ease;
+   301→  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+   302→}
+   303→
+   304→.loading-bar.active {
+   305→  width: 70%;
+   306→  animation: loadingPulse 1.5s ease-in-out infinite;
+   307→}
+   308→
+   309→.loading-bar.complete {
+   310→  width: 100%;
+   311→  opacity: 0;
+   312→  transition: width 0.3s ease, opacity 0.5s ease 0.3s;
+   313→}
+   314→
+   315→@keyframes loadingPulse {
+   316→  0%, 100% { opacity: 1; }
+   317→  50% { opacity: 0.7; }
+   318→}
+   319→
+   320→
+   321→/* ==========================================================================
+   322→   NAVBAR
+   323→   ========================================================================== */
+   324→.navbar-dark-custom {
+   325→  background: rgba(10, 14, 23, 0.85) !important;
+   326→  backdrop-filter: blur(20px) saturate(180%);
+   327→  -webkit-backdrop-filter: blur(20px) saturate(180%);
+   328→  border-bottom: 1px solid var(--glass-border);
+   329→  box-shadow:
+   330→    0 4px 24px rgba(0, 0, 0, 0.3),
+   331→    inset 0 -1px 0 rgba(255, 255, 255, 0.03);
+   332→  padding: 0.5rem 0;
+   333→  transition: background var(--transition-normal), box-shadow var(--transition-normal);
+   334→  z-index: 1030;
+   335→}
+   336→
+   337→.navbar-dark-custom.scrolled {
+   338→  background: rgba(10, 14, 23, 0.95) !important;
+   339→  box-shadow:
+   340→    0 4px 30px rgba(0, 0, 0, 0.5),
+   341→    0 0 20px rgba(212, 175, 55, 0.04),
+   342→    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+   343→}
+   344→
+   345→/* Navbar Brand */
+   346→.navbar-brand {
+   347→  display: flex;
+   348→  align-items: center;
+   349→  gap: 0.35rem;
+   350→  font-weight: 800;
+   351→  font-size: 1.25rem;
+   352→  letter-spacing: 1px;
+   353→  text-decoration: none;
+   354→  transition: transform var(--transition-fast);
+   355→}
+   356→
+   357→.navbar-brand:hover {
+   358→  transform: scale(1.03);
+   359→}
+   360→
+   361→.brand-icon {
+   362→  font-size: 1.4rem;
+   363→  filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.3));
+   364→}
+   365→
+   366→.brand-text {
+   367→  background: var(--gold-text-gradient);
+   368→  -webkit-background-clip: text;
+   369→  -webkit-text-fill-color: transparent;
+   370→  background-clip: text;
+   371→}
+   372→
+   373→/* Nav Links */
+   374→.navbar-dark-custom .nav-link {
+   375→  color: var(--text-secondary) !important;
+   376→  font-weight: 500;
+   377→  font-size: 0.9rem;
+   378→  padding: 0.5rem 0.85rem !important;
+   379→  border-radius: var(--radius-sm);
+   380→  transition: color var(--transition-fast), background var(--transition-fast), text-shadow var(--transition-normal);
+   381→  position: relative;
+   382→  letter-spacing: 0.3px;
+   383→}
+   384→
+   385→.navbar-dark-custom .nav-link:hover {
+   386→  color: var(--text-primary) !important;
+   387→  background: rgba(255, 255, 255, 0.04);
+   388→  text-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
+   389→}
+   390→
+   391→.navbar-dark-custom .nav-link.active {
+   392→  color: var(--gold-light) !important;
+   393→  text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+   394→}
+   395→
+   396→.navbar-dark-custom .nav-link.active::after {
+   397→  content: '';
+   398→  position: absolute;
+   399→  bottom: 2px;
+   400→  left: 50%;
+   401→  transform: translateX(-50%);
+   402→  width: 60%;
+   403→  height: 2px;
+   404→  background: var(--gold-gradient);
+   405→  border-radius: 1px;
+   406→  box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+   407→}
+   408→
+   409→.navbar-dark-custom .nav-link i {
+   410→  font-size: 0.85rem;
+   411→  margin-right: 0.2rem;
+   412→}
+   413→
+   414→/* Navbar Toggler */
+   415→.navbar-dark-custom .navbar-toggler {
+   416→  border-color: var(--glass-border-gold) !important;
+   417→  padding: 0.35rem 0.6rem;
+   418→  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+   419→}
+   420→
+   421→.navbar-dark-custom .navbar-toggler:hover {
+   422→  border-color: var(--gold) !important;
+   423→  box-shadow: 0 0 12px rgba(212, 175, 55, 0.15);
+   424→}
+   425→
+   426→.border-gold {
+   427→  border-color: var(--glass-border-gold) !important;
+   428→}
+   429→
+   430→/* Participant Chip */
+   431→.participant-chip {
+   432→  display: inline-flex;
+   433→  align-items: center;
+   434→  gap: 0.3rem;
+   435→  padding: 0.35rem 0.85rem;
+   436→  background: rgba(212, 175, 55, 0.1);
+   437→  border: 1px solid rgba(212, 175, 55, 0.2);
+   438→  border-radius: 50px;
+   439→  color: var(--gold-light);
+   440→  font-size: 0.8rem;
+   441→  font-weight: 600;
+   442→  white-space: nowrap;
+   443→  backdrop-filter: blur(10px);
+   444→}
+   445→
+   446→/* Mobile Nav Drawer */
+   447→@media (max-width: 991.98px) {
+   448→  .navbar-collapse {
+   449→    background: rgba(10, 14, 23, 0.96);
+   450→    backdrop-filter: blur(24px) saturate(180%);
+   451→    -webkit-backdrop-filter: blur(24px) saturate(180%);
+   452→    border-radius: var(--radius-lg);
+   453→    margin-top: 0.75rem;
+   454→    padding: 1rem;
+   455→    border: 1px solid var(--glass-border);
+   456→    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+   457→  }
+   458→
+   459→  .navbar-dark-custom .nav-link {
+   460→    padding: 0.65rem 0.85rem !important;
+   461→    font-size: 1rem;
+   462→  }
+   463→
+   464→  .participant-chip {
+   465→    margin-bottom: 0.5rem;
+   466→  }
+   467→}
+   468→
+   469→
+   470→/* ==========================================================================
+   471→   GLASS CARD SYSTEM — CRITICAL
+   472→   ========================================================================== */
+   473→
+   474→/* --- Basic Frosted Glass --- */
+   475→.glass-card {
+   476→  background: var(--bg-glass);
+   477→  backdrop-filter: blur(20px) saturate(180%);
+   478→  -webkit-backdrop-filter: blur(20px) saturate(180%);
+   479→  border: 1px solid var(--glass-border);
+   480→  border-radius: var(--radius-xl);
+   481→  box-shadow:
+   482→    var(--glass-shadow),
+   483→    var(--glass-inner-glow);
+   484→  position: relative;
+   485→  overflow: hidden;
+   486→  transition:
+   487→    transform var(--transition-normal),
+   488→    box-shadow var(--transition-slow),
+   489→    border-color var(--transition-normal),
+   490→    background var(--transition-normal);
+   491→}
+   492→
+   493→/* Glass card subtle reflection */
+   494→.glass-card::before {
+   495→  content: '';
+   496→  position: absolute;
+   497→  top: 0;
+   498→  left: -50%;
+   499→  width: 200%;
+   500→  height: 100%;
+   501→  background: linear-gradient(
+   502→    105deg,
+   503→    transparent 40%,
+   504→    rgba(255, 255, 255, 0.02) 45%,
+   505→    rgba(255, 255, 255, 0.04) 50%,
+   506→    rgba(255, 255, 255, 0.02) 55%,
+   507→    transparent 60%
+   508→  );
+   509→  pointer-events: none;
+   510→  z-index: 1;
+   511→  transition: transform 0.6s ease;
+   512→}
+   513→
+   514→.glass-card::after {
+   515→  content: '';
+   516→  position: absolute;
+   517→  top: 0;
+   518→  left: 0;
+   519→  right: 0;
+   520→  height: 1px;
+   521→  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+   522→  pointer-events: none;
+   523→  z-index: 2;
+   524→}
+   525→
+   526→.glass-card:hover {
+   527→  background: var(--bg-glass-hover);
+   528→  border-color: var(--glass-border-hover);
+   529→  box-shadow:
+   530→    var(--glass-shadow-hover),
+   531→    var(--glass-inner-glow-strong),
+   532→    0 0 20px rgba(212, 175, 55, 0.04);
+   533→  transform: translateY(-2px);
+   534→}
+   535→
+   536→.glass-card:hover::before {
+   537→  transform: translateX(15%);
+   538→}
+   539→
+   540→
+   541→/* --- Gold-Bordered Glass --- */
+   542→.glass-card-gold {
+   543→  background: var(--bg-glass);
+   544→  backdrop-filter: blur(24px) saturate(200%);
+   545→  -webkit-backdrop-filter: blur(24px) saturate(200%);
+   546→  border: 1px solid var(--glass-border-gold);
+   547→  border-radius: var(--radius-xl);
+   548→  box-shadow:
+   549→    var(--glass-shadow),
+   550→    var(--glass-glow),
+   551→    var(--glass-inner-glow);
+   552→  position: relative;
+   553→  overflow: hidden;
+   554→  transition:
+   555→    transform var(--transition-normal),
+   556→    box-shadow var(--transition-slow),
+   557→    border-color var(--transition-normal),
+   558→    background var(--transition-normal);
+   559→}
+   560→
+   561→.glass-card-gold::before {
+   562→  content: '';
+   563→  position: absolute;
+   564→  top: 0;
+   565→  left: -50%;
+   566→  width: 200%;
+   567→  height: 100%;
+   568→  background: linear-gradient(
+   569→    105deg,
+   570→    transparent 35%,
+   571→    rgba(212, 175, 55, 0.04) 42%,
+   572→    rgba(245, 212, 66, 0.08) 50%,
+   573→    rgba(212, 175, 55, 0.04) 58%,
+   574→    transparent 65%
+   575→  );
+   576→  pointer-events: none;
+   577→  z-index: 1;
+   578→  animation: liquidShimmer 6s ease-in-out infinite;
+   579→}
+   580→
+   581→.glass-card-gold::after {
+   582→  content: '';
+   583→  position: absolute;
+   584→  top: 0;
+   585→  left: 0;
+   586→  right: 0;
+   587→  height: 1px;
+   588→  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+   589→  pointer-events: none;
+   590→  z-index: 2;
+   591→}
+   592→
+   593→.glass-card-gold:hover {
+   594→  background: var(--bg-glass-hover);
+   595→  border-color: rgba(212, 175, 55, 0.4);
+   596→  box-shadow:
+   597→    var(--glass-shadow-hover),
+   598→    var(--glass-glow-hover),
+   599→    var(--glass-inner-glow-strong);
+   600→  transform: translateY(-2px);
+   601→}
+   602→
+   603→
+   604→/* --- Premium Liquid Glass with Shimmer --- */
+   605→.glass-card-premium {
+   606→  background: var(--bg-glass-premium);
+   607→  backdrop-filter: blur(28px) saturate(220%);
+   608→  -webkit-backdrop-filter: blur(28px) saturate(220%);
+   609→  border: 1px solid rgba(212, 175, 55, 0.15);
+   610→  border-radius: var(--radius-xl);
+   611→  box-shadow:
+   612→    var(--glass-shadow),
+   613→    var(--glass-glow),
+   614→    var(--glass-inner-glow),
+   615→    inset 0 0 30px rgba(212, 175, 55, 0.03);
+   616→  position: relative;
+   617→  overflow: hidden;
+   618→  transition:
+   619→    transform var(--transition-normal),
+   620→    box-shadow var(--transition-slow),
+   621→    border-color var(--transition-normal),
+   622→    background var(--transition-normal);
+   623→}
+   624→
+   625→.glass-card-premium::before {
+   626→  content: '';
+   627→  position: absolute;
+   628→  top: -50%;
+   629→  left: -50%;
+   630→  width: 200%;
+   631→  height: 200%;
+   632→  background: var(--gold-shimmer);
+   633→  animation: liquidShimmer 4s ease-in-out infinite;
+   634→  pointer-events: none;
+   635→  z-index: 1;
+   636→}
+   637→
+   638→.glass-card-premium::after {
+   639→  content: '';
+   640→  position: absolute;
+   641→  top: 0;
+   642→  left: 0;
+   643→  right: 0;
+   644→  height: 1px;
+   645→  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.25), transparent);
+   646→  pointer-events: none;
+   647→  z-index: 2;
+   648→}
+   649→
+   650→.glass-card-premium:hover {
+   651→  background: rgba(25, 35, 55, 0.7);
+   652→  border-color: rgba(212, 175, 55, 0.35);
+   653→  box-shadow:
+   654→    var(--glass-shadow-hover),
+   655→    0 0 40px rgba(212, 175, 55, 0.1),
+   656→    var(--glass-inner-glow-strong),
+   657→    inset 0 0 40px rgba(212, 175, 55, 0.05);
+   658→  transform: translateY(-3px) scale(1.005);
+   659→}
+   660→
+   661→
+   662→/* ==========================================================================
+   663→   LIQUID SHIMMER ANIMATION
+   664→   ========================================================================== */
+   665→@keyframes liquidShimmer {
+   666→  0% {
+   667→    transform: translateX(-100%) rotate(0deg);
+   668→  }
+   669→  50% {
+   670→    transform: translateX(50%) rotate(2deg);
+   671→  }
+   672→  100% {
+   673→    transform: translateX(200%) rotate(0deg);
+   674→  }
+   675→}
+   676→
+   677→@keyframes shimmerSweep {
+   678→  0% {
+   679→    background-position: -200% center;
+   680→  }
+   681→  100% {
+   682→    background-position: 200% center;
+   683→  }
+   684→}
+   685→
+   686→/* Inner glow on hover for all glass cards */
+   687→.glass-card:hover,
+   688→.glass-card-gold:hover,
+   689→.glass-card-premium:hover {
+   690→  box-shadow:
+   691→    var(--glass-shadow-hover),
+   692→    0 0 25px rgba(212, 175, 55, 0.06),
+   693→    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+   694→    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+   695→}
+   696→
+   697→/* Liquid reflection on hover */
+   698→.glass-card:hover::before,
+   699→.glass-card-gold:hover::before {
+   700→  animation: liquidReflection 1.2s ease-out forwards;
+   701→}
+   702→
+   703→@keyframes liquidReflection {
+   704→  0% {
+   705→    opacity: 0.5;
+   706→    transform: translateX(-10%);
+   707→  }
+   708→  100% {
+   709→    opacity: 1;
+   710→    transform: translateX(20%);
+   711→  }
+   712→}
+   713→
+   714→
+   715→/* ==========================================================================
+   716→   GOLD TEXT & GRADIENT TEXT
+   717→   ========================================================================== */
+   718→.gold-text {
+   719→  color: var(--gold-light) !important;
+   720→  text-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+   721→}
+   722→
+   723→.gold-text-gradient {
+   724→  background: var(--gold-text-gradient) !important;
+   725→  -webkit-background-clip: text !important;
+   726→  -webkit-text-fill-color: transparent !important;
+   727→  background-clip: text !important;
+   728→}
+   729→
+   730→.text-gold {
+   731→  color: var(--gold-light) !important;
+   732→}
+   733→
+   734→
+   735→/* ==========================================================================
+   736→   BUTTONS
+   737→   ========================================================================== */
+   738→
+   739→/* --- Primary Gold Button with PULSE GLOW --- */
+   740→.btn-gold {
+   741→  background: var(--gold-gradient);
+   742→  background-size: 200% auto;
+   743→  color: var(--bg-primary) !important;
+   744→  border: none;
+   745→  font-weight: 700;
+   746→  font-family: var(--font-sans);
+   747→  letter-spacing: 0.5px;
+   748→  border-radius: var(--radius-md);
+   749→  padding: 0.55rem 1.5rem;
+   750→  position: relative;
+   751→  overflow: hidden;
+   752→  transition:
+   753→    transform var(--transition-fast),
+   754→    box-shadow var(--transition-normal),
+   755→    background-position var(--transition-normal);
+   756→  animation: goldPulse 2.5s ease-in-out infinite;
+   757→  box-shadow:
+   758→    0 0 5px rgba(212, 175, 55, 0.4),
+   759→    0 0 20px rgba(212, 175, 55, 0.1);
+   760→}
+   761→
+   762→.btn-gold::before {
+   763→  content: '';
+   764→  position: absolute;
+   765→  top: 0;
+   766→  left: -100%;
+   767→  width: 100%;
+   768→  height: 100%;
+   769→  background: linear-gradient(
+   770→    90deg,
+   771→    transparent,
+   772→    rgba(255, 255, 255, 0.25),
+   773→    transparent
+   774→  );
+   775→  transition: left 0.5s ease;
+   776→  z-index: 1;
+   777→}
+   778→
+   779→.btn-gold:hover {
+   780→  background-position: right center;
+   781→  transform: translateY(-1px) scale(1.02);
+   782→  color: var(--bg-primary) !important;
+   783→  box-shadow:
+   784→    0 0 15px rgba(212, 175, 55, 0.6),
+   785→    0 0 40px rgba(212, 175, 55, 0.3),
+   786→    0 0 60px rgba(212, 175, 55, 0.1);
+   787→  animation: none;
+   788→}
+   789→
+   790→.btn-gold:hover::before {
+   791→  left: 100%;
+   792→}
+   793→
+   794→.btn-gold:active {
+   795→  transform: translateY(0) scale(0.98);
+   796→  box-shadow:
+   797→    0 0 10px rgba(212, 175, 55, 0.5),
+   798→    0 0 25px rgba(212, 175, 55, 0.2);
+   799→}
+   800→
+   801→/* Gold Pulse Animation — VERY NOTICEABLE */
+   802→@keyframes goldPulse {
+   803→  0%, 100% {
+   804→    box-shadow:
+   805→      0 0 5px rgba(212, 175, 55, 0.4),
+   806→      0 0 20px rgba(212, 175, 55, 0.1);
+   807→  }
+   808→  50% {
+   809→    box-shadow:
+   810→      0 0 15px rgba(212, 175, 55, 0.6),
+   811→      0 0 40px rgba(212, 175, 55, 0.3),
+   812→      0 0 60px rgba(212, 175, 55, 0.1);
+   813→  }
+   814→}
+   815→
+   816→/* Stronger pulse for CTA / Submit buttons */
+   817→.btn-gold.btn-lg,
+   818→.btn-gold.predict-btn,
+   819→button[type="submit"].btn-gold,
+   820→.submit-row .btn-gold,
+   821→.submit-row .btn-primary {
+   822→  animation: goldPulseStrong 2s ease-in-out infinite;
+   823→}
+   824→
+   825→@keyframes goldPulseStrong {
+   826→  0%, 100% {
+   827→    box-shadow:
+   828→      0 0 8px rgba(212, 175, 55, 0.5),
+   829→      0 0 25px rgba(212, 175, 55, 0.15);
+   830→  }
+   831→  50% {
+   832→    box-shadow:
+   833→      0 0 20px rgba(212, 175, 55, 0.7),
+   834→      0 0 50px rgba(212, 175, 55, 0.35),
+   835→      0 0 80px rgba(212, 175, 55, 0.15);
+   836→  }
+   837→}
+   838→
+   839→/* --- Gold Outline Button --- */
+   840→.btn-gold-outline {
+   841→  background: transparent;
+   842→  color: var(--gold) !important;
+   843→  border: 1.5px solid var(--gold);
+   844→  font-weight: 600;
+   845→  font-family: var(--font-sans);
+   846→  letter-spacing: 0.3px;
+   847→  border-radius: var(--radius-md);
+   848→  padding: 0.5rem 1.4rem;
+   849→  position: relative;
+   850→  overflow: hidden;
+   851→  transition:
+   852→    color var(--transition-fast),
+   853→    background var(--transition-fast),
+   854→    border-color var(--transition-fast),
+   855→    box-shadow var(--transition-normal),
+   856→    transform var(--transition-fast);
+   857→}
+   858→
+   859→.btn-gold-outline::before {
+   860→  content: '';
+   861→  position: absolute;
+   862→  inset: 0;
+   863→  background: var(--gold-gradient);
+   864→  opacity: 0;
+   865→  transition: opacity var(--transition-normal);
+   866→  z-index: -1;
+   867→}
+   868→
+   869→.btn-gold-outline:hover {
+   870→  color: var(--bg-primary) !important;
+   871→  border-color: var(--gold-light);
+   872→  box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+   873→  transform: translateY(-1px);
+   874→}
+   875→
+   876→.btn-gold-outline:hover::before {
+   877→  opacity: 1;
+   878→}
+   879→
+   880→.btn-gold-outline:active {
+   881→  transform: translateY(0) scale(0.98);
+   882→}
+   883→
+   884→/* Active state for filter buttons */
+   885→.btn-gold-outline.active,
+   886→.filter-btn.active {
+   887→  background: var(--gold-gradient) !important;
+   888→  color: var(--bg-primary) !important;
+   889→  border-color: var(--gold-light) !important;
+   890→}
+   891→
+   892→/* --- Ghost Button --- */
+   893→.btn-ghost {
+   894→  background: transparent;
+   895→  color: var(--text-secondary);
+   896→  border: none;
+   897→  font-weight: 500;
+   898→  padding: 0.5rem 1rem;
+   899→  border-radius: var(--radius-md);
+   900→  transition:
+   901→    color var(--transition-fast),
+   902→    background var(--transition-fast);
+   903→}
+   904→
+   905→.btn-ghost:hover {
+   906→  color: var(--text-primary);
+   907→  background: rgba(255, 255, 255, 0.04);
+   908→}
+   909→
+   910→/* Override Bootstrap primary buttons to gold */
+   911→.btn-primary {
+   912→  background: var(--gold-gradient) !important;
+   913→  color: var(--bg-primary) !important;
+   914→  border: none !important;
+   915→  font-weight: 700;
+   916→  border-radius: var(--radius-md);
+   917→  animation: goldPulseStrong 2s ease-in-out infinite;
+   918→  box-shadow:
+   919→    0 0 8px rgba(212, 175, 55, 0.5),
+   920→    0 0 25px rgba(212, 175, 55, 0.15);
+   921→  transition:
+   922→    transform var(--transition-fast),
+   923→    box-shadow var(--transition-normal);
+   924→}
+   925→
+   926→.btn-primary:hover {
+   927→  box-shadow:
+   928→    0 0 20px rgba(212, 175, 55, 0.7),
+   929→    0 0 50px rgba(212, 175, 55, 0.35),
+   930→    0 0 80px rgba(212, 175, 55, 0.15) !important;
+   931→}
+   932→
+   933→/* Secondary button override */
+   934→.btn-secondary {
+   935→  background: rgba(255, 255, 255, 0.08) !important;
+   936→  color: var(--text-primary) !important;
+   937→  border: 1px solid var(--glass-border) !important;
+   938→  font-weight: 600;
+   939→  border-radius: var(--radius-md);
+   940→}
+   941→
+   942→.btn-secondary:hover {
+   943→  background: rgba(255, 255, 255, 0.12) !important;
+   944→  border-color: var(--glass-border-hover) !important;
+   945→}
+   946→
+   947→
+   948→/* ==========================================================================
+   949→   STATUS BADGES
+   950→   ========================================================================== */
+   951→.status-badge {
+   952→  display: inline-flex;
+   953→  align-items: center;
+   954→  gap: 0.25rem;
+   955→  padding: 0.25rem 0.75rem;
+   956→  border-radius: 50px;
+   957→  font-size: 0.7rem;
+   958→  font-weight: 700;
+   959→  text-transform: uppercase;
+   960→  letter-spacing: 0.5px;
+   961→  backdrop-filter: blur(10px);
+   962→  -webkit-backdrop-filter: blur(10px);
+   963→}
+   964→
+   965→.status-open {
+   966→  background: var(--success-bg);
+   967→  color: var(--success);
+   968→  border: 1px solid rgba(16, 185, 129, 0.25);
+   969→}
+   970→
+   971→.status-locked {
+   972→  background: var(--warning-bg);
+   973→  color: var(--warning);
+   974→  border: 1px solid rgba(245, 158, 11, 0.25);
+   975→}
+   976→
+   977→.status-completed {
+   978→  background: rgba(107, 114, 128, 0.12);
+   979→  color: var(--text-secondary);
+   980→  border: 1px solid rgba(107, 114, 128, 0.2);
+   981→}
+   982→
+   983→.status-live {
+   984→  background: var(--danger-bg);
+   985→  color: var(--danger);
+   986→  border: 1px solid rgba(239, 68, 68, 0.25);
+   987→  animation: livePulse 1.5s ease-in-out infinite;
+   988→}
+   989→
+   990→@keyframes livePulse {
+   991→  0%, 100% { opacity: 1; box-shadow: 0 0 0 rgba(239, 68, 68, 0); }
+   992→  50% { opacity: 0.8; box-shadow: 0 0 12px rgba(239, 68, 68, 0.3); }
+   993→}
+   994→
+   995→/* Alternate status badge variants */
+   996→.status-badge-open {
+   997→  background: var(--success-bg);
+   998→  color: var(--success);
+   999→  border: 1px solid rgba(16, 185, 129, 0.25);
+  1000→}
+  1001→
+  1002→.status-badge-locked {
+  1003→  background: var(--warning-bg);
+  1004→  color: var(--warning);
+  1005→  border: 1px solid rgba(245, 158, 11, 0.25);
+  1006→}
+  1007→
+  1008→.status-badge-completed {
+  1009→  background: rgba(107, 114, 128, 0.12);
+  1010→  color: var(--text-secondary);
+  1011→  border: 1px solid rgba(107, 114, 128, 0.2);
+  1012→}
+  1013→
+  1014→.status-badge-live {
+  1015→  background: var(--danger-bg);
+  1016→  color: var(--danger);
+  1017→  border: 1px solid rgba(239, 68, 68, 0.25);
+  1018→  animation: livePulse 1.5s ease-in-out infinite;
+  1019→}
+  1020→
+  1021→
+  1022→/* ==========================================================================
+  1023→   MATCH CARDS
+  1024→   ========================================================================== */
+  1025→.match-card {
+  1026→  padding: 1.25rem;
+  1027→  border-radius: var(--radius-xl);
+  1028→  transition:
+  1029→    transform var(--transition-normal),
+  1030→    box-shadow var(--transition-slow),
+  1031→    border-color var(--transition-normal);
+  1032→}
+  1033→
+  1034→.match-card:hover {
+  1035→  transform: translateY(-3px);
+  1036→}
+  1037→
+  1038→/* Match Card Header (detail page) */
+  1039→.match-card-header {
+  1040→  display: flex;
+  1041→  justify-content: center;
+  1042→  align-items: center;
+  1043→  gap: 0.75rem;
+  1044→  margin-bottom: 1rem;
+  1045→  flex-wrap: wrap;
+  1046→}
+  1047→
+  1048→/* Match Teams Layout */
+  1049→.match-teams {
+  1050→  display: flex;
+  1051→  align-items: center;
+  1052→  justify-content: center;
+  1053→  gap: 0.75rem;
+  1054→  margin-bottom: 0.75rem;
+  1055→}
+  1056→
+  1057→.match-team {
+  1058→  display: flex;
+  1059→  flex-direction: column;
+  1060→  align-items: center;
+  1061→  min-width: 80px;
+  1062→}
+  1063→
+  1064→.match-team-name {
+  1065→  font-size: 0.9rem;
+  1066→  font-weight: 700;
+  1067→  color: var(--text-primary);
+  1068→  text-align: center;
+  1069→  line-height: 1.2;
+  1070→  margin-top: 0.35rem;
+  1071→}
+  1072→
+  1073→/* Flag Placeholder */
+  1074→.flag-placeholder {
+  1075→  width: 48px;
+  1076→  height: 48px;
+  1077→  border-radius: 50%;
+  1078→  display: flex;
+  1079→  align-items: center;
+  1080→  justify-content: center;
+  1081→  font-weight: 800;
+  1082→  font-size: 1rem;
+  1083→  background: rgba(212, 175, 55, 0.12);
+  1084→  color: var(--gold-light);
+  1085→  border: 2px solid rgba(212, 175, 55, 0.2);
+  1086→  backdrop-filter: blur(8px);
+  1087→  -webkit-backdrop-filter: blur(8px);
+  1088→  box-shadow: 0 0 12px rgba(212, 175, 55, 0.08);
+  1089→  transition:
+  1090→    transform var(--transition-fast),
+  1091→    box-shadow var(--transition-fast),
+  1092→    border-color var(--transition-fast);
+  1093→}
+  1094→
+  1095→.flag-placeholder:hover {
+  1096→  transform: scale(1.08);
+  1097→  border-color: rgba(212, 175, 55, 0.4);
+  1098→  box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+  1099→}
+  1100→
+  1101→/* VS Badge */
+  1102→.vs-badge {
+  1103→  width: 40px;
+  1104→  height: 40px;
+  1105→  border-radius: 50%;
+  1106→  display: flex;
+  1107→  align-items: center;
+  1108→  justify-content: center;
+  1109→  font-weight: 900;
+  1110→  font-size: 0.75rem;
+  1111→  background: var(--gold-gradient);
+  1112→  color: var(--bg-primary);
+  1113→  flex-shrink: 0;
+  1114→  box-shadow:
+  1115→    0 0 12px rgba(212, 175, 55, 0.25),
+  1116→    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  1117→  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
+  1118→}
+  1119→
+  1120→/* Match Meta */
+  1121→.match-meta {
+  1122→  text-align: center;
+  1123→  font-size: 0.8rem;
+  1124→  color: var(--text-muted);
+  1125→  display: flex;
+  1126→  justify-content: center;
+  1127→  gap: 1rem;
+  1128→  flex-wrap: wrap;
+  1129→}
+  1130→
+  1131→.match-venue,
+  1132→.match-kickoff {
+  1133→  display: flex;
+  1134→  align-items: center;
+  1135→  gap: 0.3rem;
+  1136→}
+  1137→
+  1138→/* Match Score */
+  1139→.match-score {
+  1140→  font-size: 1.5rem;
+  1141→  font-weight: 900;
+  1142→  color: var(--gold-light);
+  1143→  font-family: var(--font-mono);
+  1144→  text-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+  1145→}
+  1146→
+  1147→.match-score-final {
+  1148→  font-size: 2rem;
+  1149→  font-weight: 900;
+  1150→  color: var(--gold-light);
+  1151→  font-family: var(--font-mono);
+  1152→  text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  1153→  letter-spacing: 0.05em;
+  1154→}
+  1155→
+  1156→/* Score Input Wrapper */
+  1157→.score-input-wrapper {
+  1158→  position: relative;
+  1159→}
+  1160→
+  1161→.score-input {
+  1162→  width: 80px;
+  1163→  min-height: 60px;
+  1164→  font-size: 1.75rem;
+  1165→  font-family: var(--font-mono);
+  1166→  font-weight: 800;
+  1167→  text-align: center;
+  1168→  background: var(--bg-input);
+  1169→  border: 2px solid var(--border-subtle);
+  1170→  border-radius: var(--radius-md);
+  1171→  color: var(--text-primary);
+  1172→  padding: 0.25rem;
+  1173→  -moz-appearance: textfield;
+  1174→  transition:
+  1175→    border-color var(--transition-fast),
+  1176→    box-shadow var(--transition-fast),
+  1177→    background var(--transition-fast);
+  1178→}
+  1179→
+  1180→.score-input:focus {
+  1181→  border-color: var(--gold);
+  1182→  box-shadow:
+  1183→    0 0 0 3px rgba(212, 175, 55, 0.2),
+  1184→    0 0 15px rgba(212, 175, 55, 0.1);
+  1185→  background: var(--bg-input-focus);
+  1186→  color: var(--gold-light);
+  1187→  outline: none;
+  1188→}
+  1189→
+  1190→.score-input::-webkit-inner-spin-button,
+  1191→.score-input::-webkit-outer-spin-button {
+  1192→  -webkit-appearance: none;
+  1193→  margin: 0;
+  1194→}
+  1195→
+  1196→/* Score Separator */
+  1197→.score-separator {
+  1198→  font-size: 1.5rem;
+  1199→  font-weight: 800;
+  1200→  color: var(--text-muted);
+  1201→}
+  1202→
+  1203→/* Prediction Locked Overlay */
+  1204→.prediction-locked {
+  1205→  position: relative;
+  1206→}
+  1207→
+  1208→.prediction-locked::after {
+  1209→  content: '';
+  1210→  position: absolute;
+  1211→  inset: 0;
+  1212→  background: rgba(10, 14, 23, 0.5);
+  1213→  backdrop-filter: blur(3px);
+  1214→  -webkit-backdrop-filter: blur(3px);
+  1215→  border-radius: inherit;
+  1216→  z-index: 5;
+  1217→}
+  1218→
+  1219→.lock-icon {
+  1220→  font-size: 2rem;
+  1221→  display: inline-block;
+  1222→  margin-bottom: 0.5rem;
+  1223→}
+  1224→
+  1225→/* Predict Button */
+  1226→.predict-btn {
+  1227→  min-height: 44px;
+  1228→  min-width: 120px;
+  1229→}
+  1230→
+  1231→
+  1232→/* ==========================================================================
+  1233→   MATCH DAY HEADER
+  1234→   ========================================================================== */
+  1235→.match-day-header {
+  1236→  font-size: 1.1rem;
+  1237→  font-weight: 700;
+  1238→  color: var(--text-primary);
+  1239→  display: flex;
+  1240→  align-items: center;
+  1241→  gap: 0.5rem;
+  1242→  padding-bottom: 0.5rem;
+  1243→  border-bottom: 1px solid var(--border-subtle);
+  1244→  position: relative;
+  1245→}
+  1246→
+  1247→.match-day-header::after {
+  1248→  content: '';
+  1249→  position: absolute;
+  1250→  bottom: -1px;
+  1251→  left: 0;
+  1252→  width: 80px;
+  1253→  height: 2px;
+  1254→  background: var(--gold-gradient);
+  1255→  border-radius: 1px;
+  1256→}
+  1257→
+  1258→
+  1259→/* ==========================================================================
+  1260→   COUNTDOWN SECTION
+  1261→   ========================================================================== */
+  1262→.countdown-container {
+  1263→  display: flex;
+  1264→  justify-content: center;
+  1265→  gap: 1rem;
+  1266→  margin: 2rem 0;
+  1267→  flex-wrap: wrap;
+  1268→}
+  1269→
+  1270→.countdown-item {
+  1271→  display: flex;
+  1272→  flex-direction: column;
+  1273→  align-items: center;
+  1274→}
+  1275→
+  1276→.countdown-digit {
+  1277→  width: 80px;
+  1278→  height: 80px;
+  1279→  display: flex;
+  1280→  align-items: center;
+  1281→  justify-content: center;
+  1282→  font-size: 2.2rem;
+  1283→  font-weight: 900;
+  1284→  font-family: var(--font-mono);
+  1285→  background: rgba(212, 175, 55, 0.08);
+  1286→  border: 1px solid rgba(212, 175, 55, 0.2);
+  1287→  border-radius: var(--radius-lg);
+  1288→  color: var(--gold-light);
+  1289→  text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  1290→  backdrop-filter: blur(12px);
+  1291→  -webkit-backdrop-filter: blur(12px);
+  1292→  box-shadow:
+  1293→    0 4px 15px rgba(0, 0, 0, 0.2),
+  1294→    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  1295→  transition: transform var(--transition-normal);
+  1296→}
+  1297→
+  1298→.countdown-digit:hover {
+  1299→  transform: scale(1.08);
+  1300→  border-color: rgba(212, 175, 55, 0.35);
+  1301→  box-shadow:
+  1302→    0 6px 20px rgba(0, 0, 0, 0.3),
+  1303→    0 0 20px rgba(212, 175, 55, 0.1);
+  1304→}
+  1305→
+  1306→.countdown-label {
+  1307→  font-size: 0.7rem;
+  1308→  letter-spacing: 2px;
+  1309→  color: var(--text-muted);
+  1310→  margin-top: 6px;
+  1311→  text-transform: uppercase;
+  1312→  font-weight: 600;
+  1313→}
+  1314→
+  1315→.countdown-separator {
+  1316→  font-size: 2rem;
+  1317→  font-weight: 900;
+  1318→  color: var(--gold);
+  1319→  align-self: flex-start;
+  1320→  margin-top: 1rem;
+  1321→  animation: separatorPulse 1s ease-in-out infinite;
+  1322→}
+  1323→
+  1324→@keyframes separatorPulse {
+  1325→  0%, 100% { opacity: 1; }
+  1326→  50% { opacity: 0.3; }
+  1327→}
+  1328→
+  1329→
+  1330→/* ==========================================================================
+  1331→   LEADERBOARD STYLES
+  1332→   ========================================================================== */
+  1333→.leaderboard-item {
+  1334→  display: flex;
+  1335→  align-items: center;
+  1336→  gap: 0.75rem;
+  1337→  padding: 0.85rem 1rem;
+  1338→  background: var(--bg-glass);
+  1339→  backdrop-filter: blur(16px) saturate(180%);
+  1340→  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  1341→  border: 1px solid var(--glass-border);
+  1342→  border-radius: var(--radius-lg);
+  1343→  margin-bottom: 0.5rem;
+  1344→  transition:
+  1345→    background var(--transition-fast),
+  1346→    border-color var(--transition-fast),
+  1347→    transform var(--transition-fast),
+  1348→    box-shadow var(--transition-normal);
+  1349→}
+  1350→
+  1351→.leaderboard-item:hover {
+  1352→  background: var(--bg-glass-hover);
+  1353→  border-color: var(--glass-border-hover);
+  1354→  transform: translateX(4px);
+  1355→  box-shadow: 0 0 15px rgba(212, 175, 55, 0.05);
+  1356→}
+  1357→
+  1358→.leaderboard-item.rank-1 {
+  1359→  border-color: rgba(212, 175, 55, 0.3);
+  1360→  background: rgba(212, 175, 55, 0.06);
+  1361→}
+  1362→
+  1363→.leaderboard-item.rank-1:hover {
+  1364→  border-color: rgba(212, 175, 55, 0.45);
+  1365→  box-shadow: 0 0 25px rgba(212, 175, 55, 0.1);
+  1366→}
+  1367→
+  1368→.leaderboard-item.rank-2 {
+  1369→  border-color: rgba(192, 192, 192, 0.15);
+  1370→  background: rgba(192, 192, 192, 0.03);
+  1371→}
+  1372→
+  1373→.leaderboard-item.rank-3 {
+  1374→  border-color: rgba(205, 127, 50, 0.15);
+  1375→  background: rgba(205, 127, 50, 0.03);
+  1376→}
+  1377→
+  1378→/* Leaderboard Row (used in tables and mini leaderboard) */
+  1379→.leaderboard-row {
+  1380→  display: flex;
+  1381→  align-items: center;
+  1382→  padding: 0.75rem 1rem;
+  1383→  border-radius: var(--radius-lg);
+  1384→  margin-bottom: 0.5rem;
+  1385→  transition:
+  1386→    background var(--transition-fast),
+  1387→    border-color var(--transition-fast),
+  1388→    box-shadow var(--transition-normal);
+  1389→  background: rgba(255, 255, 255, 0.02);
+  1390→  border: 1px solid rgba(255, 255, 255, 0.04);
+  1391→}
+  1392→
+  1393→.leaderboard-row:hover {
+  1394→  background: rgba(212, 175, 55, 0.06);
+  1395→  border-color: rgba(212, 175, 55, 0.15);
+  1396→  box-shadow: 0 0 12px rgba(212, 175, 55, 0.04);
+  1397→}
+  1398→
+  1399→/* Rank Badge */
+  1400→.rank-badge {
+  1401→  width: 36px;
+  1402→  height: 36px;
+  1403→  border-radius: 50%;
+  1404→  display: flex;
+  1405→  align-items: center;
+  1406→  justify-content: center;
+  1407→  font-weight: 800;
+  1408→  font-size: 0.9rem;
+  1409→  flex-shrink: 0;
+  1410→  background: var(--bg-input);
+  1411→  color: var(--text-secondary);
+  1412→  border: 2px solid transparent;
+  1413→  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  1414→}
+  1415→
+  1416→.rank-badge:hover {
+  1417→  transform: scale(1.08);
+  1418→}
+  1419→
+  1420→.rank-gold {
+  1421→  background: linear-gradient(135deg, #d4af37, #f5d442) !important;
+  1422→  color: var(--bg-primary) !important;
+  1423→  border-color: var(--medal-gold) !important;
+  1424→  box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
+  1425→}
+  1426→
+  1427→.rank-silver {
+  1428→  background: linear-gradient(135deg, #9ca3af, #d1d5db) !important;
+  1429→  color: var(--bg-primary) !important;
+  1430→  border-color: var(--medal-silver) !important;
+  1431→}
+  1432→
+  1433→.rank-bronze {
+  1434→  background: linear-gradient(135deg, #b45309, #d97706) !important;
+  1435→  color: var(--bg-primary) !important;
+  1436→  border-color: var(--medal-bronze) !important;
+  1437→}
+  1438→
+  1439→/* Leaderboard mini items */
+  1440→.lb-name {
+  1441→  flex: 1;
+  1442→  margin-left: 0.75rem;
+  1443→  color: var(--text-primary);
+  1444→  font-weight: 500;
+  1445→}
+  1446→
+  1447→.lb-points {
+  1448→  font-weight: 700;
+  1449→  color: var(--gold-light);
+  1450→  font-size: 1.1rem;
+  1451→  font-family: var(--font-mono);
+  1452→}
+  1453→
+  1454→.lb-exact {
+  1455→  color: var(--text-muted);
+  1456→  font-size: 0.8rem;
+  1457→  margin-left: 0.5rem;
+  1458→}
+  1459→
+  1460→
+  1461→/* ==========================================================================
+  1462→   PODIUM SECTION
+  1463→   ========================================================================== */
+  1464→.podium-section {
+  1465→  position: relative;
+  1466→}
+  1467→
+  1468→.podium-section .glass-card,
+  1469→.podium-section .glass-card-gold {
+  1470→  transition: transform var(--transition-normal), box-shadow var(--transition-slow);
+  1471→}
+  1472→
+  1473→.podium-section .glass-card:hover,
+  1474→.podium-section .glass-card-gold:hover {
+  1475→  transform: translateY(-4px);
+  1476→}
+  1477→
+  1478→/* Champion Card */
+  1479→.champion-card {
+  1480→  position: relative;
+  1481→}
+  1482→
+  1483→.champion-card::before {
+  1484→  content: '';
+  1485→  position: absolute;
+  1486→  inset: -2px;
+  1487→  background: var(--gold-gradient);
+  1488→  border-radius: calc(var(--radius-xl) + 2px);
+  1489→  z-index: -1;
+  1490→  opacity: 0.5;
+  1491→  animation: championGlow 3s ease-in-out infinite;
+  1492→}
+  1493→
+  1494→@keyframes championGlow {
+  1495→  0%, 100% { opacity: 0.3; }
+  1496→  50% { opacity: 0.6; }
+  1497→}
+  1498→
+  1499→.silver-card {
+  1500→  border-color: rgba(192, 192, 192, 0.2) !important;
+  1501→}
+  1502→
+  1503→.bronze-card {
+  1504→  border-color: rgba(205, 127, 50, 0.2) !important;
+  1505→}
+  1506→
+  1507→.celebrate {
+  1508→  animation: celebratePulse 2s ease-in-out infinite;
+  1509→}
+  1510→
+  1511→@keyframes celebratePulse {
+  1512→  0%, 100% { box-shadow: var(--glass-shadow), 0 0 20px rgba(212, 175, 55, 0.1); }
+  1513→  50% { box-shadow: var(--glass-shadow-hover), 0 0 40px rgba(212, 175, 55, 0.2); }
+  1514→}
+  1515→
+  1516→
+  1517→/* ==========================================================================
+  1518→   MEDAL STYLES
+  1519→   ========================================================================== */
+  1520→.medal {
+  1521→  display: inline-flex;
+  1522→  align-items: center;
+  1523→  justify-content: center;
+  1524→  border-radius: 50%;
+  1525→  font-weight: 800;
+  1526→  border: 2px solid transparent;
+  1527→  backdrop-filter: blur(8px);
+  1528→  -webkit-backdrop-filter: blur(8px);
+  1529→}
+  1530→
+  1531→.medal-gold {
+  1532→  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(245, 212, 66, 0.15));
+  1533→  border-color: rgba(255, 215, 0, 0.3);
+  1534→  box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
+  1535→}
+  1536→
+  1537→.medal-silver {
+  1538→  background: linear-gradient(135deg, rgba(192, 192, 192, 0.2), rgba(209, 213, 219, 0.15));
+  1539→  border-color: rgba(192, 192, 192, 0.3);
+  1540→  box-shadow: 0 0 10px rgba(192, 192, 192, 0.15);
+  1541→}
+  1542→
+  1543→.medal-bronze {
+  1544→  background: linear-gradient(135deg, rgba(205, 127, 50, 0.2), rgba(232, 168, 87, 0.15));
+  1545→  border-color: rgba(205, 127, 50, 0.3);
+  1546→  box-shadow: 0 0 10px rgba(205, 127, 50, 0.15);
+  1547→}
+  1548→
+  1549→
+  1550→/* ==========================================================================
+  1551→   PARTICIPANT STYLES
+  1552→   ========================================================================== */
+  1553→.participant-name {
+  1554→  font-weight: 700;
+  1555→  color: var(--text-primary);
+  1556→  line-height: 1.3;
+  1557→}
+  1558→
+  1559→.participant-points {
+  1560→  font-weight: 900;
+  1561→  color: var(--gold-light);
+  1562→  font-family: var(--font-mono);
+  1563→}
+  1564→
+  1565→.participant-detail {
+  1566→  font-size: 0.8rem;
+  1567→  color: var(--text-muted);
+  1568→  font-weight: 500;
+  1569→}
+  1570→
+  1571→.participant-info {
+  1572→  flex: 1;
+  1573→  min-width: 0;
+  1574→}
+  1575→
+  1576→.points-label {
+  1577→  display: block;
+  1578→  font-size: 0.6875rem;
+  1579→  font-weight: 600;
+  1580→  color: var(--text-muted);
+  1581→  text-transform: uppercase;
+  1582→  letter-spacing: 0.05em;
+  1583→}
+  1584→
+  1585→
+  1586→/* ==========================================================================
+  1587→   PLAYER SHOWCASE SECTION
+  1588→   ========================================================================== */
+  1589→.player-showcase {
+  1590→  position: relative;
+  1591→  overflow: hidden;
+  1592→  padding: 2rem 0;
+  1593→}
+  1594→
+  1595→.player-card {
+  1596→  position: relative;
+  1597→  border-radius: var(--radius-xl);
+  1598→  overflow: hidden;
+  1599→  transition: transform var(--transition-normal);
+  1600→}
+  1601→
+  1602→.player-card:hover {
+  1603→  transform: scale(1.03);
+  1604→}
+  1605→
+  1606→.player-image {
+  1607→  width: 100%;
+  1608→  height: auto;
+  1609→  object-fit: cover;
+  1610→  border-radius: var(--radius-lg);
+  1611→  clip-path: inset(0 round var(--radius-lg));
+  1612→}
+  1613→
+  1614→.player-name-label {
+  1615→  position: absolute;
+  1616→  bottom: 0;
+  1617→  left: 0;
+  1618→  right: 0;
+  1619→  padding: 1rem;
+  1620→  background: linear-gradient(to top, rgba(10, 14, 23, 0.9), transparent);
+  1621→  color: var(--text-primary);
+  1622→  font-weight: 700;
+  1623→  font-size: 0.9rem;
+  1624→}
+  1625→
+  1626→
+  1627→/* ==========================================================================
+  1628→   HERO SECTION
+  1629→   ========================================================================== */
+  1630→.hero-section {
+  1631→  min-height: 100vh;
+  1632→  display: flex;
+  1633→  align-items: center;
+  1634→  justify-content: center;
+  1635→  text-align: center;
+  1636→  position: relative;
+  1637→  padding: 120px 20px 80px;
+  1638→  overflow: hidden;
+  1639→  background:
+  1640→    radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.06) 0%, transparent 60%),
+  1641→    radial-gradient(ellipse at 20% 80%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+  1642→    radial-gradient(ellipse at 80% 80%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+  1643→    var(--bg-primary);
+  1644→}
+  1645→
+  1646→.hero-section::before {
+  1647→  content: '';
+  1648→  position: absolute;
+  1649→  top: 0;
+  1650→  left: 0;
+  1651→  right: 0;
+  1652→  height: 2px;
+  1653→  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  1654→  opacity: 0.6;
+  1655→}
+  1656→
+  1657→.hero-section::after {
+  1658→  content: '';
+  1659→  position: absolute;
+  1660→  bottom: 0;
+  1661→  left: 0;
+  1662→  right: 0;
+  1663→  height: 200px;
+  1664→  background: linear-gradient(to top, var(--bg-primary), transparent);
+  1665→  pointer-events: none;
+  1666→  z-index: 1;
+  1667→}
+  1668→
+  1669→.hero-title {
+  1670→  font-size: clamp(2rem, 6vw, 4rem);
+  1671→  font-weight: 900;
+  1672→  background: var(--gold-text-gradient);
+  1673→  -webkit-background-clip: text;
+  1674→  -webkit-text-fill-color: transparent;
+  1675→  background-clip: text;
+  1676→  letter-spacing: 2px;
+  1677→  line-height: 1.1;
+  1678→  margin-bottom: 0.5rem;
+  1679→  text-shadow: none;
+  1680→  filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.15));
+  1681→}
+  1682→
+  1683→.hero-subtitle {
+  1684→  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  1685→  color: var(--text-secondary);
+  1686→  font-weight: 300;
+  1687→  letter-spacing: 4px;
+  1688→  text-transform: uppercase;
+  1689→  margin-bottom: 1.5rem;
+  1690→}
+  1691→
+  1692→.hero-trophy {
+  1693→  font-size: clamp(3rem, 8vw, 5rem);
+  1694→  display: block;
+  1695→  margin-bottom: 1rem;
+  1696→  animation: trophyBounce 2s ease-in-out infinite;
+  1697→  filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.2));
+  1698→}
+  1699→
+  1700→@keyframes trophyBounce {
+  1701→  0%, 100% { transform: translateY(0) scale(1); }
+  1702→  50% { transform: translateY(-12px) scale(1.05); }
+  1703→}
+  1704→
+  1705→.hero-cta {
+  1706→  display: flex;
+  1707→  gap: 1rem;
+  1708→  justify-content: center;
+  1709→  flex-wrap: wrap;
+  1710→  margin-top: 1.5rem;
+  1711→}
+  1712→
+  1713→.hero-cta .btn {
+  1714→  min-height: 48px;
+  1715→  min-width: 180px;
+  1716→  font-weight: 600;
+  1717→  letter-spacing: 0.5px;
+  1718→}
+  1719→
+  1720→
+  1721→/* ==========================================================================
+  1722→   STATS CARDS
+  1723→   ========================================================================== */
+  1724→.stats-card {
+  1725→  text-align: center;
+  1726→  padding: 1.5rem 1rem;
+  1727→  border-radius: var(--radius-xl);
+  1728→}
+  1729→
+  1730→.stats-icon {
+  1731→  font-size: 2rem;
+  1732→  display: block;
+  1733→  margin-bottom: 0.5rem;
+  1734→  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.15));
+  1735→}
+  1736→
+  1737→.stats-number {
+  1738→  font-size: 2rem;
+  1739→  font-weight: 900;
+  1740→  color: var(--gold-light);
+  1741→  font-family: var(--font-mono);
+  1742→  text-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
+  1743→}
+  1744→
+  1745→.stats-label {
+  1746→  font-size: 0.85rem;
+  1747→  color: var(--text-secondary);
+  1748→  text-transform: uppercase;
+  1749→  letter-spacing: 1px;
+  1750→  font-weight: 600;
+  1751→}
+  1752→
+  1753→
+  1754→/* ==========================================================================
+  1755→   PAGE HEADER
+  1756→   ========================================================================== */
+  1757→.page-header {
+  1758→  text-align: center;
+  1759→  padding: 5.5rem 1rem 1.5rem;
+  1760→  position: relative;
+  1761→  background:
+  1762→    radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.04) 0%, transparent 60%),
+  1763→    transparent;
+  1764→}
+  1765→
+  1766→.page-header::after {
+  1767→  content: '';
+  1768→  position: absolute;
+  1769→  bottom: 0;
+  1770→  left: 50%;
+  1771→  transform: translateX(-50%);
+  1772→  width: 80px;
+  1773→  height: 2px;
+  1774→  background: var(--gold-gradient);
+  1775→  border-radius: 1px;
+  1776→  box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+  1777→}
+  1778→
+  1779→.page-title {
+  1780→  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  1781→  font-weight: 900;
+  1782→  margin-bottom: 0.5rem;
+  1783→  letter-spacing: 1px;
+  1784→}
+  1785→
+  1786→.page-description {
+  1787→  color: var(--text-secondary);
+  1788→  font-size: 1rem;
+  1789→  margin-bottom: 0.5rem;
+  1790→  font-weight: 400;
+  1791→}
+  1792→
+  1793→.page-content {
+  1794→  padding-bottom: 2rem;
+  1795→}
+  1796→
+  1797→.container-narrow {
+  1798→  max-width: 600px;
+  1799→}
+  1800→
+  1801→
+  1802→/* ==========================================================================
+  1803→   SECTION TITLES
+  1804→   ========================================================================== */
+  1805→.section-title {
+  1806→  font-size: 1.25rem;
+  1807→  font-weight: 800;
+  1808→  color: var(--text-primary);
+  1809→  display: flex;
+  1810→  align-items: center;
+  1811→  gap: 0.75rem;
+  1812→  letter-spacing: 0.5px;
+  1813→}
+  1814→
+  1815→.title-accent {
+  1816→  display: inline-block;
+  1817→  width: 4px;
+  1818→  height: 1.25rem;
+  1819→  background: var(--gold-gradient);
+  1820→  border-radius: 2px;
+  1821→  box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+  1822→  flex-shrink: 0;
+  1823→}
+  1824→
+  1825→.section-heading {
+  1826→  display: flex;
+  1827→  align-items: center;
+  1828→  gap: 0.75rem;
+  1829→  margin-bottom: 1.5rem;
+  1830→}
+  1831→
+  1832→.section-heading::before,
+  1833→.section-heading::after {
+  1834→  content: '';
+  1835→  flex: 1;
+  1836→  height: 1px;
+  1837→  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+  1838→}
+  1839→
+  1840→.section-heading span {
+  1841→  color: var(--gold-light);
+  1842→  font-weight: 700;
+  1843→  font-size: 1.3rem;
+  1844→  letter-spacing: 1px;
+  1845→  text-transform: uppercase;
+  1846→  white-space: nowrap;
+  1847→}
+  1848→
+  1849→
+  1850→/* ==========================================================================
+  1851→   LOGIN CARD
+  1852→   ========================================================================== */
+  1853→.login-page {
+  1854→  min-height: 100vh;
+  1855→  display: flex;
+  1856→  align-items: center;
+  1857→  justify-content: center;
+  1858→  padding-top: 80px;
+  1859→  padding-bottom: 40px;
+  1860→  position: relative;
+  1861→  overflow: hidden;
+  1862→}
+  1863→
+  1864→.login-page::before {
+  1865→  content: '';
+  1866→  position: absolute;
+  1867→  inset: 0;
+  1868→  background:
+  1869→    radial-gradient(ellipse at 20% 50%, rgba(212, 175, 55, 0.04) 0%, transparent 50%),
+  1870→    radial-gradient(ellipse at 80% 50%, rgba(212, 175, 55, 0.04) 0%, transparent 50%);
+  1871→  pointer-events: none;
+  1872→}
+  1873→
+  1874→.login-card {
+  1875→  max-width: 440px;
+  1876→  width: 100%;
+  1877→  border-radius: var(--radius-xl);
+  1878→  padding: 2.5rem 2rem;
+  1879→  position: relative;
+  1880→  z-index: 1;
+  1881→}
+  1882→
+  1883→.login-card.glass-card-gold::before {
+  1884→  animation-duration: 3s;
+  1885→}
+  1886→
+  1887→.trophy-icon {
+  1888→  font-size: 4rem;
+  1889→  display: block;
+  1890→  margin-bottom: 0.5rem;
+  1891→  animation: float 3s ease-in-out infinite;
+  1892→  filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.2));
+  1893→}
+  1894→
+  1895→@keyframes float {
+  1896→  0%, 100% { transform: translateY(0); }
+  1897→  50% { transform: translateY(-10px); }
+  1898→}
+  1899→
+  1900→/* Form Controls for Login/Prediction */
+  1901→.form-control,
+  1902→.form-select {
+  1903→  background-color: var(--bg-input);
+  1904→  color: var(--text-primary);
+  1905→  border-color: rgba(212, 175, 55, 0.15);
+  1906→  border-radius: var(--radius-md);
+  1907→  transition:
+  1908→    border-color var(--transition-fast),
+  1909→    box-shadow var(--transition-fast),
+  1910→    background var(--transition-fast);
+  1911→}
+  1912→
+  1913→.form-control:focus,
+  1914→.form-select:focus {
+  1915→  border-color: var(--gold);
+  1916→  box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.2), 0 0 15px rgba(212, 175, 55, 0.08);
+  1917→  background-color: var(--bg-input-focus);
+  1918→  color: var(--text-primary);
+  1919→}
+  1920→
+  1921→.form-control::placeholder {
+  1922→  color: var(--text-muted);
+  1923→}
+  1924→
+  1925→.form-select option {
+  1926→  background-color: var(--bg-secondary);
+  1927→  color: var(--text-primary);
+  1928→}
+  1929→
+  1930→.form-label {
+  1931→  font-weight: 500;
+  1932→  font-size: 0.9rem;
+  1933→}
+  1934→
+  1935→/* Secret code wrapper */
+  1936→.secret-wrapper {
+  1937→  position: relative;
+  1938→}
+  1939→
+  1940→.secret-wrapper .toggle-password {
+  1941→  position: absolute;
+  1942→  right: 12px;
+  1943→  top: 50%;
+  1944→  transform: translateY(-50%);
+  1945→  background: none;
+  1946→  border: none;
+  1947→  color: var(--text-secondary);
+  1948→  cursor: pointer;
+  1949→  padding: 4px;
+  1950→  z-index: 2;
+  1951→  font-size: 1.1rem;
+  1952→  transition: color var(--transition-fast);
+  1953→}
+  1954→
+  1955→.secret-wrapper .toggle-password:hover {
+  1956→  color: var(--gold);
+  1957→}
+  1958→
+  1959→/* Shake animation for login errors */
+  1960→.shake {
+  1961→  animation: shake 0.5s ease-in-out;
+  1962→}
+  1963→
+  1964→@keyframes shake {
+  1965→  0%, 100% { transform: translateX(0); }
+  1966→  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  1967→  20%, 40%, 60%, 80% { transform: translateX(5px); }
+  1968→}
+  1969→
+  1970→
+  1971→/* ==========================================================================
+  1972→   FOOTER
+  1973→   ========================================================================== */
+  1974→.footer,
+  1975→.footer-section {
+  1976→  position: relative;
+  1977→  z-index: 1;
+  1978→  border-top: 1px solid var(--border-gold);
+  1979→  background: rgba(10, 14, 23, 0.9);
+  1980→  backdrop-filter: blur(16px);
+  1981→  -webkit-backdrop-filter: blur(16px);
+  1982→}
+  1983→
+  1984→.footer::before,
+  1985→.footer-section::before {
+  1986→  content: '';
+  1987→  position: absolute;
+  1988→  top: 0;
+  1989→  left: 0;
+  1990→  right: 0;
+  1991→  height: 1px;
+  1992→  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+  1993→}
+  1994→
+  1995→
+  1996→/* ==========================================================================
+  1997→   CONFETTI CONTAINER
+  1998→   ========================================================================== */
+  1999→.confetti-container {
+  2000→  position: fixed;
+
+[showing lines 1-2000 of 2665; use offset=2001 with limit to continue reading]
