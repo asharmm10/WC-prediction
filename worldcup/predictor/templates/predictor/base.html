@@ -6,9 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <meta name="description" content="FIFA World Cup 2026 Family Prediction League">
   <meta name="csrf-token" content="{{ csrf_token }}">
+  <meta name="theme-color" content="#0a0e17">
   <title>{% block title %}WC2026 Prediction League{% endblock %}</title>
 
-  <!-- Google Fonts: Inter -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
@@ -26,7 +27,7 @@
   <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
   <!-- Custom Dark Theme -->
-  <link rel="stylesheet" href="{% static 'css/style.css' %}?XTransformPort=8000">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2{% if xtransformport_param %}&{{ xtransformport_param }}{% endif %}">
 
   {% block extra_css %}{% endblock %}
 </head>
@@ -37,6 +38,9 @@
   <!-- Floating Footballs Container -->
   <div id="floating-footballs"></div>
 
+  <!-- Background Particles -->
+  <canvas id="particles-canvas"></canvas>
+
   <!-- Toast Container -->
   <div class="toast-container" id="toast-container"></div>
 
@@ -46,8 +50,8 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark-custom fixed-top" id="mainNavbar">
     <div class="container">
-      <a class="navbar-brand" href="{% url 'predictor:home' %}">
-        <span class="brand-icon">&#9917;</span>
+      <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'predictor:home' %}">
+        <img src="https://sfile.chatglm.cn/images-ppt/c7bf7e71674f.png" alt="WC2026" style="height:36px;width:auto;filter:drop-shadow(0 0 8px rgba(212,175,55,0.5));">
         <span class="brand-text gold-text">WC2026</span>
       </a>
       <button class="navbar-toggler border-gold" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,7 +94,7 @@
             <i class="bi bi-box-arrow-right"></i> Logout
           </a>
           {% else %}
-          <a href="{% url 'predictor:login' %}" class="btn btn-gold btn-sm">
+          <a href="{% url 'predictor:login' %}" class="btn btn-gold btn-sm btn-glow">
             <i class="bi bi-box-arrow-in-right"></i> Login
           </a>
           {% endif %}
@@ -119,12 +123,13 @@
   <!-- Footer -->
   <footer class="footer text-center py-4 mt-auto">
     <div class="container">
-      <div class="row">
-        <div class="col-md-4 text-md-start">
-          <span class="brand-icon">&#9917;</span> <span class="gold-text">WC2026</span>
+      <div class="row align-items-center">
+        <div class="col-md-4 text-md-start mb-2 mb-md-0">
+          <img src="https://sfile.chatglm.cn/images-ppt/c7bf7e71674f.png" alt="WC2026" style="height:24px;width:auto;filter:drop-shadow(0 0 4px rgba(212,175,55,0.4));" class="me-2">
+          <span class="gold-text fw-bold">WC2026</span>
         </div>
         <div class="col-md-4">
-          <p class="text-muted mb-0">FIFA World Cup 2026 &mdash; Family Prediction League</p>
+          <p class="text-muted mb-0" style="font-size:0.85rem;">FIFA World Cup 2026 &mdash; Family Prediction League</p>
           <p class="text-muted small mb-0">Made with &#10084;&#65039; for the family</p>
         </div>
         <div class="col-md-4 text-md-end">
@@ -144,38 +149,30 @@
   <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
   <script>
     AOS.init({
-      duration: 700,
+      duration: 900,
       easing: 'ease-out-cubic',
       once: true,
-      offset: 60,
+      offset: 80,
     });
   </script>
 
   <!-- Custom JS -->
-  <script src="{% static 'js/main.js' %}?XTransformPort=8000"></script>
+  <script src="{% static 'js/main.js' %}?v=2{% if xtransformport_param %}&{{ xtransformport_param }}{% endif %}"></script>
 
-  <!-- Gateway Integration: Add XTransformPort to all internal links, forms, and AJAX -->
+  <!-- Gateway Integration -->
   <script>
   (function() {
-    // When running inside the Caddy gateway with XTransformPort,
-    // we need to add the query parameter to all internal navigation
     const PORT = '8000';
     const PARAM = 'XTransformPort';
-
-    // Check if we're behind the gateway (running in iframe with XTransformPort)
     const urlParams = new URLSearchParams(window.location.search);
     const isBehindGateway = urlParams.has(PARAM);
 
     if (isBehindGateway) {
-      // Intercept all link clicks to add XTransformPort
       document.addEventListener('click', function(e) {
         const link = e.target.closest('a[href]');
         if (!link) return;
-
         const href = link.getAttribute('href');
         if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto') || href.startsWith('tel') || href.startsWith('javascript') || href.startsWith('//')) return;
-
-        // Add XTransformPort to internal links
         try {
           const url = new URL(href, window.location.origin);
           if (!url.searchParams.has(PARAM)) {
@@ -185,14 +182,11 @@
         } catch(err) {}
       });
 
-      // Add XTransformPort to all forms on submit
       document.addEventListener('submit', function(e) {
         const form = e.target;
         if (form.tagName !== 'FORM') return;
-
         const action = form.getAttribute('action') || window.location.pathname;
         if (action.startsWith('http') || action.startsWith('//')) return;
-
         try {
           const url = new URL(action, window.location.origin);
           if (!url.searchParams.has(PARAM)) {
@@ -202,7 +196,6 @@
         } catch(err) {}
       }, true);
 
-      // Handle AJAX requests - add XTransformPort to fetch URLs
       const originalFetch = window.fetch;
       window.fetch = function(url, options) {
         if (typeof url === 'string' && !url.startsWith('http') && !url.startsWith('#') && !url.startsWith('//')) {
@@ -213,28 +206,14 @@
               url = urlObj.pathname + urlObj.search;
             }
           } catch(err) {}
-        } else if (url instanceof Request) {
-          // Handle Request objects
-          try {
-            const originalUrl = url.url;
-            if (!originalUrl.startsWith('http') && !originalUrl.startsWith('//')) {
-              const urlObj = new URL(originalUrl, window.location.origin);
-              if (!urlObj.searchParams.has(PARAM)) {
-                urlObj.searchParams.set(PARAM, PORT);
-                url = new Request(urlObj.pathname + urlObj.search, url);
-              }
-            }
-          } catch(err) {}
         }
         return originalFetch.call(this, url, options);
       };
 
-      // Fix all existing links on the page that don't have XTransformPort
       function fixLinks() {
         document.querySelectorAll('a[href]').forEach(function(link) {
           const href = link.getAttribute('href');
           if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto') || href.startsWith('tel') || href.startsWith('javascript') || href.startsWith('//')) return;
-
           try {
             const url = new URL(href, window.location.origin);
             if (!url.searchParams.has(PARAM) && url.pathname.startsWith('/')) {
@@ -244,11 +223,9 @@
           } catch(err) {}
         });
 
-        // Fix form actions
         document.querySelectorAll('form[action]').forEach(function(form) {
           const action = form.getAttribute('action');
           if (!action || action.startsWith('http') || action.startsWith('//')) return;
-
           try {
             const url = new URL(action, window.location.origin);
             if (!url.searchParams.has(PARAM)) {
@@ -259,13 +236,8 @@
         });
       }
 
-      // Run immediately and after any DOM changes
       fixLinks();
-
-      // Use MutationObserver to fix links added dynamically
-      const observer = new MutationObserver(function() {
-        fixLinks();
-      });
+      const observer = new MutationObserver(function() { fixLinks(); });
       observer.observe(document.body, { childList: true, subtree: true });
     }
   })();

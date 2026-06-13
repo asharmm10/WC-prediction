@@ -1342,12 +1342,94 @@
     initLeaderboard();
     initLoginForm();
     initLiveUpdates();
+    initParticles();
 
     // Trigger confetti if there's a celebration flag in the page
     if (document.querySelector('.celebrate')) {
       setTimeout(triggerConfetti, 500);
     }
   });
+
+  // ------------------------------------------------------------------
+  // Particles Canvas Effect
+  // ------------------------------------------------------------------
+  function initParticles() {
+    var canvas = document.getElementById('particles-canvas');
+    if (!canvas || prefersReducedMotion) return;
+
+    var ctx = canvas.getContext('2d');
+    var particles = [];
+    var maxParticles = 40;
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', debounce(resize, 200));
+
+    // Style the canvas
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = '0';
+    canvas.style.opacity = '0.4';
+
+    for (var i = 0; i < maxParticles; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.5 + 0.5,
+        speedX: (Math.random() - 0.5) * 0.3,
+        speedY: (Math.random() - 0.5) * 0.3,
+        opacity: Math.random() * 0.5 + 0.1
+      });
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.x += p.speedX;
+        p.y += p.speedY;
+
+        // Wrap around
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(212, 175, 55, ' + p.opacity + ')';
+        ctx.fill();
+      }
+
+      // Draw connections
+      for (var i = 0; i < particles.length; i++) {
+        for (var j = i + 1; j < particles.length; j++) {
+          var dx = particles[i].x - particles[j].x;
+          var dy = particles[i].y - particles[j].y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = 'rgba(212, 175, 55, ' + (0.06 * (1 - dist / 120)) + ')';
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+    animate();
+  }
 
   // Expose showToast globally for use in inline scripts or other modules
   window.showToast = showToast;

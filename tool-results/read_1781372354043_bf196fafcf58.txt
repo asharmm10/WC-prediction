@@ -1,0 +1,804 @@
+     1→{% extends "predictor/base.html" %}
+     2→{% load static %}
+     3→
+     4→{% block title %}FIFA World Cup 2026 - Family Prediction League{% endblock %}
+     5→
+     6→{% block extra_css %}
+     7→<style>
+     8→    /* ── Video Background ── */
+     9→    .hero-video-bg {
+    10→        position: absolute;
+    11→        top: 0; left: 0; right: 0; bottom: 0;
+    12→        overflow: hidden;
+    13→        z-index: 0;
+    14→    }
+    15→    .hero-video-bg video {
+    16→        position: absolute;
+    17→        top: 50%; left: 50%;
+    18→        min-width: 100%; min-height: 100%;
+    19→        transform: translate(-50%, -50%);
+    20→        object-fit: cover;
+    21→        opacity: 0.25;
+    22→    }
+    23→    .hero-video-overlay {
+    24→        position: absolute;
+    25→        inset: 0;
+    26→        background: linear-gradient(
+    27→            180deg,
+    28→            rgba(10, 14, 23, 0.7) 0%,
+    29→            rgba(10, 14, 23, 0.5) 40%,
+    30→            rgba(10, 14, 23, 0.85) 80%,
+    31→            rgba(10, 14, 23, 1) 100%
+    32→        );
+    33→        z-index: 1;
+    34→    }
+    35→
+    36→    /* ── Hero Section ── */
+    37→    .hero-section {
+    38→        min-height: 100vh;
+    39→        display: flex;
+    40→        align-items: center;
+    41→        justify-content: center;
+    42→        text-align: center;
+    43→        position: relative;
+    44→        padding: 120px 20px 80px;
+    45→        overflow: hidden;
+    46→    }
+    47→    .hero-content {
+    48→        position: relative;
+    49→        z-index: 2;
+    50→    }
+    51→    .hero-logo {
+    52→        width: 120px;
+    53→        height: auto;
+    54→        margin-bottom: 1rem;
+    55→        filter: drop-shadow(0 0 30px rgba(212,175,55,0.5));
+    56→        animation: floatSlow 6s ease-in-out infinite;
+    57→    }
+    58→    @keyframes floatSlow {
+    59→        0%, 100% { transform: translateY(0); }
+    60→        50% { transform: translateY(-12px); }
+    61→    }
+    62→    .hero-title {
+    63→        font-size: clamp(2.2rem, 7vw, 4.5rem);
+    64→        font-weight: 900;
+    65→        background: linear-gradient(135deg, #d4af37 0%, #f5d442 40%, #d4af37 70%, #f5d442 100%);
+    66→        background-size: 200% auto;
+    67→        -webkit-background-clip: text;
+    68→        -webkit-text-fill-color: transparent;
+    69→        background-clip: text;
+    70→        letter-spacing: 2px;
+    71→        line-height: 1.1;
+    72→        margin-bottom: 0.5rem;
+    73→        animation: shimmerText 4s linear infinite;
+    74→    }
+    75→    @keyframes shimmerText {
+    76→        0% { background-position: 0% center; }
+    77→        100% { background-position: 200% center; }
+    78→    }
+    79→    .hero-subtitle {
+    80→        font-size: clamp(0.9rem, 2.5vw, 1.4rem);
+    81→        color: #9ca3af;
+    82→        font-weight: 300;
+    83→        letter-spacing: 6px;
+    84→        text-transform: uppercase;
+    85→        margin-bottom: 2rem;
+    86→    }
+    87→    .hero-tagline {
+    88→        font-size: clamp(1rem, 2vw, 1.2rem);
+    89→        color: #d4af37;
+    90→        font-weight: 600;
+    91→        margin-bottom: 2.5rem;
+    92→        text-shadow: 0 0 20px rgba(212,175,55,0.3);
+    93→    }
+    94→
+    95→    /* ── Countdown Section ── */
+    96→    .countdown-section {
+    97→        margin-bottom: 2.5rem;
+    98→    }
+    99→    .countdown-label-text {
+   100→        color: #9ca3af;
+   101→        font-size: 0.85rem;
+   102→        text-transform: uppercase;
+   103→        letter-spacing: 3px;
+   104→        margin-bottom: 0.75rem;
+   105→    }
+   106→    .countdown-match-name {
+   107→        color: #f5d442;
+   108→        font-weight: 700;
+   109→        font-size: 1.1rem;
+   110→        margin-bottom: 1rem;
+   111→    }
+   112→    .countdown-container {
+   113→        display: flex;
+   114→        justify-content: center;
+   115→        gap: 12px;
+   116→        flex-wrap: wrap;
+   117→    }
+   118→    .countdown-block {
+   119→        display: flex;
+   120→        flex-direction: column;
+   121→        align-items: center;
+   122→        min-width: 70px;
+   123→    }
+   124→    .countdown-digit {
+   125→        background: rgba(17, 24, 39, 0.7);
+   126→        backdrop-filter: blur(12px);
+   127→        border: 1px solid rgba(212,175,55,0.25);
+   128→        border-radius: 12px;
+   129→        padding: 10px 16px;
+   130→        font-family: 'JetBrains Mono', monospace;
+   131→        font-size: 2rem;
+   132→        font-weight: 800;
+   133→        color: #f5d442;
+   134→        min-width: 70px;
+   135→        text-align: center;
+   136→        box-shadow: 0 0 20px rgba(212,175,55,0.1), inset 0 1px 0 rgba(255,255,255,0.05);
+   137→    }
+   138→    .countdown-unit {
+   139→        font-size: 0.7rem;
+   140→        color: #6b7280;
+   141→        text-transform: uppercase;
+   142→        letter-spacing: 2px;
+   143→        margin-top: 6px;
+   144→        font-weight: 600;
+   145→    }
+   146→    .countdown-sep {
+   147→        font-size: 2rem;
+   148→        color: #d4af37;
+   149→        font-weight: 800;
+   150→        align-self: flex-start;
+   151→        padding-top: 10px;
+   152→        animation: blink 1s step-end infinite;
+   153→    }
+   154→    @keyframes blink {
+   155→        50% { opacity: 0.3; }
+   156→    }
+   157→
+   158→    /* ── Hero CTA Buttons ── */
+   159→    .hero-actions {
+   160→        display: flex;
+   161→        gap: 16px;
+   162→        justify-content: center;
+   163→        flex-wrap: wrap;
+   164→        margin-top: 2rem;
+   165→    }
+   166→
+   167→    /* ── Player Showcase ── */
+   168→    .player-showcase {
+   169→        position: relative;
+   170→        padding: 80px 0 60px;
+   171→        overflow: hidden;
+   172→    }
+   173→    .player-showcase::before {
+   174→        content: '';
+   175→        position: absolute;
+   176→        inset: 0;
+   177→        background: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.06) 0%, transparent 70%);
+   178→        pointer-events: none;
+   179→    }
+   180→    .players-row {
+   181→        display: flex;
+   182→        justify-content: center;
+   183→        gap: 20px;
+   184→        flex-wrap: wrap;
+   185→        padding: 0 10px;
+   186→    }
+   187→    .player-card {
+   188→        position: relative;
+   189→        width: 140px;
+   190→        height: 220px;
+   191→        border-radius: 16px;
+   192→        overflow: hidden;
+   193→        background: rgba(17,24,39,0.6);
+   194→        backdrop-filter: blur(16px);
+   195→        border: 1px solid rgba(212,175,55,0.15);
+   196→        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+   197→        cursor: pointer;
+   198→    }
+   199→    .player-card:hover {
+   200→        transform: translateY(-10px) scale(1.05);
+   201→        border-color: rgba(212,175,55,0.5);
+   202→        box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(212,175,55,0.2);
+   203→    }
+   204→    .player-card::after {
+   205→        content: '';
+   206→        position: absolute;
+   207→        inset: 0;
+   208→        background: linear-gradient(180deg, transparent 30%, rgba(10,14,23,0.95) 100%);
+   209→        z-index: 1;
+   210→    }
+   211→    .player-card img {
+   212→        width: 100%;
+   213→        height: 100%;
+   214→        object-fit: cover;
+   215→        object-position: top center;
+   216→        transition: transform 0.4s ease;
+   217→    }
+   218→    .player-card:hover img {
+   219→        transform: scale(1.1);
+   220→    }
+   221→    .player-info {
+   222→        position: absolute;
+   223→        bottom: 0; left: 0; right: 0;
+   224→        padding: 12px 10px;
+   225→        z-index: 2;
+   226→        text-align: center;
+   227→    }
+   228→    .player-name {
+   229→        color: #ffffff;
+   230→        font-weight: 700;
+   231→        font-size: 0.85rem;
+   232→        line-height: 1.2;
+   233→        margin-bottom: 2px;
+   234→    }
+   235→    .player-team {
+   236→        color: #d4af37;
+   237→        font-size: 0.7rem;
+   238→        font-weight: 500;
+   239→    }
+   240→
+   241→    /* ── Stats Cards Row ── */
+   242→    .stats-row {
+   243→        display: grid;
+   244→        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+   245→        gap: 16px;
+   246→        margin: 40px 0;
+   247→    }
+   248→    .stat-card {
+   249→        background: rgba(17,24,39,0.5);
+   250→        backdrop-filter: blur(20px) saturate(180%);
+   251→        border: 1px solid rgba(212,175,55,0.12);
+   252→        border-radius: 16px;
+   253→        padding: 20px 16px;
+   254→        text-align: center;
+   255→        transition: all 0.3s ease;
+   256→        position: relative;
+   257→        overflow: hidden;
+   258→    }
+   259→    .stat-card::before {
+   260→        content: '';
+   261→        position: absolute;
+   262→        top: 0; left: 0; right: 0;
+   263→        height: 2px;
+   264→        background: linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent);
+   265→    }
+   266→    .stat-card:hover {
+   267→        border-color: rgba(212,175,55,0.3);
+   268→        transform: translateY(-4px);
+   269→        box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 20px rgba(212,175,55,0.08);
+   270→    }
+   271→    .stat-icon {
+   272→        font-size: 2rem;
+   273→        margin-bottom: 8px;
+   274→    }
+   275→    .stat-value {
+   276→        font-family: 'JetBrains Mono', monospace;
+   277→        font-size: 1.8rem;
+   278→        font-weight: 800;
+   279→        color: #f5d442;
+   280→        line-height: 1;
+   281→    }
+   282→    .stat-label {
+   283→        color: #6b7280;
+   284→        font-size: 0.75rem;
+   285→        text-transform: uppercase;
+   286→        letter-spacing: 1px;
+   287→        margin-top: 6px;
+   288→        font-weight: 600;
+   289→    }
+   290→
+   291→    /* ── Quick Leaderboard ── */
+   292→    .quick-leaderboard {
+   293→        padding: 40px 0;
+   294→    }
+   295→    .lb-item {
+   296→        display: flex;
+   297→        align-items: center;
+   298→        gap: 12px;
+   299→        padding: 12px 16px;
+   300→        border-radius: 12px;
+   301→        background: rgba(17,24,39,0.4);
+   302→        backdrop-filter: blur(12px);
+   303→        border: 1px solid rgba(255,255,255,0.05);
+   304→        margin-bottom: 8px;
+   305→        transition: all 0.3s ease;
+   306→    }
+   307→    .lb-item:hover {
+   308→        border-color: rgba(212,175,55,0.2);
+   309→        background: rgba(17,24,39,0.6);
+   310→    }
+   311→    .lb-item.rank-1 {
+   312→        background: rgba(212,175,55,0.08);
+   313→        border-color: rgba(212,175,55,0.2);
+   314→    }
+   315→    .lb-rank {
+   316→        width: 36px; height: 36px;
+   317→        border-radius: 50%;
+   318→        display: flex; align-items: center; justify-content: center;
+   319→        font-weight: 800;
+   320→        font-size: 0.9rem;
+   321→        background: rgba(255,255,255,0.05);
+   322→        color: #9ca3af;
+   323→        flex-shrink: 0;
+   324→    }
+   325→    .lb-rank.rank-gold {
+   326→        background: linear-gradient(135deg, #FFD700, #f5d442);
+   327→        color: #0a0e17;
+   328→        box-shadow: 0 0 12px rgba(255,215,0,0.3);
+   329→    }
+   330→    .lb-rank.rank-silver {
+   331→        background: linear-gradient(135deg, #C0C0C0, #e8e8e8);
+   332→        color: #0a0e17;
+   333→    }
+   334→    .lb-rank.rank-bronze {
+   335→        background: linear-gradient(135deg, #CD7F32, #e8a857);
+   336→        color: #0a0e17;
+   337→    }
+   338→    .lb-name {
+   339→        flex: 1;
+   340→        color: #ffffff;
+   341→        font-weight: 600;
+   342→        font-size: 0.95rem;
+   343→    }
+   344→    .lb-pts {
+   345→        font-family: 'JetBrains Mono', monospace;
+   346→        font-weight: 800;
+   347→        color: #f5d442;
+   348→        font-size: 1.1rem;
+   349→    }
+   350→
+   351→    /* ── Upcoming Matches Section ── */
+   352→    .upcoming-section {
+   353→        padding: 40px 0;
+   354→    }
+   355→    .match-quick-card {
+   356→        display: flex;
+   357→        align-items: center;
+   358→        gap: 12px;
+   359→        padding: 14px 16px;
+   360→        border-radius: 12px;
+   361→        background: rgba(17,24,39,0.4);
+   362→        backdrop-filter: blur(12px);
+   363→        border: 1px solid rgba(255,255,255,0.05);
+   364→        margin-bottom: 10px;
+   365→        transition: all 0.3s ease;
+   366→        text-decoration: none;
+   367→        color: inherit;
+   368→    }
+   369→    .match-quick-card:hover {
+   370→        border-color: rgba(212,175,55,0.25);
+   371→        background: rgba(17,24,39,0.6);
+   372→        transform: translateX(4px);
+   373→        color: inherit;
+   374→    }
+   375→    .match-quick-teams {
+   376→        flex: 1;
+   377→    }
+   378→    .match-quick-vs {
+   379→        font-size: 0.8rem;
+   380→        color: #6b7280;
+   381→    }
+   382→    .match-quick-time {
+   383→        color: #9ca3af;
+   384→        font-size: 0.8rem;
+   385→        white-space: nowrap;
+   386→    }
+   387→
+   388→    /* ── Floating Players (decorative) ── */
+   389→    .floating-player {
+   390→        position: absolute;
+   391→        z-index: 0;
+   392→        opacity: 0.08;
+   393→        pointer-events: none;
+   394→    }
+   395→    .floating-player img {
+   396→        height: 300px;
+   397→        width: auto;
+   398→        filter: grayscale(30%);
+   399→    }
+   400→    .floating-player.left {
+   401→        left: -40px;
+   402→        bottom: 10%;
+   403→    }
+   404→    .floating-player.right {
+   405→        right: -40px;
+   406→        bottom: 5%;
+   407→    }
+   408→
+   409→    /* ── Section Divider ── */
+   410→    .section-divider {
+   411→        height: 1px;
+   412→        background: linear-gradient(90deg, transparent, rgba(212,175,55,0.3), transparent);
+   413→        max-width: 600px;
+   414→        margin: 0 auto;
+   415→    }
+   416→
+   417→    /* ── Responsive ── */
+   418→    @media (max-width: 768px) {
+   419→        .player-card {
+   420→            width: 110px;
+   421→            height: 170px;
+   422→        }
+   423→        .players-row {
+   424→            gap: 10px;
+   425→        }
+   426→        .player-name { font-size: 0.75rem; }
+   427→        .player-team { font-size: 0.6rem; }
+   428→        .countdown-digit {
+   429→            font-size: 1.5rem;
+   430→            padding: 8px 12px;
+   431→            min-width: 55px;
+   432→        }
+   433→        .countdown-block { min-width: 55px; }
+   434→        .stats-row { grid-template-columns: repeat(2, 1fr); }
+   435→        .floating-player { display: none; }
+   436→        .hero-logo { width: 80px; }
+   437→    }
+   438→    @media (max-width: 480px) {
+   439→        .player-card {
+   440→            width: 90px;
+   441→            height: 140px;
+   442→        }
+   443→    }
+   444→</style>
+   445→{% endblock %}
+   446→
+   447→{% block content %}
+   448→<!-- ============================================================
+   449→     HERO SECTION
+   450→     ============================================================ -->
+   451→<section class="hero-section">
+   452→    <!-- Video Background -->
+   453→    <div class="hero-video-bg">
+   454→        <video autoplay muted loop playsinline id="hero-video">
+   455→            <source src="{% static 'video/wc_logo_an.mp4' %}" type="video/mp4">
+   456→        </video>
+   457→        <div class="hero-video-overlay"></div>
+   458→    </div>
+   459→
+   460→    <!-- Hero Content -->
+   461→    <div class="hero-content">
+   462→        <img src="https://sfile.chatglm.cn/images-ppt/c7bf7e71674f.png" alt="FIFA World Cup 2026" class="hero-logo mx-auto d-block" data-aos="zoom-in" data-aos-duration="800">
+   463→
+   464→        <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100">
+   465→            FIFA WORLD CUP<br>2026
+   466→        </h1>
+   467→        <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200">
+   468→            Family Prediction League
+   469→        </p>
+   470→        <p class="hero-tagline" data-aos="fade-up" data-aos-delay="300">
+   471→            &#9917; Predict. Compete. Win Glory.
+   472→        </p>
+   473→
+   474→        <!-- Countdown -->
+   475→        {% if next_match %}
+   476→        <div class="countdown-section" data-aos="fade-up" data-aos-delay="400">
+   477→            <div class="countdown-label-text">Next Match</div>
+   478→            <div class="countdown-match-name">
+   479→                {{ next_match.home_team }} vs {{ next_match.away_team }}
+   480→            </div>
+   481→            <div class="countdown-container" id="countdown-container"
+   482→                 data-kickoff="{{ next_match.kickoff_datetime|date:'c' }}">
+   483→                <div class="countdown-block">
+   484→                    <div class="countdown-digit" id="cd-days">--</div>
+   485→                    <div class="countdown-unit">Days</div>
+   486→                </div>
+   487→                <div class="countdown-sep">:</div>
+   488→                <div class="countdown-block">
+   489→                    <div class="countdown-digit" id="cd-hours">--</div>
+   490→                    <div class="countdown-unit">Hours</div>
+   491→                </div>
+   492→                <div class="countdown-sep">:</div>
+   493→                <div class="countdown-block">
+   494→                    <div class="countdown-digit" id="cd-mins">--</div>
+   495→                    <div class="countdown-unit">Mins</div>
+   496→                </div>
+   497→                <div class="countdown-sep">:</div>
+   498→                <div class="countdown-block">
+   499→                    <div class="countdown-digit" id="cd-secs">--</div>
+   500→                    <div class="countdown-unit">Secs</div>
+   501→                </div>
+   502→            </div>
+   503→        </div>
+   504→        {% endif %}
+   505→
+   506→        <!-- Hero CTA Buttons -->
+   507→        <div class="hero-actions" data-aos="fade-up" data-aos-delay="500">
+   508→            {% if current_participant %}
+   509→            <a href="{% url 'predictor:today' %}" class="btn btn-gold btn-lg btn-glow" style="min-height:52px;min-width:180px;font-size:1.1rem;">
+   510→                &#9917; Predict Now
+   511→            </a>
+   512→            {% else %}
+   513→            <a href="{% url 'predictor:login' %}" class="btn btn-gold btn-lg btn-glow" style="min-height:52px;min-width:180px;font-size:1.1rem;">
+   514→                <i class="bi bi-box-arrow-in-right me-1"></i> Login to Predict
+   515→            </a>
+   516→            {% endif %}
+   517→            <a href="{% url 'predictor:leaderboard' %}" class="btn btn-gold-outline btn-lg" style="min-height:52px;min-width:160px;">
+   518→                <i class="bi bi-bar-chart-fill me-1"></i> Leaderboard
+   519→            </a>
+   520→        </div>
+   521→    </div>
+   522→</section>
+   523→
+   524→<!-- ============================================================
+   525→     PLAYER SHOWCASE
+   526→     ============================================================ -->
+   527→<section class="player-showcase" data-aos="fade-up">
+   528→    <div class="container">
+   529→        <div class="text-center mb-4">
+   530→            <h2 class="gold-text fw-bold" style="font-size:1.5rem;">Legends of the Game</h2>
+   531→            <p class="text-secondary" style="font-size:0.9rem;">The stars who define the World Cup</p>
+   532→        </div>
+   533→        <div class="players-row">
+   534→            <!-- Messi -->
+   535→            <div class="player-card" data-aos="fade-up" data-aos-delay="0">
+   536→                <img src="https://sfile.chatglm.cn/images-ppt/2b8d7d4c570a.png" alt="Messi" loading="lazy">
+   537→                <div class="player-info">
+   538→                    <div class="player-name">Messi</div>
+   539→                    <div class="player-team">Argentina</div>
+   540→                </div>
+   541→            </div>
+   542→            <!-- Ronaldo -->
+   543→            <div class="player-card" data-aos="fade-up" data-aos-delay="100">
+   544→                <img src="https://sfile.chatglm.cn/images-ppt/e9ed09cc5680.png" alt="Ronaldo" loading="lazy">
+   545→                <div class="player-info">
+   546→                    <div class="player-name">Ronaldo</div>
+   547→                    <div class="player-team">Portugal</div>
+   548→                </div>
+   549→            </div>
+   550→            <!-- Mbappe -->
+   551→            <div class="player-card" data-aos="fade-up" data-aos-delay="200">
+   552→                <img src="https://sfile.chatglm.cn/images-ppt/9b5d26e8ea09.jpg" alt="Mbappe" loading="lazy">
+   553→                <div class="player-info">
+   554→                    <div class="player-name">Mbappe</div>
+   555→                    <div class="player-team">France</div>
+   556→                </div>
+   557→            </div>
+   558→            <!-- Neymar -->
+   559→            <div class="player-card" data-aos="fade-up" data-aos-delay="300">
+   560→                <img src="https://sfile.chatglm.cn/images-ppt/ebe58d911c40.png" alt="Neymar" loading="lazy">
+   561→                <div class="player-info">
+   562→                    <div class="player-name">Neymar</div>
+   563→                    <div class="player-team">Brazil</div>
+   564→                </div>
+   565→            </div>
+   566→            <!-- Bellingham -->
+   567→            <div class="player-card" data-aos="fade-up" data-aos-delay="400">
+   568→                <img src="https://sfile.chatglm.cn/images-ppt/ec8a543bae86.png" alt="Bellingham" loading="lazy">
+   569→                <div class="player-info">
+   570→                    <div class="player-name">Bellingham</div>
+   571→                    <div class="player-team">England</div>
+   572→                </div>
+   573→            </div>
+   574→            <!-- Vinicius Jr -->
+   575→            <div class="player-card" data-aos="fade-up" data-aos-delay="500">
+   576→                <img src="https://sfile.chatglm.cn/images-ppt/3dbb1a84b8b8.png" alt="Vinicius Jr" loading="lazy">
+   577→                <div class="player-info">
+   578→                    <div class="player-name">Vinicius Jr</div>
+   579→                    <div class="player-team">Brazil</div>
+   580→                </div>
+   581→            </div>
+   582→        </div>
+   583→        <!-- Second Row -->
+   584→        <div class="players-row mt-3">
+   585→            <!-- Modric -->
+   586→            <div class="player-card" data-aos="fade-up" data-aos-delay="100">
+   587→                <img src="https://sfile.chatglm.cn/images-ppt/3b6b9adf9bd0.png" alt="Modric" loading="lazy">
+   588→                <div class="player-info">
+   589→                    <div class="player-name">Modric</div>
+   590→                    <div class="player-team">Croatia</div>
+   591→                </div>
+   592→            </div>
+   593→            <!-- Kane -->
+   594→            <div class="player-card" data-aos="fade-up" data-aos-delay="200">
+   595→                <img src="https://sfile.chatglm.cn/images-ppt/d2b776c1d518.png" alt="Kane" loading="lazy">
+   596→                <div class="player-info">
+   597→                    <div class="player-name">Kane</div>
+   598→                    <div class="player-team">England</div>
+   599→                </div>
+   600→            </div>
+   601→            <!-- Pedri -->
+   602→            <div class="player-card" data-aos="fade-up" data-aos-delay="300">
+   603→                <img src="https://sfile.chatglm.cn/images-ppt/76bccdb6d888.png" alt="Pedri" loading="lazy">
+   604→                <div class="player-info">
+   605→                    <div class="player-name">Pedri</div>
+   606→                    <div class="player-team">Spain</div>
+   607→                </div>
+   608→            </div>
+   609→        </div>
+   610→    </div>
+   611→</section>
+   612→
+   613→<!-- Divider -->
+   614→<div class="section-divider" data-aos="fade-in"></div>
+   615→
+   616→<!-- ============================================================
+   617→     STATS OVERVIEW
+   618→     ============================================================ -->
+   619→<section class="py-5">
+   620→    <div class="container">
+   621→        <div class="stats-row" data-aos="fade-up">
+   622→            <div class="stat-card">
+   623→                <div class="stat-icon">&#128101;</div>
+   624→                <div class="stat-value">{{ participant_count }}</div>
+   625→                <div class="stat-label">Participants</div>
+   626→            </div>
+   627→            <div class="stat-card">
+   628→                <div class="stat-icon">&#9917;</div>
+   629→                <div class="stat-value">16</div>
+   630→                <div class="stat-label">Matches</div>
+   631→            </div>
+   632→            <div class="stat-card">
+   633→                <div class="stat-icon">&#127942;</div>
+   634→                <div class="stat-value">3</div>
+   635→                <div class="stat-label">Points / Exact</div>
+   636→            </div>
+   637→            <div class="stat-card">
+   638→                <div class="stat-icon">&#127775;</div>
+   639→                <div class="stat-value">
+   640→                    <img src="https://sfile.chatglm.cn/images-ppt/abfba32c1c09.png" alt="Trophy" style="height:48px;width:auto;filter:drop-shadow(0 0 8px rgba(212,175,55,0.5));">
+   641→                </div>
+   642→                <div class="stat-label">The Trophy Awaits</div>
+   643→            </div>
+   644→        </div>
+   645→    </div>
+   646→</section>
+   647→
+   648→<!-- Divider -->
+   649→<div class="section-divider" data-aos="fade-in"></div>
+   650→
+   651→<!-- ============================================================
+   652→     TOP 5 LEADERBOARD + UPCOMING MATCHES (Side by Side on desktop)
+   653→     ============================================================ -->
+   654→<section class="py-5">
+   655→    <div class="container">
+   656→        <div class="row g-4">
+   657→            <!-- Top 5 Leaderboard -->
+   658→            <div class="col-lg-6" data-aos="fade-right">
+   659→                <h2 class="gold-text fw-bold mb-4" style="font-size:1.4rem;">
+   660→                    <i class="bi bi-trophy-fill me-2"></i>Top 5 Standings
+   661→                </h2>
+   662→                {% if top5 %}
+   663→                <div class="quick-leaderboard">
+   664→                    {% for entry in top5 %}
+   665→                    <div class="lb-item {% if entry.rank <= 3 %}rank-1{% endif %}">
+   666→                        <div class="lb-rank {% if entry.rank == 1 %}rank-gold{% elif entry.rank == 2 %}rank-silver{% elif entry.rank == 3 %}rank-bronze{% endif %}">
+   667→                            {% if entry.rank == 1 %}&#127942;{% else %}{{ entry.rank }}{% endif %}
+   668→                        </div>
+   669→                        <div class="lb-name">{{ entry.participant.name }}</div>
+   670→                        <div class="lb-pts">{{ entry.points }} <span style="font-size:0.7rem;color:#6b7280;">pts</span></div>
+   671→                    </div>
+   672→                    {% endfor %}
+   673→                </div>
+   674→                <div class="text-center mt-3">
+   675→                    <a href="{% url 'predictor:leaderboard' %}" class="btn btn-gold-outline btn-sm">
+   676→                        View Full Leaderboard <i class="bi bi-arrow-right ms-1"></i>
+   677→                    </a>
+   678→                </div>
+   679→                {% else %}
+   680→                <div class="glass-card text-center p-4">
+   681→                    <p class="text-secondary">No predictions yet. Be the first!</p>
+   682→                </div>
+   683→                {% endif %}
+   684→            </div>
+   685→
+   686→            <!-- Upcoming Matches -->
+   687→            <div class="col-lg-6" data-aos="fade-left">
+   688→                <h2 class="gold-text fw-bold mb-4" style="font-size:1.4rem;">
+   689→                    <i class="bi bi-calendar-event-fill me-2"></i>Upcoming Matches
+   690→                </h2>
+   691→                {% if upcoming_matches %}
+   692→                {% for match in upcoming_matches %}
+   693→                <a href="{% url 'predictor:match_detail' match.id %}" class="match-quick-card">
+   694→                    <div class="match-quick-teams">
+   695→                        <div class="fw-bold text-white" style="font-size:0.95rem;">
+   696→                            {{ match.home_team }}
+   697→                            <span class="match-quick-vs mx-1">vs</span>
+   698→                            {{ match.away_team }}
+   699→                        </div>
+   700→                        {% if match.group_stage %}
+   701→                        <span class="badge rounded-pill mt-1" style="background:rgba(59,130,246,0.12);color:#3b82f6;border:1px solid rgba(59,130,246,0.25);font-size:0.6rem;">
+   702→                            {{ match.group_stage }}
+   703→                        </span>
+   704→                        {% endif %}
+   705→                    </div>
+   706→                    <div class="match-quick-time">
+   707→                        <div>{{ match.kickoff_datetime|date:"M j" }}</div>
+   708→                        <div style="color:#f5d442;">{{ match.kickoff_datetime|date:"H:i" }}</div>
+   709→                    </div>
+   710→                </a>
+   711→                {% endfor %}
+   712→                <div class="text-center mt-3">
+   713→                    <a href="{% url 'predictor:schedule' %}" class="btn btn-gold-outline btn-sm">
+   714→                        Full Schedule <i class="bi bi-arrow-right ms-1"></i>
+   715→                    </a>
+   716→                </div>
+   717→                {% else %}
+   718→                <div class="glass-card text-center p-4">
+   719→                    <p class="text-secondary">No upcoming matches scheduled.</p>
+   720→                </div>
+   721→                {% endif %}
+   722→            </div>
+   723→        </div>
+   724→    </div>
+   725→</section>
+   726→
+   727→<!-- Recent Results -->
+   728→{% if recent_matches %}
+   729→<div class="section-divider" data-aos="fade-in"></div>
+   730→<section class="py-5">
+   731→    <div class="container">
+   732→        <h2 class="gold-text fw-bold mb-4 text-center" style="font-size:1.4rem;" data-aos="fade-up">
+   733→            <i class="bi bi-check-circle-fill me-2"></i>Recent Results
+   734→        </h2>
+   735→        <div class="row g-3 justify-content-center" data-aos="fade-up">
+   736→            {% for match in recent_matches %}
+   737→            <div class="col-md-6 col-lg-4">
+   738→                <a href="{% url 'predictor:match_detail' match.id %}" class="text-decoration-none">
+   739→                    <div class="glass-card-gold p-3 text-center" style="border-radius:12px;">
+   740→                        <div class="small text-secondary mb-2">{{ match.group_stage }}</div>
+   741→                        <div class="d-flex align-items-center justify-content-center gap-3">
+   742→                            <div>
+   743→                                <div class="text-white fw-bold">{{ match.home_team }}</div>
+   744→                            </div>
+   745→                            <div class="d-flex align-items-center gap-2">
+   746→                                <span class="gold-text fw-bold" style="font-size:1.5rem;font-family:'JetBrains Mono',monospace;">{{ match.home_score }}</span>
+   747→                                <span class="text-secondary">&ndash;</span>
+   748→                                <span class="gold-text fw-bold" style="font-size:1.5rem;font-family:'JetBrains Mono',monospace;">{{ match.away_score }}</span>
+   749→                            </div>
+   750→                            <div>
+   751→                                <div class="text-white fw-bold">{{ match.away_team }}</div>
+   752→                            </div>
+   753→                        </div>
+   754→                    </div>
+   755→                </a>
+   756→            </div>
+   757→            {% endfor %}
+   758→        </div>
+   759→    </div>
+   760→</section>
+   761→{% endif %}
+   762→{% endblock %}
+   763→
+   764→{% block extra_js %}
+   765→<script>
+   766→// Countdown Timer
+   767→document.addEventListener('DOMContentLoaded', function() {
+   768→    var container = document.getElementById('countdown-container');
+   769→    if (!container) return;
+   770→
+   771→    var kickoffStr = container.getAttribute('data-kickoff');
+   772→    if (!kickoffStr) return;
+   773→
+   774→    var kickoff = new Date(kickoffStr).getTime();
+   775→
+   776→    function updateCountdown() {
+   777→        var now = new Date().getTime();
+   778→        var diff = kickoff - now;
+   779→
+   780→        if (diff <= 0) {
+   781→            document.getElementById('cd-days').textContent = '00';
+   782→            document.getElementById('cd-hours').textContent = '00';
+   783→            document.getElementById('cd-mins').textContent = '00';
+   784→            document.getElementById('cd-secs').textContent = '00';
+   785→            return;
+   786→        }
+   787→
+   788→        var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+   789→        var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+   790→        var mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+   791→        var secs = Math.floor((diff % (1000 * 60)) / 1000);
+   792→
+   793→        document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+   794→        document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+   795→        document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
+   796→        document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
+   797→    }
+   798→
+   799→    updateCountdown();
+   800→    setInterval(updateCountdown, 1000);
+   801→});
+   802→</script>
+   803→{% endblock %}
+   804→

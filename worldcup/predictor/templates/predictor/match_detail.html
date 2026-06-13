@@ -2,208 +2,181 @@
 {% load static %}
 
 {% block title %}{{ match.home_team }} vs {{ match.away_team }} | WC2026{% endblock %}
-
 {% block nav_matches %} active{% endblock %}
 
 {% block content %}
-<section class="page-header" data-aos="fade-down">
+<section style="padding-top:90px;" data-aos="fade-down">
   <nav aria-label="breadcrumb" style="margin-bottom:0.5rem;">
-    <ol class="breadcrumb justify-content-center mb-0" style="font-size:0.8125rem;">
-      <li class="breadcrumb-item"><a href="{% url 'predictor:matches' %}" style="color:var(--text-muted);">Matches</a></li>
-      <li class="breadcrumb-item active" aria-current="page" style="color:var(--gold-light);">{{ match.home_team }} vs {{ match.away_team }}</li>
+    <ol class="breadcrumb justify-content-center mb-0" style="font-size:0.8rem;">
+      <li class="breadcrumb-item"><a href="{% url 'predictor:matches' %}" style="color:#6b7280;">Matches</a></li>
+      <li class="breadcrumb-item active" aria-current="page" style="color:#f5d442;">{{ match.home_team }} vs {{ match.away_team }}</li>
     </ol>
   </nav>
 </section>
 
-<div class="container page-content">
-  <div class="container-narrow mx-auto">
+<div class="container pb-5">
+  <div class="mx-auto" style="max-width:700px;">
 
-    <!-- ============================================================
-         MATCH HEADER CARD
-         ============================================================ -->
-    <div class="match-card mb-4" data-aos="fade-up" data-aos-duration="700">
-      <!-- Group & Status Header -->
-      <div class="match-card-header">
+    <!-- MATCH HEADER CARD -->
+    <div class="glass-card-gold p-4 mb-4 text-center" data-aos="fade-up" data-aos-duration="700" style="border-radius:16px;">
+      <!-- Group & Status -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
         {% if match.group_stage %}
-        <span class="status-badge" style="background:var(--info-bg);color:var(--info);border:1px solid rgba(59,130,246,0.3);">
-          Group {{ match.group_stage }}
-        </span>
+        <span class="badge rounded-pill" style="background:rgba(59,130,246,0.1);color:#3b82f6;border:1px solid rgba(59,130,246,0.2);">{{ match.group_stage }}</span>
+        {% else %}
+        <span></span>
         {% endif %}
 
         {% if match.status == 'completed' %}
-        <span class="status-badge status-badge-completed">
-          <span>&#10003;</span> Completed
-        </span>
+        <span class="status-badge status-completed">&#9989; Completed</span>
         {% elif match.status == 'live' %}
-        <span class="status-badge status-badge-live">
-          <span>&#128308;</span> Live
-        </span>
+        <span class="status-badge status-live">&#128308; Live</span>
         {% elif match.is_locked %}
-        <span class="status-badge status-badge-locked">
-          <span>&#128274;</span> Locked
-        </span>
+        <span class="status-badge status-locked">&#128274; Locked</span>
         {% else %}
-        <span class="status-badge status-badge-open">
-          <span>&#128994;</span> Open
-        </span>
+        <span class="status-badge status-open">&#128994; Open</span>
         {% endif %}
       </div>
 
-      <!-- Teams & VS -->
-      <div class="match-teams py-3">
-        <!-- Home Team -->
-        <div class="match-team">
-          <div class="flag-placeholder" style="background:linear-gradient(135deg,#1e3a5f,#2d5a8e);">
-            {{ match.home_team|make_list|first|upper }}
+      <!-- Teams & Score -->
+      <div class="d-flex align-items-center justify-content-center gap-3 py-3">
+        <div class="text-center" style="flex:1;">
+          <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+            <div style="width:48px;height:48px;min-width:48px;border-radius:50%;background:#1a4d2e;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:800;color:#fff;border:2px solid rgba(255,255,255,0.15);">{{ match.home_team|first }}</div>
+            <span class="fw-bold text-white" style="font-size:1.1rem;">{{ match.home_team }}</span>
           </div>
-          <div class="match-team-name">{{ match.home_team }}</div>
         </div>
 
-        <!-- VS Badge -->
-        <div class="d-flex flex-column align-items-center">
-          <div class="vs-badge">VS</div>
+        <div class="text-center" style="min-width:80px;">
           {% if match.status == 'completed' and match.home_score is not None %}
-          <div class="match-score-final mt-2" style="font-size:2rem;letter-spacing:0.05em;">
-            {{ match.home_score }} &ndash; {{ match.away_score }}
+          <div style="font-family:'JetBrains Mono',monospace;font-weight:900;font-size:2rem;color:#f5d442;">
+            {{ match.home_score }} <span class="text-secondary" style="font-size:1.2rem;">&ndash;</span> {{ match.away_score }}
           </div>
+          {% elif match.status == 'live' and match.home_score is not None %}
+          <div style="font-family:'JetBrains Mono',monospace;font-weight:900;font-size:2rem;color:#ef4444;">
+            {{ match.home_score }} <span class="text-secondary" style="font-size:1.2rem;">&ndash;</span> {{ match.away_score }}
+          </div>
+          {% else %}
+          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#d4af37,#f5d442);color:#0a0e17;font-weight:900;font-size:0.7rem;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 0 15px rgba(212,175,55,0.3);">VS</div>
           {% endif %}
         </div>
 
-        <!-- Away Team -->
-        <div class="match-team">
-          <div class="flag-placeholder" style="background:linear-gradient(135deg,#1e3a5f,#2d5a8e);">
-            {{ match.away_team|make_list|first|upper }}
+        <div class="text-center" style="flex:1;">
+          <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+            <span class="fw-bold text-white" style="font-size:1.1rem;">{{ match.away_team }}</span>
+            <div style="width:48px;height:48px;min-width:48px;border-radius:50%;background:#8b1a1a;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:800;color:#fff;border:2px solid rgba(255,255,255,0.15);">{{ match.away_team|first }}</div>
           </div>
-          <div class="match-team-name">{{ match.away_team }}</div>
         </div>
       </div>
 
-      <!-- Match Meta -->
-      <div class="match-meta">
-        <div class="match-venue">
-          <span>&#128205;</span>
-          <span>{{ match.venue|default:"TBD" }}</span>
-        </div>
-        <div class="match-kickoff">
-          <span>&#128197;</span>
-          <span>{{ match.kickoff_datetime|date:"M d, Y" }} &middot; {{ match.kickoff_datetime|date:"g:i A" }}</span>
-        </div>
+      <!-- Match Info -->
+      <div class="d-flex justify-content-center gap-4 text-secondary small pt-2" style="border-top:1px solid rgba(255,255,255,0.06);">
+        <span>&#128205; {{ match.venue|default:"TBD" }}</span>
+        <span>&#128197; {{ match.kickoff_datetime|date:"M d, Y" }} &middot; {{ match.kickoff_datetime|date:"g:i A" }}</span>
       </div>
     </div>
 
-    <!-- ============================================================
-         PREDICTION SECTION
-         ============================================================ -->
+    <!-- PREDICTION SECTION -->
     <div class="mb-4" data-aos="fade-up" data-aos-delay="150">
       {% if not match.is_locked and match.status != 'completed' %}
         {% if current_participant %}
           {% if has_predicted %}
-          <!-- Already Predicted -->
-          <div class="glass-card text-center p-4">
+          <div class="glass-card p-4 text-center" style="border-radius:14px;">
             <div style="font-size:2rem;margin-bottom:0.5rem;">&#9989;</div>
-            <h4 style="color:var(--success);margin-bottom:0.5rem;">You've predicted this match</h4>
+            <h4 style="color:#10b981;margin-bottom:0.5rem;">You've predicted this match</h4>
             {% for pred in predictions %}
               {% if pred.participant.id == current_participant.id %}
-              <p style="font-family:var(--font-mono);font-size:1.25rem;font-weight:800;color:var(--gold-light);margin-bottom:1rem;">
+              <p style="font-family:'JetBrains Mono',monospace;font-size:1.25rem;font-weight:800;color:#f5d442;margin-bottom:1rem;">
                 {{ match.home_team }} {{ pred.home_score }} &ndash; {{ pred.away_score }} {{ match.away_team }}
               </p>
               {% endif %}
             {% endfor %}
-            <a href="{% url 'predictor:edit_prediction' match.id %}" class="btn btn-secondary">
-              <span>&#9998;</span> Edit Prediction
+            <a href="{% url 'predictor:edit_prediction' match.id %}" class="btn btn-gold-outline" style="min-height:44px;border-radius:10px;">
+              &#9999;&#65039; Edit Prediction
             </a>
           </div>
           {% else %}
-          <!-- Not Yet Predicted -->
-          <div class="glass-card text-center p-4">
+          <div class="glass-card-premium p-4 text-center" style="border-radius:14px;">
             <div style="font-size:2rem;margin-bottom:0.5rem;">&#127922;</div>
-            <h4 style="color:var(--text-primary);margin-bottom:0.5rem;">Make Your Prediction</h4>
-            <p class="text-muted mb-3">This match is still open for predictions!</p>
-            <a href="{% url 'predictor:submit_prediction' match.id %}" class="btn btn-primary btn-lg">
-              <span>&#9917;</span> Predict Now
+            <h4 class="text-white mb-2">Make Your Prediction</h4>
+            <p class="text-secondary mb-3">This match is still open for predictions!</p>
+            <a href="{% url 'predictor:submit_prediction' match.id %}" class="btn btn-gold btn-lg btn-glow" style="min-width:200px;border-radius:12px;">
+              &#9917; Predict Now
             </a>
           </div>
           {% endif %}
         {% else %}
-        <!-- Not Logged In -->
-        <div class="glass-card text-center p-4">
+        <div class="glass-card p-4 text-center" style="border-radius:14px;">
           <div style="font-size:2rem;margin-bottom:0.5rem;">&#128274;</div>
-          <h4 style="color:var(--text-secondary);margin-bottom:0.5rem;">Login to Predict</h4>
-          <p class="text-muted mb-3">Sign in with your name and secret code to make predictions.</p>
-          <a href="{% url 'predictor:login' %}" class="btn btn-primary">
-            <span>&#128100;</span> Login
+          <h4 style="color:#9ca3af;margin-bottom:0.5rem;">Login to Predict</h4>
+          <p class="text-secondary mb-3">Sign in with your name and secret code to make predictions.</p>
+          <a href="{% url 'predictor:login' %}?next={% url 'predictor:match_detail' match.id %}" class="btn btn-gold btn-glow" style="min-width:160px;border-radius:10px;">
+            &#128100; Login
           </a>
         </div>
         {% endif %}
       {% elif match.is_locked and match.status != 'completed' %}
-      <!-- Locked -->
-      <div class="glass-card text-center p-4 prediction-locked">
-        <span class="lock-icon">&#128274;</span>
-        <h4 style="color:var(--danger);margin-bottom:0.5rem;">Predictions are locked</h4>
-        <p class="text-muted mb-0">This match has kicked off &mdash; no more predictions accepted.</p>
+      <div class="glass-card p-4 text-center" style="border-radius:14px;opacity:0.8;">
+        <span style="font-size:2rem;">&#128274;</span>
+        <h4 style="color:#f87171;margin-bottom:0.5rem;">Predictions are locked</h4>
+        <p class="text-secondary mb-0">This match has kicked off &mdash; no more predictions accepted.</p>
       </div>
       {% elif match.status == 'completed' %}
-      <!-- Completed -->
-      <div class="glass-card-gold text-center p-4">
+      <div class="glass-card-gold p-4 text-center" style="border-radius:14px;">
         <div style="font-size:2rem;margin-bottom:0.5rem;">&#127942;</div>
-        <h4 style="color:var(--gold-light);margin-bottom:0.5rem;">Match Completed</h4>
-        <p style="font-family:var(--font-mono);font-size:1.5rem;font-weight:900;color:var(--gold-light);margin-bottom:0;">
-          Final Score: {{ match.home_score }} &ndash; {{ match.away_score }}
+        <h4 style="color:#f5d442;margin-bottom:0.5rem;">Match Completed</h4>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:900;color:#f5d442;margin-bottom:0;">
+          {{ match.home_score }} &ndash; {{ match.away_score }}
         </p>
       </div>
       {% endif %}
     </div>
 
-    <!-- ============================================================
-         ALL PREDICTIONS TABLE
-         ============================================================ -->
+    <!-- ALL PREDICTIONS TABLE -->
     {% if predictions %}
     <section data-aos="fade-up" data-aos-delay="250">
-      <h2 class="section-title mb-3">
-        <span class="title-accent"></span>
+      <h2 class="gold-text fw-bold mb-3" style="font-size:1.2rem;">
+        <span style="display:inline-block;width:4px;height:18px;background:#d4af37;border-radius:2px;margin-right:8px;vertical-align:middle;"></span>
         All Predictions
       </h2>
 
       <!-- Desktop Table -->
       <div class="d-none d-md-block">
-        <div class="glass-card p-0 overflow-hidden">
+        <div class="glass-card p-0 overflow-hidden" style="border-radius:14px;">
           <table class="table table-dark table-borderless mb-0" style="background:transparent;">
             <thead>
-              <tr style="border-bottom:1px solid var(--border-gold);">
-                <th class="ps-4 py-3" style="color:var(--text-muted);font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.05em;">Participant</th>
-                <th class="text-center py-3" style="color:var(--text-muted);font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.05em;">Predicted Score</th>
+              <tr style="border-bottom:1px solid rgba(212,175,55,0.15);">
+                <th class="ps-4 py-3" style="color:#6b7280;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;">Participant</th>
+                <th class="text-center py-3" style="color:#6b7280;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;">Score</th>
                 {% if match.status == 'completed' %}
-                <th class="text-center pe-4 py-3" style="color:var(--text-muted);font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.05em;">Points</th>
+                <th class="text-center pe-4 py-3" style="color:#6b7280;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;">Points</th>
                 {% endif %}
               </tr>
             </thead>
             <tbody>
               {% for pred in predictions|dictsort:"participant.name" %}
-              <tr style="border-bottom:1px solid var(--border-subtle);
-                         {% if match.status == 'completed' and pred.is_exact %}background:rgba(16,185,129,0.08);{% elif current_participant and pred.participant.id == current_participant.id %}background:rgba(212,175,55,0.06);{% endif %}">
-                <td class="ps-4 py-3 align-middle">
-                  <span style="font-weight:700;color:{% if current_participant and pred.participant.id == current_participant.id %}var(--gold-light){% else %}var(--text-primary){% endif %};">
+              <tr style="border-bottom:1px solid rgba(255,255,255,0.04);
+                         {% if match.status == 'completed' and pred.is_exact %}background:rgba(16,185,129,0.06);
+                         {% elif current_participant and pred.participant.id == current_participant.id %}background:rgba(212,175,55,0.04);{% endif %}">
+                <td class="ps-4 py-3">
+                  <span style="font-weight:700;color:{% if current_participant and pred.participant.id == current_participant.id %}#f5d442{% else %}#fff{% endif %};">
                     {{ pred.participant.name }}
                     {% if current_participant and pred.participant.id == current_participant.id %}
-                    <span style="font-size:0.75rem;color:var(--text-muted);">(You)</span>
+                    <span style="font-size:0.7rem;color:#6b7280;">(You)</span>
                     {% endif %}
                   </span>
                 </td>
-                <td class="text-center py-3 align-middle">
-                  <span style="font-family:var(--font-mono);font-weight:800;font-size:1.125rem;color:var(--text-primary);">
+                <td class="text-center py-3">
+                  <span style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1.1rem;color:#fff;">
                     {{ pred.home_score }} &ndash; {{ pred.away_score }}
                   </span>
                 </td>
                 {% if match.status == 'completed' %}
-                <td class="text-center pe-4 py-3 align-middle">
+                <td class="text-center pe-4 py-3">
                   {% if pred.is_exact %}
-                  <span style="color:var(--gold-light);font-weight:800;font-size:1.125rem;">
-                    &#9989; 3 pts
-                  </span>
+                  <span style="color:#f5d442;font-weight:800;">&#9989; 3 pts</span>
                   {% else %}
-                  <span style="color:var(--danger);font-weight:600;font-size:0.9375rem;">
-                    &#10060; 0 pts
-                  </span>
+                  <span style="color:#f87171;font-weight:600;">&#10060; 0 pts</span>
                   {% endif %}
                 </td>
                 {% endif %}
@@ -214,35 +187,30 @@
         </div>
       </div>
 
-      <!-- Mobile Card Layout -->
+      <!-- Mobile Cards -->
       <div class="d-md-none">
         {% for pred in predictions|dictsort:"participant.name" %}
-        <div class="glass-card mb-2 p-3"
-             data-aos="fade-up"
-             data-aos-delay="{{ forloop.counter0|divisibleby:20|yesno:'0,0' }}"
-             style="{% if match.status == 'completed' and pred.is_exact %}border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.08);{% elif current_participant and pred.participant.id == current_participant.id %}border-color:rgba(212,175,55,0.3);{% endif %}">
+        <div class="glass-card mb-2 p-3" style="border-radius:10px;
+             {% if match.status == 'completed' and pred.is_exact %}border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.06);
+             {% elif current_participant and pred.participant.id == current_participant.id %}border-color:rgba(212,175,55,0.3);{% endif %}">
           <div class="d-flex justify-content-between align-items-center">
             <div>
-              <div style="font-weight:700;color:{% if current_participant and pred.participant.id == current_participant.id %}var(--gold-light){% else %}var(--text-primary){% endif %};">
+              <div style="font-weight:700;color:{% if current_participant and pred.participant.id == current_participant.id %}#f5d442{% else %}#fff{% endif %};">
                 {{ pred.participant.name }}
                 {% if current_participant and pred.participant.id == current_participant.id %}
-                <span style="font-size:0.75rem;color:var(--text-muted);">(You)</span>
+                <span style="font-size:0.7rem;color:#6b7280;">(You)</span>
                 {% endif %}
               </div>
-              <div style="font-family:var(--font-mono);font-weight:800;font-size:1.125rem;color:var(--text-primary);">
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1.1rem;color:#fff;">
                 {{ pred.home_score }} &ndash; {{ pred.away_score }}
               </div>
             </div>
             {% if match.status == 'completed' %}
             <div class="text-end">
               {% if pred.is_exact %}
-              <span style="color:var(--gold-light);font-weight:800;">
-                &#9989; 3 pts
-              </span>
+              <span style="color:#f5d442;font-weight:800;">&#9989; 3pts</span>
               {% else %}
-              <span style="color:var(--danger);font-weight:600;">
-                &#10060; 0 pts
-              </span>
+              <span style="color:#f87171;font-weight:600;">&#10060;</span>
               {% endif %}
             </div>
             {% endif %}
@@ -250,48 +218,18 @@
         </div>
         {% endfor %}
       </div>
-
-      <!-- Prediction Summary -->
-      {% if match.status == 'completed' %}
-      <div class="glass-card mt-3 p-3 text-center" data-aos="fade-up">
-        <div class="row g-2">
-          <div class="col-4">
-            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Total</div>
-            <div style="font-family:var(--font-mono);font-weight:800;color:var(--text-primary);font-size:1.25rem;">{{ predictions|length }}</div>
-          </div>
-          <div class="col-4">
-            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Exact</div>
-            <div style="font-family:var(--font-mono);font-weight:800;color:var(--success);font-size:1.25rem;">
-              {% widthratio predictions|length 1 1 %}{% comment %}Count exacts below{% endcomment %}
-              {% regroup predictions|dictsort:"is_exact" by is_exact as exact_list %}
-              {% for group in exact_list %}
-                {% if group.grouper == True %}{{ group.list|length }}{% endif %}
-              {% endfor %}
-            </div>
-          </div>
-          <div class="col-4">
-            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Missed</div>
-            <div style="font-family:var(--font-mono);font-weight:800;color:var(--danger);font-size:1.25rem;">
-              {% for group in exact_list %}
-                {% if group.grouper == False %}{{ group.list|length }}{% endif %}
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-      </div>
-      {% endif %}
     </section>
     {% else %}
-    <div class="glass-card text-center py-4" data-aos="fade-up">
+    <div class="glass-card text-center py-4" data-aos="fade-up" style="border-radius:14px;">
       <div style="font-size:2rem;margin-bottom:0.5rem;">&#128172;</div>
-      <p style="color:var(--text-secondary);margin-bottom:0;">No predictions yet for this match.</p>
+      <p style="color:#9ca3af;margin-bottom:0;">No predictions yet for this match.</p>
     </div>
     {% endif %}
 
-    <!-- Back to Matches -->
+    <!-- Back -->
     <div class="text-center mt-4" data-aos="fade-up">
-      <a href="{% url 'predictor:matches' %}" class="btn btn-ghost">
-        <span>&#8592;</span> Back to All Matches
+      <a href="{% url 'predictor:matches' %}" class="btn btn-gold-outline btn-sm" style="border-radius:10px;">
+        &#8592; Back to Matches
       </a>
     </div>
 

@@ -1,0 +1,252 @@
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:7:<div class="container py-4">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:11:    <div class="text-center mb-4" data-aos="fade-down">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:12:        <h1 class="display-5 fw-bold mb-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:13:            <span class="gold-text">📅 Today's Matches</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:15:        <p class="lead text-secondary mb-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:19:        <span class="badge rounded-pill px-3 py-2" style="background: var(--bg-card); border: 1px solid var(--gold); color: var(--gold);">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:29:    <section class="mb-5" id="open-matches">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:30:        <h2 class="match-day-header mb-4" data-aos="fade-up">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:31:            <span class="status-badge status-open me-2">🟢</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:36:        <div class="match-card glass-card p-3 p-md-4 mb-4 position-relative"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:42:            <div class="d-flex justify-content-between align-items-center mb-3">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:43:                <span class="status-badge status-open">OPEN</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:45:                <span class="badge rounded-pill"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:53:            <form class="prediction-form prediction-form-inline{% if not current_participant %} locked{% endif %}"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:60:                <div class="row align-items-center g-2 g-md-3">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:62:                    <div class="col-5 col-md-4 text-center text-md-end">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:63:                        <div class="d-flex flex-column flex-md-row align-items-center justify-content-end gap-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:64:                            <div class="flag-placeholder d-flex align-items-center justify-content-center"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:68:                            <span class="fw-bold fs-5 text-white">{{ match.home_team }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:73:                    <div class="col-2 col-md-4">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:74:                        <div class="d-flex align-items-center justify-content-center gap-1 gap-md-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:75:                            <div class="score-input-wrapper text-center">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:78:                                       class="form-control form-control-lg text-center fw-bold"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:85:                            <span class="vs-badge d-flex align-items-center justify-content-center mx-1"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:90:                            <div class="score-input-wrapper text-center">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:93:                                       class="form-control form-control-lg text-center fw-bold"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:103:                    <div class="col-5 col-md-4 text-center text-md-start">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:104:                        <div class="d-flex flex-column flex-md-row align-items-center justify-content-start gap-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:105:                            <div class="flag-placeholder d-flex align-items-center justify-content-center"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:109:                            <span class="fw-bold fs-5 text-white">{{ match.away_team }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:115:                <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:117:                    <div class="text-secondary small">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:118:                        <span class="me-3">🕐 {{ match.kickoff_datetime|date:"H:i" }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:120:                        <span class="d-none d-sm-inline">📍 {{ match.venue }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:124:                    <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:127:                            <span class="badge rounded-pill px-3 py-2"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:132:                               class="btn btn-gold-outline btn-sm"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:138:                                    class="btn btn-gold btn-sm"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:145:                               class="btn btn-gold-outline btn-sm"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:156:            <div class="position-absolute top-0 end-0 m-3">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:157:                <span class="d-flex align-items-center justify-content-center"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:167:            <div class="text-secondary small d-sm-none mt-1">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:180:    <section class="mb-5" id="locked-matches">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:181:        <h2 class="match-day-header mb-4" data-aos="fade-up">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:182:            <span class="status-badge status-locked me-2">🔒</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:187:        <div class="match-card glass-card p-3 p-md-4 mb-4 position-relative"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:193:            <div class="prediction-locked"></div>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:196:            <div class="d-flex justify-content-between align-items-center mb-3">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:197:                <span class="status-badge status-locked">LOCKED</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:199:                <span class="badge rounded-pill"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:207:            <div class="row align-items-center g-2 g-md-3">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:209:                <div class="col-5 col-md-4 text-center text-md-end">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:210:                    <div class="d-flex flex-column flex-md-row align-items-center justify-content-end gap-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:211:                        <div class="flag-placeholder d-flex align-items-center justify-content-center"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:215:                        <span class="fw-bold fs-5" style="color: var(--text-secondary);">{{ match.home_team }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:220:                <div class="col-2 col-md-4 text-center">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:221:                    <span class="vs-badge d-inline-flex align-items-center justify-content-center"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:228:                <div class="col-5 col-md-4 text-center text-md-start">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:229:                    <div class="d-flex flex-column flex-md-row align-items-center justify-content-start gap-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:230:                        <div class="flag-placeholder d-flex align-items-center justify-content-center"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:234:                        <span class="fw-bold fs-5" style="color: var(--text-secondary);">{{ match.away_team }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:240:            <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:242:                <div class="text-secondary small">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:243:                    <span class="me-3">🕐 {{ match.kickoff_datetime|date:"H:i" }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:248:                <span class="badge rounded-pill px-3 py-2 mt-2 mt-md-0"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:262:    <section class="mb-5" id="completed-matches">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:263:        <h2 class="match-day-header mb-4" data-aos="fade-up">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:264:            <span class="status-badge status-completed me-2">✅</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:269:        <div class="match-card glass-card-gold p-3 p-md-4 mb-4"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:275:            <div class="d-flex justify-content-between align-items-center mb-3">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:276:                <span class="status-badge status-completed">COMPLETED</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:278:                <span class="badge rounded-pill"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:286:            <div class="row align-items-center g-2 g-md-3">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:288:                <div class="col-4 text-center text-md-end">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:289:                    <div class="d-flex flex-column flex-md-row align-items-center justify-content-end gap-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:290:                        <div class="flag-placeholder d-flex align-items-center justify-content-center"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:294:                        <span class="fw-bold fs-5 text-white">{{ match.home_team }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:299:                <div class="col-4 text-center">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:300:                    <div class="d-flex align-items-center justify-content-center gap-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:301:                        <span class="display-6 fw-bold gold-text home-score">{{ match.home_score }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:302:                        <span class="fs-4 text-secondary">&ndash;</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:303:                        <span class="display-6 fw-bold gold-text away-score">{{ match.away_score }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:308:                <div class="col-4 text-center text-md-start">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:309:                    <div class="d-flex flex-column flex-md-row align-items-center justify-content-start gap-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:310:                        <div class="flag-placeholder d-flex align-items-center justify-content-center"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:314:                        <span class="fw-bold fs-5 text-white">{{ match.away_team }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:320:            <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:322:                <div class="text-secondary small">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:323:                    <span class="me-3">🕐 {{ match.kickoff_datetime|date:"H:i" }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:329:                   class="btn btn-gold-outline btn-sm mt-2 mt-md-0"
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:343:    <div class="text-center py-5" data-aos="fade-up">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:344:        <div class="glass-card p-5 mx-auto" style="max-width: 500px;">
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:345:            <div class="mb-3" style="font-size: 4rem;">⚽</div>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:346:            <h3 class="gold-text mb-2">No Matches Today</h3>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:347:            <p class="text-secondary mb-4">There are no matches scheduled for today. Check back later or browse the full schedule!</p>
+/home/z/my-project/worldcup/predictor/templates/predictor/today.html:348:            <a href="{% url 'predictor:schedule' %}" class="btn btn-gold">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:9:<section class="page-header" data-aos="fade-down">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:11:    <ol class="breadcrumb justify-content-center mb-0" style="font-size:0.8125rem;">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:12:      <li class="breadcrumb-item"><a href="{% url 'predictor:matches' %}" style="color:var(--text-muted);">Matches</a></li>
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:13:      <li class="breadcrumb-item active" aria-current="page" style="color:var(--gold-light);">{{ match.home_team }} vs {{ match.away_team }}</li>
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:18:<div class="container page-content">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:19:  <div class="container-narrow mx-auto">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:24:    <div class="match-card mb-4" data-aos="fade-up" data-aos-duration="700">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:26:      <div class="match-card-header">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:28:        <span class="status-badge" style="background:var(--info-bg);color:var(--info);border:1px solid rgba(59,130,246,0.3);">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:34:        <span class="status-badge status-badge-completed">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:38:        <span class="status-badge status-badge-live">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:42:        <span class="status-badge status-badge-locked">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:46:        <span class="status-badge status-badge-open">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:53:      <div class="match-teams py-3">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:55:        <div class="match-team">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:56:          <div class="flag-placeholder" style="background:linear-gradient(135deg,#1e3a5f,#2d5a8e);">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:59:          <div class="match-team-name">{{ match.home_team }}</div>
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:63:        <div class="d-flex flex-column align-items-center">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:64:          <div class="vs-badge">VS</div>
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:66:          <div class="match-score-final mt-2" style="font-size:2rem;letter-spacing:0.05em;">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:73:        <div class="match-team">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:74:          <div class="flag-placeholder" style="background:linear-gradient(135deg,#1e3a5f,#2d5a8e);">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:77:          <div class="match-team-name">{{ match.away_team }}</div>
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:82:      <div class="match-meta">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:83:        <div class="match-venue">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:87:        <div class="match-kickoff">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:97:    <div class="mb-4" data-aos="fade-up" data-aos-delay="150">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:102:          <div class="glass-card text-center p-4">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:112:            <a href="{% url 'predictor:edit_prediction' match.id %}" class="btn btn-secondary">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:118:          <div class="glass-card text-center p-4">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:121:            <p class="text-muted mb-3">This match is still open for predictions!</p>
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:122:            <a href="{% url 'predictor:submit_prediction' match.id %}" class="btn btn-primary btn-lg">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:129:        <div class="glass-card text-center p-4">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:132:          <p class="text-muted mb-3">Sign in with your name and secret code to make predictions.</p>
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:133:          <a href="{% url 'predictor:login' %}" class="btn btn-primary">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:140:      <div class="glass-card text-center p-4 prediction-locked">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:141:        <span class="lock-icon">&#128274;</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:143:        <p class="text-muted mb-0">This match has kicked off &mdash; no more predictions accepted.</p>
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:147:      <div class="glass-card-gold text-center p-4">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:162:      <h2 class="section-title mb-3">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:163:        <span class="title-accent"></span>
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:168:      <div class="d-none d-md-block">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:169:        <div class="glass-card p-0 overflow-hidden">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:170:          <table class="table table-dark table-borderless mb-0" style="background:transparent;">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:173:                <th class="ps-4 py-3" style="color:var(--text-muted);font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.05em;">Participant</th>
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:174:                <th class="text-center py-3" style="color:var(--text-muted);font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.05em;">Predicted Score</th>
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:176:                <th class="text-center pe-4 py-3" style="color:var(--text-muted);font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.05em;">Points</th>
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:184:                <td class="ps-4 py-3 align-middle">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:192:                <td class="text-center py-3 align-middle">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:198:                <td class="text-center pe-4 py-3 align-middle">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:218:      <div class="d-md-none">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:220:        <div class="glass-card mb-2 p-3"
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:224:          <div class="d-flex justify-content-between align-items-center">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:237:            <div class="text-end">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:256:      <div class="glass-card mt-3 p-3 text-center" data-aos="fade-up">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:257:        <div class="row g-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:258:          <div class="col-4">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:262:          <div class="col-4">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:272:          <div class="col-4">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:285:    <div class="glass-card text-center py-4" data-aos="fade-up">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:292:    <div class="text-center mt-4" data-aos="fade-up">
+/home/z/my-project/worldcup/predictor/templates/predictor/match_detail.html:293:      <a href="{% url 'predictor:matches' %}" class="btn btn-ghost">
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:89:<div class="login-page">
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:90:    <div class="login-card glass-card-gold" data-aos="zoom-in" data-aos-duration="600">
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:91:        <div class="text-center mb-4">
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:92:            <span class="trophy-icon">🏆</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:93:            <h2 class="gold-text fw-bold mb-1">Enter the Arena</h2>
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:94:            <p class="text-secondary">Sign in to make your predictions</p>
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:98:        <div class="shake">
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:99:            <div class="alert alert-danger glass-card py-2 px-3 mb-3" style="font-size: 0.9rem;">
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:100:                <i class="bi bi-exclamation-triangle-fill me-1"></i>
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:109:            <div class="mb-3">
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:110:                <label for="id_name" class="form-label text-secondary">
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:111:                    <i class="bi bi-person me-1"></i> Your Name
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:115:                <div class="text-danger mt-1" style="font-size: 0.8rem;">{{ error }}</div>
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:119:            <div class="mb-4">
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:120:                <label for="id_secret_code" class="form-label text-secondary">
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:121:                    <i class="bi bi-key me-1"></i> Secret Code
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:123:                <div class="secret-wrapper">
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:125:                    <button type="button" class="toggle-password" id="toggle-password" aria-label="Toggle password visibility">
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:126:                        <i class="bi bi-eye"></i>
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:130:                <div class="text-danger mt-1" style="font-size: 0.8rem;">{{ error }}</div>
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:134:            <button type="submit" class="btn btn-gold w-100 btn-lg" style="min-height: 48px;">
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:135:                <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:139:        <div class="text-center mt-3">
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:140:            <p class="text-muted" style="font-size: 0.8rem;">
+/home/z/my-project/worldcup/predictor/templates/predictor/login.html:141:                <i class="bi bi-shield-lock me-1"></i>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:7:<div class="container py-4">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:11:    <div class="text-center mb-4" data-aos="fade-down">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:12:        <h1 class="display-5 fw-bold mb-3">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:13:            <span class="gold-text">⚽ All Matches</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:17:        <div class="d-flex flex-wrap justify-content-center gap-2" id="match-filters">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:18:            <button class="btn btn-gold filter-btn active" data-filter="all" style="min-height: 44px;">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:21:            <button class="btn btn-gold-outline filter-btn" data-filter="upcoming" style="min-height: 44px;">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:24:            <button class="btn btn-gold-outline filter-btn" data-filter="live" style="min-height: 44px;">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:27:            <button class="btn btn-gold-outline filter-btn" data-filter="completed" style="min-height: 44px;">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:36:    <div class="row g-3 g-md-4" id="match-grid">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:38:        <div class="col-md-6 col-lg-4 match-col"
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:43:            <a href="{% url 'predictor:match_detail' match.id %}" class="text-decoration-none">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:44:                <div class="match-card glass-card p-3 h-100 position-relative"
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:48:                    <div class="d-flex justify-content-between align-items-center mb-3">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:50:                            <span class="status-badge status-open">UPCOMING</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:52:                            <span class="status-badge status-locked">LOCKED</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:54:                            <span class="status-badge status-live">LIVE</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:56:                            <span class="status-badge status-completed">COMPLETED</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:58:                            <span class="status-badge status-open">{{ match.status|upper }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:62:                        <span class="badge rounded-pill"
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:70:                    <div class="text-center mb-3">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:72:                        <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:73:                            <div class="flag-placeholder d-flex align-items-center justify-content-center"
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:77:                            <span class="fw-bold text-white fs-6">{{ match.home_team }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:82:                        <div class="d-flex align-items-center justify-content-center gap-2 my-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:83:                            <span class="display-6 fw-bold gold-text home-score">{{ match.home_score }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:84:                            <span class="fs-5 text-secondary">&ndash;</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:85:                            <span class="display-6 fw-bold gold-text away-score">{{ match.away_score }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:88:                        <div class="d-flex align-items-center justify-content-center gap-2 my-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:89:                            <span class="display-6 fw-bold home-score" style="color: var(--danger);">{{ match.home_score }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:90:                            <span class="fs-5 text-secondary">&ndash;</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:91:                            <span class="display-6 fw-bold away-score" style="color: var(--danger);">{{ match.away_score }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:94:                        <span class="vs-badge d-inline-flex align-items-center justify-content-center my-1"
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:101:                        <div class="d-flex align-items-center justify-content-center gap-2 mt-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:102:                            <div class="flag-placeholder d-flex align-items-center justify-content-center"
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:106:                            <span class="fw-bold text-white fs-6">{{ match.away_team }}</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:111:                    <div class="text-center text-secondary small mb-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:117:                    <div class="text-center text-secondary small mb-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:123:                    <div class="text-center mt-2 pt-2" style="border-top: 1px solid rgba(255,255,255,0.08);">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:125:                            <span class="btn btn-sm btn-gold-outline" style="min-height: 40px; pointer-events: none;">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:129:                            <span class="btn btn-sm" style="min-height: 40px; background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); pointer-events: none;">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:134:                            <span class="btn btn-sm" style="min-height: 40px; background: var(--success-bg); color: var(--success); border: 1px solid rgba(16,185,129,0.3); pointer-events: none;">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:138:                            <span class="btn btn-sm btn-gold" style="min-height: 40px;">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:143:                            <span class="btn btn-sm btn-gold-outline" style="min-height: 40px;">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:147:                            <span class="btn btn-sm" style="min-height: 40px; background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); pointer-events: none;">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:155:                    <div class="position-absolute top-0 end-0 m-2">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:156:                        <span class="d-flex align-items-center justify-content-center"
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:167:        <div class="col-12 text-center py-5" data-aos="fade-up">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:168:            <div class="glass-card p-5 mx-auto" style="max-width: 500px;">
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:169:                <div class="mb-3" style="font-size: 4rem;">⚽</div>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:170:                <h3 class="gold-text mb-2">No Matches Found</h3>
+/home/z/my-project/worldcup/predictor/templates/predictor/matches.html:171:                <p class="text-secondary">There are no matches in the system yet. Check back later!</p>
+/home/z/my-project/worldcup/predictor/templates/predictor/components/navbar.html:2:<nav class="navbar navbar-expand-lg navbar-dark-custom fixed-top">
+/home/z/my-project/worldcup/predictor/templates/predictor/components/navbar.html:3:    <div class="container">
+/home/z/my-project/worldcup/predictor/templates/predictor/components/navbar.html:4:        <a class="navbar-brand d-flex align-items-center" href="{% url 'predictor:home' %}">
+/home/z/my-project/worldcup/predictor/templates/predictor/components/navbar.html:5:            <span class="me-1" style="font-size: 1.4rem;">⚽</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/components/navbar.html:6:            <span class="gold-text fw-bold">WC2026</span>
+/home/z/my-project/worldcup/predictor/templates/predictor/components/navbar.html:9:        <button class="navbar-toggler border-gold" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+/home/z/my-project/worldcup/predictor/templates/predictor/components/navbar.html:10:            <span class="navbar-toggler-icon"></span>
+/home/z/my-project/worldcup/predictor/templates/predictor/components/navbar.html:13:        <div class="collapse navbar-collapse" id="navbarNav">
+/home/z/my-project/worldcup/predictor/templates/predictor/components/navbar.html:14:            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+/home/z/my-project/worldcup/predictor/templates/predictor/components/navbar.html:15:                <li class="nav-item">
+/home/z/my-project/worldcup/predictor/templates/predictor/components/navbar.html:16:                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'predictor:home' %}">
+/home/z/my-project/worldcup/predictor/templates/predictor/components/navbar.html:17:                        <i class="bi bi-house-door"></i> Home
+/home/z/my-project/worldcup/predictor/templates/predictor/components/navbar.html:20:                <li class="nav-item">
+/home/z/my-project/worldcup/predictor/templates/predictor/components/navbar.html:21:                    <a class="nav-link {% if '/today/' in request.path %}active{% endif %}" href="{% url 'predictor:today' %}">
+/home/z/my-project/worldcup/predictor/templates/predictor/components/navbar.html:22:                        <i class="bi bi-calendar-event"></i> Today
+
+[Showing results with pagination = limit: 250]

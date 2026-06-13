@@ -55,11 +55,20 @@ def login_view(request):
     """Handle participant login via name + secret_code.
 
     GET: Display login form with name dropdown and secret code field.
+         Stores the 'next' parameter in the form for post-login redirect.
     POST: Validate credentials; on success store participant_id in session
-          and redirect to home. On failure, show error via Django messages.
+          and redirect to the original page (or home). On failure, show error.
     """
+    # Store the 'next' redirect URL from query params or referer
+    next_url = request.GET.get('next') or request.META.get('HTTP_REFERER', '')
+    # Only keep internal paths
+    if next_url and not next_url.startswith('/'):
+        next_url = ''
+
     if request.method == 'POST':
         form = ParticipantLoginForm(request.POST)
+        # Also read next from hidden field
+        next_url = request.POST.get('next', '')
         if form.is_valid():
             name = form.cleaned_data['name']
             secret_code = form.cleaned_data['secret_code']
@@ -72,6 +81,9 @@ def login_view(request):
                     request,
                     f"Welcome back, {participant.name}! 🎉"
                 )
+                # Redirect to original page or home
+                if next_url:
+                    return redirect(next_url)
                 return redirect('predictor:home')
             except Participant.DoesNotExist:
                 messages.error(
@@ -83,7 +95,10 @@ def login_view(request):
     else:
         form = ParticipantLoginForm()
 
-    return render(request, 'predictor/login.html', {'form': form})
+    return render(request, 'predictor/login.html', {
+        'form': form,
+        'next_url': next_url,
+    })
 
 
 def logout_view(request):
@@ -313,8 +328,9 @@ def submit_prediction(request, match_id):
     current_participant = get_current_participant(request)
 
     if not current_participant:
-        messages.warning(request, "Please log in to make predictions.")
-        return redirect('predictor:login')
+        from django.urls import reverse
+        login_url = reverse('predictor:login')
+        return redirect(f'{login_url}?next={request.path}')
 
     if match.is_locked:
         messages.error(
@@ -388,7 +404,9 @@ def edit_prediction(request, match_id):
 
     if not current_participant:
         messages.warning(request, "Please log in to edit predictions.")
-        return redirect('predictor:login')
+        from django.urls import reverse
+        login_url = reverse('predictor:login')
+        return redirect(f'{login_url}?next={request.path}')
 
     if match.is_locked:
         messages.error(

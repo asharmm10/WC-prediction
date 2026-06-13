@@ -3,170 +3,266 @@
 
 {% block title %}Today's Matches | WC2026{% endblock %}
 
-{% block content %}
-<div class="container py-4">
-    <!-- ============================================================
-         HEADER SECTION
-         ============================================================ -->
-    <div class="text-center mb-4" data-aos="fade-down">
-        <h1 class="display-5 fw-bold mb-2">
-            <span class="gold-text">📅 Today's Matches</span>
-        </h1>
-        <p class="lead text-secondary mb-2">
-            {{ today_date|date:"l, F j, Y" }}
-        </p>
-        {% if current_participant %}
-        <span class="badge rounded-pill px-3 py-2" style="background: var(--bg-card); border: 1px solid var(--gold); color: var(--gold);">
-            👤 {{ current_participant.name }}
-        </span>
-        {% endif %}
-    </div>
+{% block nav_today %} active{% endblock %}
 
+{% block extra_css %}
+<style>
+    .today-header {
+        padding: 100px 0 40px;
+        text-align: center;
+        position: relative;
+    }
+    .today-header::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.06) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .today-date {
+        font-size: clamp(1rem, 2.5vw, 1.3rem);
+        color: #9ca3af;
+        font-weight: 300;
+        letter-spacing: 2px;
+    }
+    .match-section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .match-section-title .icon {
+        font-size: 1.5rem;
+    }
+    .match-section-title h2 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    /* Enhanced match card for today */
+    .today-match-card {
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 16px;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    .today-match-card:hover {
+        transform: translateY(-2px);
+    }
+    .today-match-card.locked-match {
+        opacity: 0.75;
+    }
+    .today-match-card.completed-match {
+        border-color: rgba(212,175,55,0.25);
+    }
+
+    /* Score inputs enhanced */
+    .score-input-enhanced {
+        width: 56px;
+        height: 56px;
+        font-size: 1.5rem;
+        font-weight: 800;
+        text-align: center;
+        background: rgba(31,41,55,0.8);
+        border: 2px solid rgba(212,175,55,0.25);
+        color: #f5d442;
+        border-radius: 12px;
+        font-family: 'JetBrains Mono', monospace;
+        transition: all 0.3s ease;
+    }
+    .score-input-enhanced:focus {
+        border-color: #d4af37;
+        box-shadow: 0 0 0 3px rgba(212,175,55,0.2), 0 0 20px rgba(212,175,55,0.1);
+        outline: none;
+    }
+    .score-input-enhanced::placeholder {
+        color: rgba(212,175,55,0.3);
+    }
+
+    /* Team display */
+    .team-display {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .team-flag {
+        width: 48px; height: 48px;
+        min-width: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #fff;
+        border: 2px solid rgba(255,255,255,0.15);
+    }
+    .team-name {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #fff;
+    }
+
+    /* VS Badge enhanced */
+    .vs-enhanced {
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #d4af37, #f5d442);
+        color: #0a0e17;
+        font-weight: 900;
+        font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 15px rgba(212,175,55,0.3);
+    }
+
+    /* Prediction submit button enhanced */
+    .btn-predict {
+        min-height: 52px;
+        min-width: 180px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: 12px;
+        letter-spacing: 0.3px;
+    }
+    .btn-predict-edit {
+        min-height: 44px;
+        border-radius: 10px;
+    }
+
+    @media (max-width: 576px) {
+        .score-input-enhanced {
+            width: 48px;
+            height: 48px;
+            font-size: 1.2rem;
+        }
+        .team-flag {
+            width: 40px; height: 40px; min-width: 40px;
+            font-size: 1rem;
+        }
+        .team-name { font-size: 0.95rem; }
+        .btn-predict {
+            min-width: 150px;
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="today-header" data-aos="fade-down">
+    <h1 class="fw-bold mb-2">
+        <span class="gold-text" style="font-size:clamp(1.8rem,5vw,2.5rem);">&#128197; Today's Matches</span>
+    </h1>
+    <p class="today-date">{{ today_date|date:"l, F j, Y" }}</p>
+    {% if current_participant %}
+    <span class="badge rounded-pill px-3 py-2" style="background:rgba(17,24,39,0.6);border:1px solid rgba(212,175,55,0.3);color:#f5d442;backdrop-filter:blur(8px);">
+        &#128100; {{ current_participant.name }}
+    </span>
+    {% endif %}
+</div>
+
+<div class="container pb-5">
     <!-- ============================================================
-         OPEN MATCHES SECTION
+         OPEN MATCHES
          ============================================================ -->
     {% if open_matches %}
     <section class="mb-5" id="open-matches">
-        <h2 class="match-day-header mb-4" data-aos="fade-up">
-            <span class="status-badge status-open me-2">🟢</span>
-            Open for Predictions
-        </h2>
+        <div class="match-section-title" data-aos="fade-up">
+            <span class="icon">&#128994;</span>
+            <h2 class="gold-text">Open for Predictions</h2>
+        </div>
 
         {% for match in open_matches %}
-        <div class="match-card glass-card p-3 p-md-4 mb-4 position-relative"
-             data-match-id="{{ match.id }}"
-             data-aos="fade-up"
-             data-aos-delay="{{ forloop.counter0|divisibleby:3 }}00">
-
-            <!-- Status & Group Header -->
+        <div class="today-match-card glass-card-gold" data-match-id="{{ match.id }}" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+            <!-- Status & Group -->
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span class="status-badge status-open">OPEN</span>
                 {% if match.group_stage %}
-                <span class="badge rounded-pill"
-                      style="background: rgba(59,130,246,0.15); color: #3b82f6; border: 1px solid rgba(59,130,246,0.3);">
-                    {{ match.group_stage }}
-                </span>
+                <span class="badge rounded-pill" style="background:rgba(59,130,246,0.12);color:#3b82f6;border:1px solid rgba(59,130,246,0.25);">{{ match.group_stage }}</span>
                 {% endif %}
             </div>
 
             <!-- Prediction Form -->
-            <form class="prediction-form prediction-form-inline{% if not current_participant %} locked{% endif %}"
+            <form class="prediction-form{% if not current_participant %} locked{% endif %}"
                   action="{% url 'predictor:submit_prediction' match.id %}"
                   method="post"
                   data-match-id="{{ match.id }}">
                 {% csrf_token %}
 
-                <!-- Teams & Scores Row -->
+                <!-- Teams & Scores -->
                 <div class="row align-items-center g-2 g-md-3">
                     <!-- Home Team -->
-                    <div class="col-5 col-md-4 text-center text-md-end">
-                        <div class="d-flex flex-column flex-md-row align-items-center justify-content-end gap-2">
-                            <div class="flag-placeholder d-flex align-items-center justify-content-center"
-                                 style="background-color: #1a4d2e; width: 48px; height: 48px; min-width: 48px; border-radius: 50%; font-size: 1.2rem; font-weight: 700; color: #fff; border: 2px solid rgba(255,255,255,0.2);">
-                                {{ match.home_team|first }}
-                            </div>
-                            <span class="fw-bold fs-5 text-white">{{ match.home_team }}</span>
+                    <div class="col-4 text-center text-md-end">
+                        <div class="team-display justify-content-center justify-content-md-end">
+                            <div class="team-flag" style="background-color:#1a4d2e;">{{ match.home_team|first }}</div>
+                            <span class="team-name d-none d-md-inline">{{ match.home_team }}</span>
                         </div>
+                        <span class="team-name d-md-none" style="font-size:0.85rem;">{{ match.home_team }}</span>
                     </div>
 
                     <!-- Score Inputs -->
-                    <div class="col-2 col-md-4">
+                    <div class="col-4">
                         <div class="d-flex align-items-center justify-content-center gap-1 gap-md-2">
-                            <div class="score-input-wrapper text-center">
-                                <input type="number"
-                                       name="home_score"
-                                       class="form-control form-control-lg text-center fw-bold"
-                                       min="0" max="20"
-                                       placeholder="-"
-                                       aria-label="Home team score"
-                                       style="width: 52px; height: 52px; font-size: 1.4rem; background: var(--bg-input); border: 2px solid rgba(212,175,55,0.3); color: var(--gold-light); border-radius: 8px;">
-                            </div>
-
-                            <span class="vs-badge d-flex align-items-center justify-content-center mx-1"
-                                  style="width: 36px; height: 36px; min-width: 36px; border-radius: 50%; background: var(--gold-gradient); color: #0a0e17; font-weight: 800; font-size: 0.7rem;">
-                                VS
-                            </span>
-
-                            <div class="score-input-wrapper text-center">
-                                <input type="number"
-                                       name="away_score"
-                                       class="form-control form-control-lg text-center fw-bold"
-                                       min="0" max="20"
-                                       placeholder="-"
-                                       aria-label="Away team score"
-                                       style="width: 52px; height: 52px; font-size: 1.4rem; background: var(--bg-input); border: 2px solid rgba(212,175,55,0.3); color: var(--gold-light); border-radius: 8px;">
-                            </div>
+                            <input type="number" name="home_score" class="score-input-enhanced" min="0" max="20" placeholder="-" aria-label="Home score">
+                            <span class="vs-enhanced">VS</span>
+                            <input type="number" name="away_score" class="score-input-enhanced" min="0" max="20" placeholder="-" aria-label="Away score">
                         </div>
                     </div>
 
                     <!-- Away Team -->
-                    <div class="col-5 col-md-4 text-center text-md-start">
-                        <div class="d-flex flex-column flex-md-row align-items-center justify-content-start gap-2">
-                            <div class="flag-placeholder d-flex align-items-center justify-content-center"
-                                 style="background-color: #8b1a1a; width: 48px; height: 48px; min-width: 48px; border-radius: 50%; font-size: 1.2rem; font-weight: 700; color: #fff; border: 2px solid rgba(255,255,255,0.2);">
-                                {{ match.away_team|first }}
-                            </div>
-                            <span class="fw-bold fs-5 text-white">{{ match.away_team }}</span>
+                    <div class="col-4 text-center text-md-start">
+                        <div class="team-display justify-content-center justify-content-md-start">
+                            <span class="team-name d-none d-md-inline">{{ match.away_team }}</span>
+                            <div class="team-flag" style="background-color:#8b1a1a;">{{ match.away_team|first }}</div>
                         </div>
+                        <span class="team-name d-md-none" style="font-size:0.85rem;">{{ match.away_team }}</span>
                     </div>
                 </div>
 
-                <!-- Match Info Row -->
-                <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3"
-                     style="border-top: 1px solid rgba(255,255,255,0.08);">
+                <!-- Match Info & Action -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3" style="border-top:1px solid rgba(255,255,255,0.06);">
                     <div class="text-secondary small">
-                        <span class="me-3">🕐 {{ match.kickoff_datetime|date:"H:i" }}</span>
+                        <span class="me-3">&#128336; {{ match.kickoff_datetime|date:"H:i" }}</span>
                         {% if match.venue %}
-                        <span class="d-none d-sm-inline">📍 {{ match.venue }}</span>
+                        <span class="d-none d-sm-inline">&#128205; {{ match.venue }}</span>
                         {% endif %}
                     </div>
-
                     <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
                         {% if current_participant %}
                             {% if match.has_predicted %}
-                            <span class="badge rounded-pill px-3 py-2"
-                                  style="background: var(--success-bg); color: var(--success); border: 1px solid rgba(16,185,129,0.3);">
-                                Predicted ✓
-                            </span>
-                            <a href="{% url 'predictor:edit_prediction' match.id %}"
-                               class="btn btn-gold-outline btn-sm"
-                               style="min-height: 44px; min-width: 44px;">
-                                ✏️ Edit
+                            <span class="badge rounded-pill px-3 py-2" style="background:rgba(16,185,129,0.12);color:#10b981;border:1px solid rgba(16,185,129,0.25);">Predicted &#10003;</span>
+                            <a href="{% url 'predictor:edit_prediction' match.id %}" class="btn btn-gold-outline btn-sm btn-predict-edit">
+                                &#9999;&#65039; Edit
                             </a>
                             {% else %}
-                            <button type="submit"
-                                    class="btn btn-gold btn-sm"
-                                    style="min-height: 48px; min-width: 120px; font-size: 1rem;">
-                                ⚽ Submit Prediction
+                            <button type="submit" class="btn btn-gold btn-sm btn-predict btn-glow">
+                                &#9917; Submit Prediction
                             </button>
                             {% endif %}
                         {% else %}
-                            <a href="{% url 'predictor:login' %}"
-                               class="btn btn-gold-outline btn-sm"
-                               style="min-height: 48px; min-width: 120px; font-size: 1rem;">
-                                🔑 Login to Predict
+                            <a href="{% url 'predictor:login' %}?next={{ request.path }}" class="btn btn-gold btn-sm btn-predict btn-glow">
+                                &#128273; Login to Predict
                             </a>
                         {% endif %}
                     </div>
                 </div>
             </form>
 
-            <!-- Predicted Overlay Indicator -->
+            <!-- Predicted indicator -->
             {% if match.has_predicted and current_participant %}
             <div class="position-absolute top-0 end-0 m-3">
-                <span class="d-flex align-items-center justify-content-center"
-                      style="width: 32px; height: 32px; border-radius: 50%; background: var(--success); color: #fff; font-size: 1rem;"
-                      title="You have predicted this match">
-                    ✓
-                </span>
+                <span class="d-flex align-items-center justify-content-center" style="width:32px;height:32px;border-radius:50%;background:#10b981;color:#fff;font-size:1rem;box-shadow:0 0 12px rgba(16,185,129,0.4);">&#10003;</span>
             </div>
             {% endif %}
 
-            <!-- Mobile Venue -->
             {% if match.venue %}
-            <div class="text-secondary small d-sm-none mt-1">
-                📍 {{ match.venue }}
-            </div>
+            <div class="text-secondary small d-sm-none mt-1">&#128205; {{ match.venue }}</div>
             {% endif %}
         </div>
         {% endfor %}
@@ -174,80 +270,49 @@
     {% endif %}
 
     <!-- ============================================================
-         LOCKED MATCHES SECTION
+         LOCKED MATCHES
          ============================================================ -->
     {% if locked_matches %}
     <section class="mb-5" id="locked-matches">
-        <h2 class="match-day-header mb-4" data-aos="fade-up">
-            <span class="status-badge status-locked me-2">🔒</span>
-            Predictions Locked
-        </h2>
+        <div class="match-section-title" data-aos="fade-up">
+            <span class="icon">&#128274;</span>
+            <h2 style="color:#9ca3af;">Predictions Locked</h2>
+        </div>
 
         {% for match in locked_matches %}
-        <div class="match-card glass-card p-3 p-md-4 mb-4 position-relative"
-             data-match-id="{{ match.id }}"
-             data-aos="fade-up"
-             data-aos-delay="{{ forloop.counter0|divisibleby:3 }}00">
-
-            <!-- Locked Overlay -->
-            <div class="prediction-locked"></div>
-
-            <!-- Status & Group Header -->
+        <div class="today-match-card locked-match glass-card" data-match-id="{{ match.id }}" data-aos="fade-up">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span class="status-badge status-locked">LOCKED</span>
                 {% if match.group_stage %}
-                <span class="badge rounded-pill"
-                      style="background: rgba(59,130,246,0.15); color: #3b82f6; border: 1px solid rgba(59,130,246,0.3);">
-                    {{ match.group_stage }}
-                </span>
+                <span class="badge rounded-pill" style="background:rgba(59,130,246,0.12);color:#3b82f6;border:1px solid rgba(59,130,246,0.25);">{{ match.group_stage }}</span>
                 {% endif %}
             </div>
 
-            <!-- Teams Row (no inputs) -->
-            <div class="row align-items-center g-2 g-md-3">
-                <!-- Home Team -->
-                <div class="col-5 col-md-4 text-center text-md-end">
-                    <div class="d-flex flex-column flex-md-row align-items-center justify-content-end gap-2">
-                        <div class="flag-placeholder d-flex align-items-center justify-content-center"
-                             style="background-color: #1a4d2e; width: 48px; height: 48px; min-width: 48px; border-radius: 50%; font-size: 1.2rem; font-weight: 700; color: #fff; border: 2px solid rgba(255,255,255,0.2); opacity: 0.6;">
-                            {{ match.home_team|first }}
-                        </div>
-                        <span class="fw-bold fs-5" style="color: var(--text-secondary);">{{ match.home_team }}</span>
+            <div class="row align-items-center g-2">
+                <div class="col-4 text-center">
+                    <div class="team-display justify-content-center">
+                        <div class="team-flag" style="background-color:#1a4d2e;opacity:0.5;">{{ match.home_team|first }}</div>
+                        <span class="fw-bold" style="color:#6b7280;font-size:1rem;">{{ match.home_team }}</span>
                     </div>
                 </div>
-
-                <!-- VS Badge -->
-                <div class="col-2 col-md-4 text-center">
-                    <span class="vs-badge d-inline-flex align-items-center justify-content-center"
-                          style="width: 36px; height: 36px; border-radius: 50%; background: var(--gold-gradient); color: #0a0e17; font-weight: 800; font-size: 0.7rem; opacity: 0.6;">
-                        VS
-                    </span>
+                <div class="col-4 text-center">
+                    <span class="vs-enhanced" style="opacity:0.4;">VS</span>
                 </div>
-
-                <!-- Away Team -->
-                <div class="col-5 col-md-4 text-center text-md-start">
-                    <div class="d-flex flex-column flex-md-row align-items-center justify-content-start gap-2">
-                        <div class="flag-placeholder d-flex align-items-center justify-content-center"
-                             style="background-color: #8b1a1a; width: 48px; height: 48px; min-width: 48px; border-radius: 50%; font-size: 1.2rem; font-weight: 700; color: #fff; border: 2px solid rgba(255,255,255,0.2); opacity: 0.6;">
-                            {{ match.away_team|first }}
-                        </div>
-                        <span class="fw-bold fs-5" style="color: var(--text-secondary);">{{ match.away_team }}</span>
+                <div class="col-4 text-center">
+                    <div class="team-display justify-content-center">
+                        <span class="fw-bold" style="color:#6b7280;font-size:1rem;">{{ match.away_team }}</span>
+                        <div class="team-flag" style="background-color:#8b1a1a;opacity:0.5;">{{ match.away_team|first }}</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Match Info -->
-            <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3"
-                 style="border-top: 1px solid rgba(255,255,255,0.08);">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3" style="border-top:1px solid rgba(255,255,255,0.06);">
                 <div class="text-secondary small">
-                    <span class="me-3">🕐 {{ match.kickoff_datetime|date:"H:i" }}</span>
-                    {% if match.venue %}
-                    <span>📍 {{ match.venue }}</span>
-                    {% endif %}
+                    <span>&#128336; {{ match.kickoff_datetime|date:"H:i" }}</span>
+                    {% if match.venue %} <span class="ms-2">&#128205; {{ match.venue }}</span> {% endif %}
                 </div>
-                <span class="badge rounded-pill px-3 py-2 mt-2 mt-md-0"
-                      style="background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239,68,68,0.3);">
-                    🔒 Kickoff in progress
+                <span class="badge rounded-pill px-3 py-2 mt-2 mt-md-0" style="background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);">
+                    &#128274; Kickoff in progress
                 </span>
             </div>
         </div>
@@ -256,79 +321,53 @@
     {% endif %}
 
     <!-- ============================================================
-         COMPLETED MATCHES SECTION
+         COMPLETED MATCHES
          ============================================================ -->
     {% if completed_matches %}
     <section class="mb-5" id="completed-matches">
-        <h2 class="match-day-header mb-4" data-aos="fade-up">
-            <span class="status-badge status-completed me-2">✅</span>
-            Final Results
-        </h2>
+        <div class="match-section-title" data-aos="fade-up">
+            <span class="icon">&#9989;</span>
+            <h2 class="gold-text">Final Results</h2>
+        </div>
 
         {% for match in completed_matches %}
-        <div class="match-card glass-card-gold p-3 p-md-4 mb-4"
-             data-match-id="{{ match.id }}"
-             data-aos="fade-up"
-             data-aos-delay="{{ forloop.counter0|divisibleby:3 }}00">
-
-            <!-- Status & Group Header -->
+        <div class="today-match-card completed-match glass-card-gold" data-match-id="{{ match.id }}" data-aos="fade-up">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span class="status-badge status-completed">COMPLETED</span>
                 {% if match.group_stage %}
-                <span class="badge rounded-pill"
-                      style="background: rgba(59,130,246,0.15); color: #3b82f6; border: 1px solid rgba(59,130,246,0.3);">
-                    {{ match.group_stage }}
-                </span>
+                <span class="badge rounded-pill" style="background:rgba(59,130,246,0.12);color:#3b82f6;border:1px solid rgba(59,130,246,0.25);">{{ match.group_stage }}</span>
                 {% endif %}
             </div>
 
-            <!-- Teams & Final Score -->
-            <div class="row align-items-center g-2 g-md-3">
-                <!-- Home Team -->
-                <div class="col-4 text-center text-md-end">
-                    <div class="d-flex flex-column flex-md-row align-items-center justify-content-end gap-2">
-                        <div class="flag-placeholder d-flex align-items-center justify-content-center"
-                             style="background-color: #1a4d2e; width: 48px; height: 48px; min-width: 48px; border-radius: 50%; font-size: 1.2rem; font-weight: 700; color: #fff; border: 2px solid rgba(255,255,255,0.2);">
-                            {{ match.home_team|first }}
-                        </div>
-                        <span class="fw-bold fs-5 text-white">{{ match.home_team }}</span>
+            <div class="row align-items-center g-2">
+                <div class="col-4 text-center">
+                    <div class="team-display justify-content-center">
+                        <div class="team-flag" style="background-color:#1a4d2e;">{{ match.home_team|first }}</div>
+                        <span class="fw-bold text-white" style="font-size:1.1rem;">{{ match.home_team }}</span>
                     </div>
                 </div>
-
-                <!-- Final Score -->
                 <div class="col-4 text-center">
                     <div class="d-flex align-items-center justify-content-center gap-2">
-                        <span class="display-6 fw-bold gold-text home-score">{{ match.home_score }}</span>
-                        <span class="fs-4 text-secondary">&ndash;</span>
-                        <span class="display-6 fw-bold gold-text away-score">{{ match.away_score }}</span>
+                        <span class="fw-bold gold-text" style="font-size:2rem;font-family:'JetBrains Mono',monospace;">{{ match.home_score }}</span>
+                        <span class="text-secondary fs-5">&ndash;</span>
+                        <span class="fw-bold gold-text" style="font-size:2rem;font-family:'JetBrains Mono',monospace;">{{ match.away_score }}</span>
                     </div>
                 </div>
-
-                <!-- Away Team -->
-                <div class="col-4 text-center text-md-start">
-                    <div class="d-flex flex-column flex-md-row align-items-center justify-content-start gap-2">
-                        <div class="flag-placeholder d-flex align-items-center justify-content-center"
-                             style="background-color: #8b1a1a; width: 48px; height: 48px; min-width: 48px; border-radius: 50%; font-size: 1.2rem; font-weight: 700; color: #fff; border: 2px solid rgba(255,255,255,0.2);">
-                            {{ match.away_team|first }}
-                        </div>
-                        <span class="fw-bold fs-5 text-white">{{ match.away_team }}</span>
+                <div class="col-4 text-center">
+                    <div class="team-display justify-content-center">
+                        <span class="fw-bold text-white" style="font-size:1.1rem;">{{ match.away_team }}</span>
+                        <div class="team-flag" style="background-color:#8b1a1a;">{{ match.away_team|first }}</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Match Info -->
-            <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3"
-                 style="border-top: 1px solid rgba(212,175,55,0.15);">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3" style="border-top:1px solid rgba(212,175,55,0.1);">
                 <div class="text-secondary small">
-                    <span class="me-3">🕐 {{ match.kickoff_datetime|date:"H:i" }}</span>
-                    {% if match.venue %}
-                    <span>📍 {{ match.venue }}</span>
-                    {% endif %}
+                    <span>&#128336; {{ match.kickoff_datetime|date:"H:i" }}</span>
+                    {% if match.venue %} <span class="ms-2">&#128205; {{ match.venue }}</span> {% endif %}
                 </div>
-                <a href="{% url 'predictor:match_detail' match.id %}"
-                   class="btn btn-gold-outline btn-sm mt-2 mt-md-0"
-                   style="min-height: 44px;">
-                    📊 View Details
+                <a href="{% url 'predictor:match_detail' match.id %}" class="btn btn-gold-outline btn-sm" style="min-height:44px;border-radius:10px;">
+                    &#128202; View Details
                 </a>
             </div>
         </div>
@@ -336,18 +375,14 @@
     </section>
     {% endif %}
 
-    <!-- ============================================================
-         EMPTY STATE
-         ============================================================ -->
+    <!-- Empty State -->
     {% if not open_matches and not locked_matches and not completed_matches %}
     <div class="text-center py-5" data-aos="fade-up">
-        <div class="glass-card p-5 mx-auto" style="max-width: 500px;">
-            <div class="mb-3" style="font-size: 4rem;">⚽</div>
+        <div class="glass-card-premium p-5 mx-auto" style="max-width:500px;">
+            <div class="mb-3" style="font-size:4rem;">&#9917;</div>
             <h3 class="gold-text mb-2">No Matches Today</h3>
             <p class="text-secondary mb-4">There are no matches scheduled for today. Check back later or browse the full schedule!</p>
-            <a href="{% url 'predictor:schedule' %}" class="btn btn-gold">
-                📅 View Schedule
-            </a>
+            <a href="{% url 'predictor:schedule' %}" class="btn btn-gold btn-glow">&#128197; View Schedule</a>
         </div>
     </div>
     {% endif %}

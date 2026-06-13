@@ -1,0 +1,716 @@
+     1→     1→{% extends "predictor/base.html" %}
+     2→     2→{% load static %}
+     3→     3→
+     4→     4→{% block title %}FIFA World Cup 2026 - Family Prediction League{% endblock %}
+     5→     5→
+     6→     6→{% block extra_css %}
+     7→     7→<style>
+     8→     8→    /* ── Hero Section ── */
+     9→     9→    .hero-section {
+    10→    10→        min-height: 100vh;
+    11→    11→        display: flex;
+    12→    12→        align-items: center;
+    13→    13→        justify-content: center;
+    14→    14→        text-align: center;
+    15→    15→        position: relative;
+    16→    16→        padding: 120px 20px 80px;
+    17→    17→        overflow: hidden;
+    18→    18→        background:
+    19→    19→            radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.08) 0%, transparent 60%),
+    20→    20→            radial-gradient(ellipse at 20% 80%, rgba(212, 175, 55, 0.04) 0%, transparent 50%),
+    21→    21→            radial-gradient(ellipse at 80% 80%, rgba(212, 175, 55, 0.04) 0%, transparent 50%),
+    22→    22→            var(--bg-primary);
+    23→    23→    }
+    24→    24→    .hero-section::before {
+    25→    25→        content: '';
+    26→    26→        position: absolute;
+    27→    27→        top: 0;
+    28→    28→        left: 0;
+    29→    29→        right: 0;
+    30→    30→        height: 2px;
+    31→    31→        background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    32→    32→        opacity: 0.6;
+    33→    33→    }
+    34→    34→    .hero-title {
+    35→    35→        font-size: clamp(2rem, 6vw, 4rem);
+    36→    36→        font-weight: 900;
+    37→    37→        background: var(--gold-text-gradient);
+    38→    38→        -webkit-background-clip: text;
+    39→    39→        -webkit-text-fill-color: transparent;
+    40→    40→        background-clip: text;
+    41→    41→        letter-spacing: 2px;
+    42→    42→        line-height: 1.1;
+    43→    43→        margin-bottom: 0.5rem;
+    44→    44→    }
+    45→    45→    .hero-subtitle {
+    46→    46→        font-size: clamp(1rem, 2.5vw, 1.5rem);
+    47→    47→        color: var(--text-secondary);
+    48→    48→        font-weight: 300;
+    49→    49→        letter-spacing: 4px;
+    50→    50→        text-transform: uppercase;
+    51→    51→        margin-bottom: 1.5rem;
+    52→    52→    }
+    53→    53→    .hero-trophy {
+    54→    54→        font-size: clamp(3rem, 8vw, 5rem);
+    55→    55→        display: block;
+    56→    56→        margin-bottom: 1rem;
+    57→    57→        animation: trophyBounce 2s ease-in-out infinite;
+    58→    58→    }
+    59→    59→    @keyframes trophyBounce {
+    60→    60→        0%, 100% { transform: translateY(0) scale(1); }
+    61→    61→        50% { transform: translateY(-12px) scale(1.05); }
+    62→    62→    }
+    63→    63→
+    64→    64→    /* ── Countdown ── */
+    65→    65→    .countdown-container {
+    66→    66→        display: flex;
+    67→    67→        justify-content: center;
+    68→    68→        gap: 1rem;
+    69→    69→        margin: 2rem 0;
+    70→    70→        flex-wrap: wrap;
+    71→    71→    }
+    72→    72→    .countdown-item {
+    73→    73→        display: flex;
+    74→    74→        flex-direction: column;
+    75→    75→        align-items: center;
+    76→    76→    }
+    77→    77→    .countdown-digit {
+    78→    78→        width: 80px;
+    79→    79→        height: 80px;
+    80→    80→        display: flex;
+    81→    81→        align-items: center;
+    82→    82→        justify-content: center;
+    83→    83→        font-size: 2.2rem;
+    84→    84→        font-weight: 900;
+    85→    85→        background: rgba(212, 175, 55, 0.1);
+    86→    86→        border: 1px solid rgba(212, 175, 55, 0.3);
+    87→    87→        border-radius: 12px;
+    88→    88→        color: var(--gold-light);
+    89→    89→        text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    90→    90→        transition: transform 0.3s ease;
+    91→    91→    }
+    92→    92→    .countdown-digit:hover {
+    93→    93→        transform: scale(1.08);
+    94→    94→    }
+    95→    95→    .countdown-label {
+    96→    96→        font-size: 0.7rem;
+    97→    97→        letter-spacing: 2px;
+    98→    98→        color: var(--text-muted);
+    99→    99→        margin-top: 6px;
+   100→   100→        text-transform: uppercase;
+   101→   101→    }
+   102→   102→
+   103→   103→    /* ── Next match badge ── */
+   104→   104→    .next-match-badge {
+   105→   105→        display: inline-block;
+   106→   106→        padding: 0.6rem 1.5rem;
+   107→   107→        border-radius: 50px;
+   108→   108→        background: rgba(212, 175, 55, 0.1);
+   109→   109→        border: 1px solid rgba(212, 175, 55, 0.25);
+   110→   110→        color: var(--text-primary);
+   111→   111→        font-size: 1rem;
+   112→   112→        margin-bottom: 1.5rem;
+   113→   113→    }
+   114→   114→
+   115→   115→    /* ── Hero CTA ── */
+   116→   116→    .hero-cta {
+   117→   117→        display: flex;
+   118→   118→        gap: 1rem;
+   119→   119→        justify-content: center;
+   120→   120→        flex-wrap: wrap;
+   121→   121→        margin-top: 1.5rem;
+   122→   122→    }
+   123→   123→    .hero-cta .btn {
+   124→   124→        min-height: 48px;
+   125→   125→        min-width: 180px;
+   126→   126→        font-weight: 600;
+   127→   127→        letter-spacing: 0.5px;
+   128→   128→    }
+   129→   129→
+   130→   130→    /* ── Stats Section ── */
+   131→   131→    .stats-card {
+   132→   132→        text-align: center;
+   133→   133→        padding: 1.5rem 1rem;
+   134→   134→        border-radius: 1rem;
+   135→   135→    }
+   136→   136→    .stats-icon {
+   137→   137→        font-size: 2rem;
+   138→   138→        display: block;
+   139→   139→        margin-bottom: 0.5rem;
+   140→   140→    }
+   141→   141→    .stats-number {
+   142→   142→        font-size: 2rem;
+   143→   143→        font-weight: 900;
+   144→   144→        color: var(--gold-light);
+   145→   145→    }
+   146→   146→    .stats-label {
+   147→   147→        font-size: 0.85rem;
+   148→   148→        color: var(--text-secondary);
+   149→   149→        text-transform: uppercase;
+   150→   150→        letter-spacing: 1px;
+   151→   151→    }
+   152→   152→
+   153→   153→    /* ── Leaderboard mini ── */
+   154→   154→    .leaderboard-row {
+   155→   155→        display: flex;
+   156→   156→        align-items: center;
+   157→   157→        padding: 0.75rem 1rem;
+   158→   158→        border-radius: 0.75rem;
+   159→   159→        margin-bottom: 0.5rem;
+   160→   160→        transition: background 0.2s ease;
+   161→   161→        background: rgba(255, 255, 255, 0.02);
+   162→   162→        border: 1px solid rgba(255, 255, 255, 0.04);
+   163→   163→    }
+   164→   164→    .leaderboard-row:hover {
+   165→   165→        background: rgba(212, 175, 55, 0.06);
+   166→   166→        border-color: rgba(212, 175, 55, 0.15);
+   167→   167→    }
+   168→   168→    .rank-badge {
+   169→   169→        width: 36px;
+   170→   170→        height: 36px;
+   171→   171→        border-radius: 50%;
+   172→   172→        display: flex;
+   173→   173→        align-items: center;
+   174→   174→        justify-content: center;
+   175→   175→        font-weight: 800;
+   176→   176→        font-size: 0.9rem;
+   177→   177→        flex-shrink: 0;
+   178→   178→        background: var(--bg-input);
+   179→   179→        color: var(--text-secondary);
+   180→   180→    }
+   181→   181→    .rank-gold {
+   182→   182→        background: linear-gradient(135deg, #d4af37, #f5d442);
+   183→   183→        color: #0a0e17;
+   184→   184→    }
+   185→   185→    .rank-silver {
+   186→   186→        background: linear-gradient(135deg, #9ca3af, #d1d5db);
+   187→   187→        color: #0a0e17;
+   188→   188→    }
+   189→   189→    .rank-bronze {
+   190→   190→        background: linear-gradient(135deg, #b45309, #d97706);
+   191→   191→        color: #0a0e17;
+   192→   192→    }
+   193→   193→    .lb-name {
+   194→   194→        flex: 1;
+   195→   195→        margin-left: 0.75rem;
+   196→   196→        color: var(--text-primary);
+   197→   197→        font-weight: 500;
+   198→   198→    }
+   199→   199→    .lb-points {
+   200→   200→        font-weight: 700;
+   201→   201→        color: var(--gold-light);
+   202→   202→        font-size: 1.1rem;
+   203→   203→    }
+   204→   204→    .lb-exact {
+   205→   205→        color: var(--text-muted);
+   206→   206→        font-size: 0.8rem;
+   207→   207→        margin-left: 0.5rem;
+   208→   208→    }
+   209→   209→
+   210→   210→    /* ── Match Card ── */
+   211→   211→    .match-card {
+   212→   212→        padding: 1.25rem;
+   213→   213→        border-radius: 1rem;
+   214→   214→        transition: transform 0.25s ease, box-shadow 0.25s ease;
+   215→   215→    }
+   216→   216→    .match-card:hover {
+   217→   217→        transform: translateY(-3px);
+   218→   218→    }
+   219→   219→    .match-teams {
+   220→   220→        display: flex;
+   221→   221→        align-items: center;
+   222→   222→        justify-content: center;
+   223→   223→        gap: 0.75rem;
+   224→   224→        margin-bottom: 0.75rem;
+   225→   225→    }
+   226→   226→    .match-team {
+   227→   227→        display: flex;
+   228→   228→        flex-direction: column;
+   229→   229→        align-items: center;
+   230→   230→        min-width: 80px;
+   231→   231→    }
+   232→   232→    .flag-placeholder {
+   233→   233→        width: 48px;
+   234→   234→        height: 48px;
+   235→   235→        border-radius: 50%;
+   236→   236→        display: flex;
+   237→   237→        align-items: center;
+   238→   238→        justify-content: center;
+   239→   239→        font-weight: 800;
+   240→   240→        font-size: 1rem;
+   241→   241→        margin-bottom: 0.35rem;
+   242→   242→        background: rgba(212, 175, 55, 0.15);
+   243→   243→        color: var(--gold-light);
+   244→   244→        border: 2px solid rgba(212, 175, 55, 0.25);
+   245→   245→    }
+   246→   246→    .team-name {
+   247→   247→        font-size: 0.85rem;
+   248→   248→        font-weight: 600;
+   249→   249→        color: var(--text-primary);
+   250→   250→        text-align: center;
+   251→   251→        line-height: 1.2;
+   252→   252→    }
+   253→   253→    .vs-badge {
+   254→   254→        width: 40px;
+   255→   255→        height: 40px;
+   256→   256→        border-radius: 50%;
+   257→   257→        display: flex;
+   258→   258→        align-items: center;
+   259→   259→        justify-content: center;
+   260→   260→        font-weight: 900;
+   261→   261→        font-size: 0.75rem;
+   262→   262→        background: linear-gradient(135deg, #d4af37, #f5d442);
+   263→   263→        color: #0a0e17;
+   264→   264→        flex-shrink: 0;
+   265→   265→    }
+   266→   266→    .match-meta {
+   267→   267→        text-align: center;
+   268→   268→        font-size: 0.8rem;
+   269→   269→        color: var(--text-muted);
+   270→   270→    }
+   271→   271→    .match-score {
+   272→   272→        font-size: 1.5rem;
+   273→   273→        font-weight: 900;
+   274→   274→        color: var(--gold-light);
+   275→   275→    }
+   276→   276→    .status-badge {
+   277→   277→        display: inline-block;
+   278→   278→        padding: 0.2rem 0.75rem;
+   279→   279→        border-radius: 50px;
+   280→   280→        font-size: 0.7rem;
+   281→   281→        font-weight: 600;
+   282→   282→        text-transform: uppercase;
+   283→   283→        letter-spacing: 0.5px;
+   284→   284→    }
+   285→   285→    .status-open {
+   286→   286→        background: var(--success-bg);
+   287→   287→        color: var(--success);
+   288→   288→        border: 1px solid rgba(16, 185, 129, 0.3);
+   289→   289→    }
+   290→   290→    .status-locked {
+   291→   291→        background: var(--warning-bg);
+   292→   292→        color: var(--warning);
+   293→   293→        border: 1px solid rgba(245, 158, 11, 0.3);
+   294→   294→    }
+   295→   295→    .status-live {
+   296→   296→        background: var(--danger-bg);
+   297→   297→        color: var(--danger);
+   298→   298→        border: 1px solid rgba(239, 68, 68, 0.3);
+   299→   299→        animation: livePulse 1.5s ease-in-out infinite;
+   300→   300→    }
+   301→   301→    @keyframes livePulse {
+   302→   302→        0%, 100% { opacity: 1; }
+   303→   303→        50% { opacity: 0.6; }
+   304→   304→    }
+   305→   305→    .status-completed {
+   306→   306→        background: rgba(107, 114, 128, 0.15);
+   307→   307→        color: var(--text-secondary);
+   308→   308→        border: 1px solid rgba(107, 114, 128, 0.3);
+   309→   309→    }
+   310→   310→    .predict-btn {
+   311→   311→        min-height: 44px;
+   312→   312→        min-width: 120px;
+   313→   313→    }
+   314→   314→
+   315→   315→    /* ── Section Headings ── */
+   316→   316→    .section-heading {
+   317→   317→        display: flex;
+   318→   318→        align-items: center;
+   319→   319→        gap: 0.75rem;
+   320→   320→        margin-bottom: 1.5rem;
+   321→   321→    }
+   322→   322→    .section-heading::before,
+   323→   323→    .section-heading::after {
+   324→   324→        content: '';
+   325→   325→        flex: 1;
+   326→   326→        height: 1px;
+   327→   327→        background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+   328→   328→    }
+   329→   329→    .section-heading span {
+   330→   330→        color: var(--gold-light);
+   331→   331→        font-weight: 700;
+   332→   332→        font-size: 1.3rem;
+   333→   333→        letter-spacing: 1px;
+   334→   334→        text-transform: uppercase;
+   335→   335→        white-space: nowrap;
+   336→   336→    }
+   337→   337→
+   338→   338→    /* ── Responsive tweaks ── */
+   339→   339→    @media (max-width: 576px) {
+   340→   340→        .countdown-digit {
+   341→   341→            width: 60px;
+   342→   342→            height: 60px;
+   343→   343→            font-size: 1.6rem;
+   344→   344→        }
+   345→   345→        .countdown-container {
+   346→   346→            gap: 0.5rem;
+   347→   347→        }
+   348→   348→        .flag-placeholder {
+   349→   349→            width: 40px;
+   350→   350→            height: 40px;
+   351→   351→            font-size: 0.85rem;
+   352→   352→        }
+   353→   353→        .team-name {
+   354→   354→            font-size: 0.75rem;
+   355→   355→        }
+   356→   356→    }
+   357→   357→</style>
+   358→   358→{% endblock %}
+   359→   359→
+   360→   360→{% block content %}
+   361→   361→
+   362→   362→<!-- ═══════════════════════════════════════════════════════════════════════
+   363→   363→     HERO SECTION
+   364→   364→     ═══════════════════════════════════════════════════════════════════════ -->
+   365→   365→<section class="hero-section">
+   366→   366→    <div class="container" style="position: relative; z-index: 2;">
+   367→   367→        <div data-aos="fade-down" data-aos-duration="800">
+   368→   368→            <span class="hero-trophy">🏆</span>
+   369→   369→        </div>
+   370→   370→
+   371→   371→        <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100">
+   372→   372→            FIFA WORLD CUP 2026
+   373→   373→        </h1>
+   374→   374→
+   375→   375→        <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200">
+   376→   376→            Family Prediction League
+   377→   377→        </p>
+   378→   378→
+   379→   379→        <!-- Countdown Timer -->
+   380→   380→        <div class="countdown-container" data-aos="fade-up" data-aos-delay="300" id="hero-countdown">
+   381→   381→            <div class="countdown-item">
+   382→   382→                <div class="countdown-digit" id="countdown-days">--</div>
+   383→   383→                <div class="countdown-label">Days</div>
+   384→   384→            </div>
+   385→   385→            <div class="countdown-item">
+   386→   386→                <div class="countdown-digit" id="countdown-hours">--</div>
+   387→   387→                <div class="countdown-label">Hours</div>
+   388→   388→            </div>
+   389→   389→            <div class="countdown-item">
+   390→   390→                <div class="countdown-digit" id="countdown-minutes">--</div>
+   391→   391→                <div class="countdown-label">Mins</div>
+   392→   392→            </div>
+   393→   393→            <div class="countdown-item">
+   394→   394→                <div class="countdown-digit" id="countdown-seconds">--</div>
+   395→   395→                <div class="countdown-label">Secs</div>
+   396→   396→            </div>
+   397→   397→        </div>
+   398→   398→
+   399→   399→        {% if next_match %}
+   400→   400→        <div class="next-match-badge" data-aos="fade-up" data-aos-delay="400">
+   401→   401→            <i class="bi bi-clock-history me-1"></i>
+   402→   402→            Next: <strong>{{ next_match.home_team }}</strong> vs <strong>{{ next_match.away_team }}</strong>
+   403→   403→            {% if next_match.venue %}<span class="text-muted ms-2"><i class="bi bi-geo-alt"></i> {{ next_match.venue }}</span>{% endif %}
+   404→   404→        </div>
+   405→   405→        {% else %}
+   406→   406→        <div class="next-match-badge" data-aos="fade-up" data-aos-delay="400">
+   407→   407→            <i class="bi bi-info-circle me-1"></i> No upcoming matches scheduled
+   408→   408→        </div>
+   409→   409→        {% endif %}
+   410→   410→
+   411→   411→        <div class="hero-cta" data-aos="fade-up" data-aos-delay="500">
+   412→   412→            {% if current_participant %}
+   413→   413→            <a href="{% url 'predictor:today' %}" class="btn btn-gold btn-lg">
+   414→   414→                <i class="bi bi-lightning-fill me-1"></i> Make Predictions
+   415→   415→            </a>
+   416→   416→            {% else %}
+   417→   417→            <a href="{% url 'predictor:login' %}" class="btn btn-gold btn-lg">
+   418→   418→                <i class="bi bi-box-arrow-in-right me-1"></i> Login to Predict
+   419→   419→            </a>
+   420→   420→            {% endif %}
+   421→   421→            <a href="{% url 'predictor:leaderboard' %}" class="btn btn-gold-outline btn-lg">
+   422→   422→                <i class="bi bi-bar-chart-fill me-1"></i> View Leaderboard
+   423→   423→            </a>
+   424→   424→        </div>
+   425→   425→    </div>
+   426→   426→</section>
+   427→   427→
+   428→   428→<!-- ═══════════════════════════════════════════════════════════════════════
+   429→   429→     STATS SECTION
+   430→   430→     ═══════════════════════════════════════════════════════════════════════ -->
+   431→   431→<section class="py-5" style="background: var(--bg-primary);">
+   432→   432→    <div class="container">
+   433→   433→        <div class="row g-4">
+   434→   434→            <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
+   435→   435→                <div class="stats-card glass-card">
+   436→   436→                    <span class="stats-icon">👥</span>
+   437→   437→                    <div class="stats-number">{{ participant_count }}</div>
+   438→   438→                    <div class="stats-label">Participants</div>
+   439→   439→                </div>
+   440→   440→            </div>
+   441→   441→            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+   442→   442→                <div class="stats-card glass-card">
+   443→   443→                    <span class="stats-icon">⚽</span>
+   444→   444→                    <div class="stats-number">{{ upcoming_matches.count|default:"0" }}</div>
+   445→   445→                    <div class="stats-label">Upcoming Matches</div>
+   446→   446→                </div>
+   447→   447→            </div>
+   448→   448→            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+   449→   449→                <div class="stats-card glass-card">
+   450→   450→                    <span class="stats-icon">🏆</span>
+   451→   451→                    <div class="stats-number">
+   452→   452→                        {% if top5 %}
+   453→   453→                            {{ top5.0.participant.name|default:"—" }}
+   454→   454→                        {% else %}
+   455→   455→                            —
+   456→   456→                        {% endif %}
+   457→   457→                    </div>
+   458→   458→                    <div class="stats-label">Top Scorer</div>
+   459→   459→                </div>
+   460→   460→            </div>
+   461→   461→        </div>
+   462→   462→    </div>
+   463→   463→</section>
+   464→   464→
+   465→   465→<!-- ═══════════════════════════════════════════════════════════════════════
+   466→   466→     TOP 5 LEADERBOARD SECTION
+   467→   467→     ═══════════════════════════════════════════════════════════════════════ -->
+   468→   468→{% if top5 %}
+   469→   469→<section class="py-5" style="background: var(--bg-secondary);">
+   470→   470→    <div class="container">
+   471→   471→        <div class="section-heading" data-aos="fade-up">
+   472→   472→            <span><i class="bi bi-trophy-fill me-2"></i>Leaderboard</span>
+   473→   473→        </div>
+   474→   474→
+   475→   475→        <div class="glass-card p-3 p-md-4" data-aos="fade-up" data-aos-delay="100" style="max-width: 600px; margin: 0 auto;">
+   476→   476→            {% for entry in top5 %}
+   477→   477→            <div class="leaderboard-row" data-aos="fade-right" data-aos-delay="{{ forloop.counter0|add:50 }}0">
+   478→   478→                <div class="rank-badge
+   479→   479→                    {% if entry.rank == 1 %}rank-gold
+   480→   480→                    {% elif entry.rank == 2 %}rank-silver
+   481→   481→                    {% elif entry.rank == 3 %}rank-bronze
+   482→   482→                    {% endif %}">
+   483→   483→                    {{ entry.rank }}
+   484→   484→                </div>
+   485→   485→                <div class="lb-name">
+   486→   486→                    {{ entry.participant.name }}
+   487→   487→                </div>
+   488→   488→                <div class="lb-points">{{ entry.points }} pts</div>
+   489→   489→                <div class="lb-exact">({{ entry.exact_predictions }} exact)</div>
+   490→   490→            </div>
+   491→   491→            {% endfor %}
+   492→   492→
+   493→   493→            <div class="text-center mt-3">
+   494→   494→                <a href="{% url 'predictor:leaderboard' %}" class="btn btn-gold-outline btn-sm" style="min-height: 44px;">
+   495→   495→                    <i class="bi bi-arrow-right me-1"></i> View Full Leaderboard
+   496→   496→                </a>
+   497→   497→            </div>
+   498→   498→        </div>
+   499→   499→    </div>
+   500→   500→</section>
+   501→   501→{% endif %}
+   502→   502→
+   503→   503→<!-- ═══════════════════════════════════════════════════════════════════════
+   504→   504→     UPCOMING MATCHES SECTION
+   505→   505→     ═══════════════════════════════════════════════════════════════════════ -->
+   506→   506→{% if upcoming_matches %}
+   507→   507→<section class="py-5" style="background: var(--bg-primary);">
+   508→   508→    <div class="container">
+   509→   509→        <div class="section-heading" data-aos="fade-up">
+   510→   510→            <span><i class="bi bi-calendar-event me-2"></i>Upcoming Matches</span>
+   511→   511→        </div>
+   512→   512→
+   513→   513→        <div class="row g-4 justify-content-center">
+   514→   514→            {% for match in upcoming_matches %}
+   515→   515→            <div class="col-sm-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:0 }}00">
+   516→   516→                <div class="match-card glass-card h-100 d-flex flex-column">
+   517→   517→                    <!-- Status Badge -->
+   518→   518→                    <div class="text-center mb-2">
+   519→   519→                        {% if match.status == 'live' %}
+   520→   520→                        <span class="status-badge status-live"><i class="bi bi-broadcast me-1"></i>Live</span>
+   521→   521→                        {% elif match.is_locked %}
+   522→   522→                        <span class="status-badge status-locked"><i class="bi bi-lock-fill me-1"></i>Locked</span>
+   523→   523→                        {% else %}
+   524→   524→                        <span class="status-badge status-open"><i class="bi bi-unlock-fill me-1"></i>Open</span>
+   525→   525→                        {% endif %}
+   526→   526→                        {% if match.group_stage %}
+   527→   527→                        <span class="ms-2 text-muted" style="font-size: 0.75rem;">Group {{ match.group_stage }}</span>
+   528→   528→                        {% endif %}
+   529→   529→                    </div>
+   530→   530→
+   531→   531→                    <!-- Teams -->
+   532→   532→                    <div class="match-teams">
+   533→   533→                        <div class="match-team">
+   534→   534→                            <div class="flag-placeholder">{{ match.home_team|make_list|first|upper }}</div>
+   535→   535→                            <div class="team-name">{{ match.home_team }}</div>
+   536→   536→                        </div>
+   537→   537→                        <div class="vs-badge">VS</div>
+   538→   538→                        <div class="match-team">
+   539→   539→                            <div class="flag-placeholder">{{ match.away_team|make_list|first|upper }}</div>
+   540→   540→                            <div class="team-name">{{ match.away_team }}</div>
+   541→   541→                        </div>
+   542→   542→                    </div>
+   543→   543→
+   544→   544→                    <!-- Match Meta -->
+   545→   545→                    <div class="match-meta mt-auto">
+   546→   546→                        <div>
+   547→   547→                            <i class="bi bi-calendar3 me-1"></i>
+   548→   548→                            {{ match.kickoff_datetime|date:"M d, Y" }}
+   549→   549→                            &bull;
+   550→   550→                            <i class="bi bi-clock me-1"></i>
+   551→   551→                            {{ match.kickoff_datetime|date:"g:i A" }}
+   552→   552→                        </div>
+   553→   553→                        {% if match.venue %}
+   554→   554→                        <div class="mt-1">
+   555→   555→                            <i class="bi bi-geo-alt me-1"></i> {{ match.venue }}
+   556→   556→                        </div>
+   557→   557→                        {% endif %}
+   558→   558→                    </div>
+   559→   559→
+   560→   560→                    <!-- Predict Button -->
+   561→   561→                    {% if not match.is_locked and not match.status == 'completed' %}
+   562→   562→                        {% if current_participant %}
+   563→   563→                        <div class="text-center mt-3">
+   564→   564→                            <a href="{% url 'predictor:submit_prediction' match.id %}" class="btn btn-gold btn-sm predict-btn">
+   565→   565→                                <i class="bi bi-pencil-square me-1"></i> Predict Now
+   566→   566→                            </a>
+   567→   567→                        </div>
+   568→   568→                        {% else %}
+   569→   569→                        <div class="text-center mt-3">
+   570→   570→                            <a href="{% url 'predictor:login' %}" class="btn btn-gold-outline btn-sm predict-btn">
+   571→   571→                                <i class="bi bi-box-arrow-in-right me-1"></i> Login to Predict
+   572→   572→                            </a>
+   573→   573→                        </div>
+   574→   574→                        {% endif %}
+   575→   575→                    {% endif %}
+   576→   576→                </div>
+   577→   577→            </div>
+   578→   578→            {% endfor %}
+   579→   579→        </div>
+   580→   580→
+   581→   581→        <div class="text-center mt-4">
+   582→   582→            <a href="{% url 'predictor:matches' %}" class="btn btn-gold-outline">
+   583→   583→                <i class="bi bi-arrow-right me-1"></i> View All Matches
+   584→   584→            </a>
+   585→   585→        </div>
+   586→   586→    </div>
+   587→   587→</section>
+   588→   588→{% endif %}
+   589→   589→
+   590→   590→<!-- ═══════════════════════════════════════════════════════════════════════
+   591→   591→     RECENT RESULTS SECTION
+   592→   592→     ═══════════════════════════════════════════════════════════════════════ -->
+   593→   593→{% if recent_matches %}
+   594→   594→<section class="py-5" style="background: var(--bg-secondary);">
+   595→   595→    <div class="container">
+   596→   596→        <div class="section-heading" data-aos="fade-up">
+   597→   597→            <span><i class="bi bi-flag-fill me-2"></i>Recent Results</span>
+   598→   598→        </div>
+   599→   599→
+   600→   600→        <div class="row g-4 justify-content-center">
+   601→   601→            {% for match in recent_matches %}
+   602→   602→            <div class="col-sm-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:0 }}00">
+   603→   603→                <div class="match-card glass-card h-100 d-flex flex-column">
+   604→   604→                    <!-- Status Badge -->
+   605→   605→                    <div class="text-center mb-2">
+   606→   606→                        <span class="status-badge status-completed"><i class="bi bi-check-circle-fill me-1"></i>Completed</span>
+   607→   607→                        {% if match.group_stage %}
+   608→   608→                        <span class="ms-2 text-muted" style="font-size: 0.75rem;">Group {{ match.group_stage }}</span>
+   609→   609→                        {% endif %}
+   610→   610→                    </div>
+   611→   611→
+   612→   612→                    <!-- Teams + Score -->
+   613→   613→                    <div class="match-teams">
+   614→   614→                        <div class="match-team">
+   615→   615→                            <div class="flag-placeholder">{{ match.home_team|make_list|first|upper }}</div>
+   616→   616→                            <div class="team-name">{{ match.home_team }}</div>
+   617→   617→                        </div>
+   618→   618→                        <div class="d-flex flex-column align-items-center">
+   619→   619→                            <div class="match-score">{{ match.result_str }}</div>
+   620→   620→                        </div>
+   621→   621→                        <div class="match-team">
+   622→   622→                            <div class="flag-placeholder">{{ match.away_team|make_list|first|upper }}</div>
+   623→   623→                            <div class="team-name">{{ match.away_team }}</div>
+   624→   624→                        </div>
+   625→   625→                    </div>
+   626→   626→
+   627→   627→                    <!-- Match Meta -->
+   628→   628→                    <div class="match-meta mt-auto">
+   629→   629→                        <div>
+   630→   630→                            <i class="bi bi-calendar3 me-1"></i>
+   631→   631→                            {{ match.kickoff_datetime|date:"M d, Y" }}
+   632→   632→                        </div>
+   633→   633→                        {% if match.venue %}
+   634→   634→                        <div class="mt-1">
+   635→   635→                            <i class="bi bi-geo-alt me-1"></i> {{ match.venue }}
+   636→   636→                        </div>
+   637→   637→                        {% endif %}
+   638→   638→                    </div>
+   639→   639→
+   640→   640→                    <!-- View Details -->
+   641→   641→                    <div class="text-center mt-3">
+   642→   642→                        <a href="{% url 'predictor:match_detail' match.id %}" class="btn btn-outline-light btn-sm" style="min-height: 44px; min-width: 120px;">
+   643→   643→                            <i class="bi bi-eye me-1"></i> View Details
+   644→   644→                        </a>
+   645→   645→                    </div>
+   646→   646→                </div>
+   647→   647→            </div>
+   648→   648→            {% endfor %}
+   649→   649→        </div>
+   650→   650→    </div>
+   651→   651→</section>
+   652→   652→{% endif %}
+   653→   653→
+   654→   654→{% endblock %}
+   655→   655→
+   656→   656→{% block extra_js %}
+   657→   657→<script>
+   658→   658→    document.addEventListener('DOMContentLoaded', function () {
+   659→   659→        // ── Countdown Timer ──
+   660→   660→        const countdownApiUrl = '{% url "predictor:countdown_api" %}';
+   661→   661→        const daysEl = document.getElementById('countdown-days');
+   662→   662→        const hoursEl = document.getElementById('countdown-hours');
+   663→   663→        const minutesEl = document.getElementById('countdown-minutes');
+   664→   664→        const secondsEl = document.getElementById('countdown-seconds');
+   665→   665→
+   666→   666→        let secondsRemaining = 0;
+   667→   667→        let countdownInterval = null;
+   668→   668→
+   669→   669→        function updateDisplay() {
+   670→   670→            if (secondsRemaining <= 0) {
+   671→   671→                daysEl.textContent = '00';
+   672→   672→                hoursEl.textContent = '00';
+   673→   673→                minutesEl.textContent = '00';
+   674→   674→                secondsEl.textContent = '00';
+   675→   675→                if (countdownInterval) {
+   676→   676→                    clearInterval(countdownInterval);
+   677→   677→                    countdownInterval = null;
+   678→   678→                }
+   679→   679→                return;
+   680→   680→            }
+   681→   681→            const days = Math.floor(secondsRemaining / 86400);
+   682→   682→            const hours = Math.floor((secondsRemaining % 86400) / 3600);
+   683→   683→            const mins = Math.floor((secondsRemaining % 3600) / 60);
+   684→   684→            const secs = secondsRemaining % 60;
+   685→   685→
+   686→   686→            daysEl.textContent = String(days).padStart(2, '0');
+   687→   687→            hoursEl.textContent = String(hours).padStart(2, '0');
+   688→   688→            minutesEl.textContent = String(mins).padStart(2, '0');
+   689→   689→            secondsEl.textContent = String(secs).padStart(2, '0');
+   690→   690→        }
+   691→   691→
+   692→   692→        function fetchCountdown() {
+   693→   693→            fetch(countdownApiUrl)
+   694→   694→                .then(function (res) { return res.json(); })
+   695→   695→                .then(function (data) {
+   696→   696→                    secondsRemaining = data.seconds_remaining || 0;
+   697→   697→                    updateDisplay();
+   698→   698→                    if (secondsRemaining > 0 && !countdownInterval) {
+   699→   699→                        countdownInterval = setInterval(function () {
+   700→   700→                            secondsRemaining = Math.max(0, secondsRemaining - 1);
+   701→   701→                            updateDisplay();
+   702→   702→                        }, 1000);
+   703→   703→                    }
+   704→   704→                })
+   705→   705→                .catch(function () {
+   706→   706→                    // Silently fail — countdown will show dashes
+   707→   707→                });
+   708→   708→        }
+   709→   709→
+   710→   710→        fetchCountdown();
+   711→   711→        // Refresh from API every 60 seconds to avoid drift
+   712→   712→        setInterval(fetchCountdown, 60000);
+   713→   713→    });
+   714→   714→</script>
+   715→   715→{% endblock %}
+   716→   716→

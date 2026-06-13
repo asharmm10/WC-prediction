@@ -20,21 +20,33 @@
         position: absolute;
         inset: 0;
         background:
-            radial-gradient(ellipse at 20% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+            radial-gradient(ellipse at 20% 50%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 50%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.04) 0%, transparent 60%);
         pointer-events: none;
     }
     .login-card {
-        max-width: 440px;
+        max-width: 460px;
         width: 100%;
-        border-radius: 1.25rem;
+        border-radius: 1.5rem;
         padding: 2.5rem 2rem;
+        position: relative;
+        z-index: 1;
+    }
+    .login-card::before {
+        content: '';
+        position: absolute;
+        top: -1px; left: -1px; right: -1px; bottom: -1px;
+        border-radius: 1.5rem;
+        background: linear-gradient(135deg, rgba(212,175,55,0.3), rgba(212,175,55,0.05), rgba(212,175,55,0.2));
+        z-index: -1;
     }
     .trophy-icon {
-        font-size: 4rem;
+        font-size: 3.5rem;
         display: block;
         margin-bottom: 0.5rem;
         animation: float 3s ease-in-out infinite;
+        filter: drop-shadow(0 0 20px rgba(212,175,55,0.4));
     }
     @keyframes float {
         0%, 100% { transform: translateY(0); }
@@ -42,14 +54,21 @@
     }
     .form-control:focus, .form-select:focus {
         border-color: var(--gold);
-        box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+        box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25), 0 0 20px rgba(212,175,55,0.1);
         background-color: var(--bg-input);
         color: var(--text-primary);
     }
     .form-control, .form-select {
         background-color: var(--bg-input);
         color: var(--text-primary);
-        border-color: rgba(212, 175, 55, 0.2);
+        border: 2px solid rgba(212,175,55,0.15);
+        border-radius: 10px;
+        padding: 12px 16px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    .form-control:hover, .form-select:hover {
+        border-color: rgba(212,175,55,0.3);
     }
     .form-select option {
         background-color: var(--bg-secondary);
@@ -60,7 +79,7 @@
     }
     .secret-wrapper .toggle-password {
         position: absolute;
-        right: 12px;
+        right: 14px;
         top: 50%;
         transform: translateY(-50%);
         background: none;
@@ -70,6 +89,7 @@
         padding: 4px;
         z-index: 2;
         font-size: 1.1rem;
+        transition: color 0.2s;
     }
     .secret-wrapper .toggle-password:hover {
         color: var(--gold);
@@ -82,21 +102,53 @@
         10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
         20%, 40%, 60%, 80% { transform: translateX(5px); }
     }
+    .login-btn {
+        min-height: 52px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        border-radius: 12px;
+    }
+    .login-bg-player {
+        position: absolute;
+        bottom: 0;
+        opacity: 0.04;
+        pointer-events: none;
+        z-index: 0;
+    }
+    .login-bg-player.left {
+        left: -60px;
+    }
+    .login-bg-player.right {
+        right: -60px;
+    }
+    .login-bg-player img {
+        height: 400px;
+        width: auto;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="login-page">
-    <div class="login-card glass-card-gold" data-aos="zoom-in" data-aos-duration="600">
+    <!-- Decorative Players -->
+    <div class="login-bg-player left">
+        <img src="https://sfile.chatglm.cn/images-ppt/e9ed09cc5680.png" alt="">
+    </div>
+    <div class="login-bg-player right">
+        <img src="https://sfile.chatglm.cn/images-ppt/2b8d7d4c570a.png" alt="">
+    </div>
+
+    <div class="login-card glass-card-premium" data-aos="zoom-in" data-aos-duration="600">
         <div class="text-center mb-4">
-            <span class="trophy-icon">🏆</span>
-            <h2 class="gold-text fw-bold mb-1">Enter the Arena</h2>
-            <p class="text-secondary">Sign in to make your predictions</p>
+            <span class="trophy-icon">&#127942;</span>
+            <h2 class="gold-text fw-bold mb-1" style="font-size:1.6rem;">Enter the Arena</h2>
+            <p class="text-secondary" style="font-size:0.95rem;">Sign in to make your predictions</p>
         </div>
 
         {% if form.errors %}
         <div class="shake">
-            <div class="alert alert-danger glass-card py-2 px-3 mb-3" style="font-size: 0.9rem;">
+            <div class="alert glass-card py-2 px-3 mb-3" style="font-size: 0.9rem; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#f87171;">
                 <i class="bi bi-exclamation-triangle-fill me-1"></i>
                 Invalid name or secret code. Please try again.
             </div>
@@ -105,9 +157,11 @@
 
         <form method="post" action="{% url 'predictor:login' %}" id="login-form" novalidate>
             {% csrf_token %}
+            <!-- Hidden next field for redirect -->
+            <input type="hidden" name="next" value="{{ next_url|default:'' }}">
 
             <div class="mb-3">
-                <label for="id_name" class="form-label text-secondary">
+                <label for="id_name" class="form-label text-secondary" style="font-weight:600;font-size:0.85rem;">
                     <i class="bi bi-person me-1"></i> Your Name
                 </label>
                 {{ form.name }}
@@ -117,7 +171,7 @@
             </div>
 
             <div class="mb-4">
-                <label for="id_secret_code" class="form-label text-secondary">
+                <label for="id_secret_code" class="form-label text-secondary" style="font-weight:600;font-size:0.85rem;">
                     <i class="bi bi-key me-1"></i> Secret Code
                 </label>
                 <div class="secret-wrapper">
@@ -131,8 +185,8 @@
                 {% endfor %}
             </div>
 
-            <button type="submit" class="btn btn-gold w-100 btn-lg" style="min-height: 48px;">
-                <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+            <button type="submit" class="btn btn-gold w-100 login-btn btn-glow">
+                <i class="bi bi-box-arrow-in-right me-2"></i> Sign In
             </button>
         </form>
 
@@ -150,11 +204,11 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Toggle password visibility
-        const toggleBtn = document.getElementById('toggle-password');
-        const secretField = document.getElementById('id_secret_code');
+        var toggleBtn = document.getElementById('toggle-password');
+        var secretField = document.getElementById('id_secret_code');
         if (toggleBtn && secretField) {
             toggleBtn.addEventListener('click', function() {
-                const icon = this.querySelector('i');
+                var icon = this.querySelector('i');
                 if (secretField.type === 'password') {
                     secretField.type = 'text';
                     icon.classList.remove('bi-eye');
@@ -169,7 +223,7 @@
 
         // Add shake animation on form errors
         {% if form.errors %}
-        const loginCard = document.querySelector('.login-card');
+        var loginCard = document.querySelector('.login-card');
         if (loginCard) {
             loginCard.classList.add('animate__animated', 'animate__shakeX');
         }

@@ -31,12 +31,21 @@ def predictor_context(request):
         except Participant.DoesNotExist:
             pass
 
+    # Gateway context: detect if request came through Caddy with XTransformPort
+    is_behind_gateway = getattr(request, 'is_behind_gateway', False)
+    xtransformport_param = ''
+    if is_behind_gateway:
+        port = request.GET.get('XTransformPort', '8000')
+        xtransformport_param = f'XTransformPort={port}'
+
     return {
         'participant_count': participant_count,
         'upcoming_matches': upcoming_matches,
         'current_leader': current_leader,
         'top5': top5,
         'current_participant': current_participant,
+        'is_behind_gateway': is_behind_gateway,
+        'xtransformport_param': xtransformport_param,
     }
 
 
