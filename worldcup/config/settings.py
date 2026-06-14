@@ -24,7 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-7!2fj(h53jz&*rb!@_#2pf2i(=ws*7ka_+sgl1s!&21(10o4f!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
+# DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
+DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
 
@@ -33,8 +34,12 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:81',
     'http://localhost:81',
     'http://0.0.0.0:81',
+    'https://wc26.elabins.com'
 ]
 CSRF_COOKIE_SAMESITE = 'Lax'
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
 
 
 # Application definition

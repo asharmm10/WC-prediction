@@ -3,21 +3,16 @@ set -e
 
 echo "=== Starting World Cup 2026 Prediction League ==="
 
-RUN apt-get update && apt-get install -y default-mysql-client
-
 # Wait for MySQL to be ready
 echo "Waiting for MySQL to be ready..."
-# echo "DB_HOST=$DB_HOST"
-# echo "DB_PORT=$DB_PORT"
-# echo "DB_USER=$DB_USER"
 
-# while ! mysqladmin ping \
-#     -h"$DB_HOST" \
-#     -P"$DB_PORT" \
-#     -u"$DB_USER" \
-#     -p"$DB_PASSWORD"; do
-#     sleep 2
-# done
+while ! mysqladmin --skip-ssl ping \
+    -h"$DB_HOST" \
+    -P"$DB_PORT" \
+    -u"$DB_USER" \
+    -p"$DB_PASSWORD" 2>/dev/null; do
+    sleep 2
+done
 echo "MySQL is up!"
 
 # Run migrations

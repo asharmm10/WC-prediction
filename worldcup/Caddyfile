@@ -1,12 +1,14 @@
 :80 {
-    handle /static/* {
-        root * /app
+    handle_path /static/* {
+        root * /app/staticfiles
         file_server
     }
-    handle /media/* {
-        root * /app
+
+    handle_path /media/* {
+        root * /app/media
         file_server
     }
+
     handle {
         reverse_proxy web:8000
     }
