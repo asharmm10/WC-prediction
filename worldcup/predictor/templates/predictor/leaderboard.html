@@ -1,361 +1,67 @@
 {% extends "predictor/base.html" %}
 {% load static %}
+{% load predictor_tags %}
 
-{% block title %}Leaderboard | WC2026{% endblock %}
-{% block nav_leaderboard %} active{% endblock %}
-
-{% block extra_css %}
-<style>
-    .lb-header {
-        padding: 100px 0 40px;
-        text-align: center;
-        position: relative;
-    }
-    .lb-header::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(ellipse at 50% 30%, rgba(212,175,55,0.06) 0%, transparent 60%);
-        pointer-events: none;
-    }
-
-    /* Podium section */
-    .podium-section {
-        position: relative;
-        padding: 20px 0 40px;
-    }
-    .podium-card {
-        border-radius: 20px;
-        padding: 24px 16px;
-        text-align: center;
-        position: relative;
-        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        overflow: hidden;
-    }
-    .podium-card:hover {
-        transform: translateY(-6px);
-    }
-    .podium-card.gold-card {
-        background: rgba(212,175,55,0.04);
-        border: 1px solid rgba(212,175,55,0.2);
-        box-shadow: 0 0 40px rgba(212,175,55,0.06);
-        transform: scale(1.05);
-    }
-    .podium-card.gold-card:hover {
-        transform: scale(1.08);
-    }
-    .podium-card.gold-card::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 40%;
-        background: linear-gradient(180deg, rgba(212,175,55,0.04) 0%, transparent 100%);
-        pointer-events: none;
-    }
-    .podium-card.silver-card {
-        background: rgba(192,192,192,0.03);
-        border: 1px solid rgba(192,192,192,0.15);
-    }
-    .podium-card.bronze-card {
-        background: rgba(205,127,50,0.03);
-        border: 1px solid rgba(205,127,50,0.15);
-    }
-    .podium-medal {
-        width: 64px; height: 64px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.75rem;
-        margin: 0 auto 12px;
-    }
-    .podium-medal.gold-medal {
-        background: linear-gradient(135deg, #FFD700, #f5d442);
-        color: #0a0e17;
-        box-shadow: 0 0 25px rgba(255,215,0,0.35);
-        font-size: 2rem;
-        width: 72px; height: 72px;
-    }
-    .podium-medal.silver-medal {
-        background: linear-gradient(135deg, #C0C0C0, #e8e8e8);
-        color: #0a0e17;
-    }
-    .podium-medal.bronze-medal {
-        background: linear-gradient(135deg, #CD7F32, #e8a857);
-        color: #0a0e17;
-    }
-    .podium-name {
-        font-weight: 800;
-        font-size: 1.2rem;
-        margin-bottom: 4px;
-    }
-    .podium-pts {
-        font-family: 'JetBrains Mono', monospace;
-        font-weight: 900;
-        font-size: 2rem;
-        color: #f5d442;
-    }
-    .podium-detail {
-        color: #6b7280;
-        font-size: 0.8rem;
-    }
-
-    /* Full Leaderboard Table */
-    .lb-table-wrapper {
-        border-radius: 18px;
-        overflow: hidden;
-    }
-    .lb-table {
-        background: transparent;
-    }
-    .lb-table thead th {
-        background: rgba(12,18,32,0.5);
-        color: #6b7280;
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: 700;
-        padding: 14px 16px;
-        border-bottom: 1px solid rgba(212,175,55,0.1);
-    }
-    .lb-table tbody tr {
-        border-bottom: 1px solid rgba(255,255,255,0.03);
-        transition: all 0.2s ease;
-    }
-    .lb-table tbody tr:hover {
-        background: rgba(12,18,32,0.3);
-    }
-    .lb-table tbody tr.rank-1-row {
-        background: rgba(212,175,55,0.04);
-    }
-    .lb-table tbody tr.rank-1-row:hover {
-        background: rgba(212,175,55,0.08);
-    }
-    .lb-table tbody td {
-        padding: 14px 16px;
-        vertical-align: middle;
-    }
-    .lb-rank-circle {
-        width: 40px; height: 40px;
-        border-radius: 50%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 800;
-        font-size: 0.9rem;
-        background: rgba(255,255,255,0.04);
-        color: #9ca3af;
-    }
-    .lb-rank-circle.rank-1 {
-        background: linear-gradient(135deg, #FFD700, #f5d442);
-        color: #0a0e17;
-        box-shadow: 0 0 12px rgba(255,215,0,0.25);
-        width: 48px; height: 48px; font-size: 1.1rem;
-    }
-    .lb-rank-circle.rank-2 {
-        background: linear-gradient(135deg, #C0C0C0, #e8e8e8);
-        color: #0a0e17;
-    }
-    .lb-rank-circle.rank-3 {
-        background: linear-gradient(135deg, #CD7F32, #e8a857);
-        color: #0a0e17;
-    }
-
-    /* Mobile Card */
-    .lb-mobile-card {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        padding: 14px 16px;
-        border-radius: 14px;
-        background: rgba(12,18,32,0.35);
-        backdrop-filter: blur(15px) saturate(1.3);
-        -webkit-backdrop-filter: blur(15px) saturate(1.3);
-        border: 1px solid rgba(255,255,255,0.03);
-        margin-bottom: 8px;
-        transition: all 0.2s ease;
-    }
-    .lb-mobile-card:hover {
-        border-color: rgba(212,175,55,0.12);
-        background: rgba(12,18,32,0.5);
-    }
-    .lb-mobile-card.top-1 {
-        background: rgba(212,175,55,0.04);
-        border-color: rgba(212,175,55,0.15);
-    }
-    .lb-mobile-info {
-        flex: 1;
-    }
-    .lb-mobile-name {
-        font-weight: 700;
-        color: #fff;
-        font-size: 0.95rem;
-    }
-    .lb-mobile-detail {
-        color: #6b7280;
-        font-size: 0.75rem;
-    }
-    .lb-mobile-pts {
-        font-family: 'JetBrains Mono', monospace;
-        font-weight: 800;
-        color: #f5d442;
-        font-size: 1.2rem;
-    }
-    .lb-mobile-pts-label {
-        font-size: 0.6rem;
-        color: #6b7280;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-</style>
-{% endblock %}
+{% block title %}Leaderboard - WC2026{% endblock %}
+{% block nav_leaderboard %}active{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<section class="lb-header" data-aos="fade-down">
-    <h1 style="font-size:clamp(2rem,5vw,3rem);font-weight:900;">
-        <span class="gold-text">&#127942; Leaderboard</span>
-    </h1>
-    <p class="text-secondary" style="font-size:1.1rem;">Family Prediction League Standings</p>
-    <span class="badge rounded-pill px-3 py-2 mt-2" style="background:rgba(12,18,32,0.5);border:1px solid rgba(212,175,55,0.15);color:#f5d442;backdrop-filter:blur(10px);">
-        {{ leaderboard|length }} Participant{{ leaderboard|length|pluralize }}
-    </span>
-</section>
-
-<div class="container pb-5">
-    <!-- TOP 3 PODIUM -->
-    {% if leaderboard|length >= 1 %}
-    <section class="podium-section mb-5" data-aos="fade-up" data-aos-duration="800">
-        <div class="row justify-content-center align-items-end g-3">
-            <!-- 2nd Place -->
-            {% if leaderboard|length >= 2 %}
-            <div class="col-4 col-md-3 order-1 order-md-1" data-aos="fade-up" data-aos-delay="200">
-                <div class="podium-card silver-card glass-card">
-                    <div class="podium-medal silver-medal">&#129352;</div>
-                    <div class="podium-name" style="color:#C0C0C0;">{{ leaderboard.1.participant.name }}</div>
-                    <div class="podium-pts">{{ leaderboard.1.points }}</div>
-                    <div class="podium-detail">{{ leaderboard.1.exact_predictions }} exact</div>
-                </div>
-            </div>
-            {% endif %}
-
-            <!-- 1st Place -->
-            <div class="col-6 col-md-4 order-0 order-md-2" data-aos="fade-up" data-aos-delay="0">
-                <div class="podium-card gold-card glass-card-premium celebrate">
-                    <div style="font-size:2.5rem;margin-bottom:4px;">&#127942;</div>
-                    <div class="podium-medal gold-medal">&#129351;</div>
-                    <div class="podium-name" style="color:#f5d442;font-size:1.5rem;">{{ leaderboard.0.participant.name }}</div>
-                    <div class="podium-pts" style="font-size:2.5rem;text-shadow:0 0 20px rgba(212,175,55,0.3);">{{ leaderboard.0.points }}</div>
-                    <div class="podium-detail">{{ leaderboard.0.exact_predictions }} exact prediction{{ leaderboard.0.exact_predictions|pluralize }}</div>
-                </div>
-            </div>
-
-            <!-- 3rd Place -->
-            {% if leaderboard|length >= 3 %}
-            <div class="col-4 col-md-3 order-2 order-md-3" data-aos="fade-up" data-aos-delay="400">
-                <div class="podium-card bronze-card glass-card">
-                    <div class="podium-medal bronze-medal">&#129353;</div>
-                    <div class="podium-name" style="color:#CD7F32;">{{ leaderboard.2.participant.name }}</div>
-                    <div class="podium-pts">{{ leaderboard.2.points }}</div>
-                    <div class="podium-detail">{{ leaderboard.2.exact_predictions }} exact</div>
-                </div>
-            </div>
-            {% endif %}
-        </div>
-    </section>
-
-    <!-- Divider -->
-    <div class="text-center mb-4" data-aos="fade-in">
-        <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,0.2),transparent);max-width:400px;margin:0 auto;"></div>
+<div class="container" style="margin-top:100px;">
+    <div class="section-header mb-4">
+        <div class="accent-bar"></div>
+        <h1 class="gold-text"><i class="bi bi-bar-chart-fill"></i> Leaderboard</h1>
     </div>
-    {% endif %}
 
-    <!-- FULL LEADERBOARD -->
-    <section data-aos="fade-up" data-aos-delay="100">
-        <h2 class="gold-text fw-bold mb-3" style="font-size:1.3rem;">
-            <span style="display:inline-block;width:4px;height:20px;background:#d4af37;border-radius:2px;margin-right:8px;vertical-align:middle;"></span>
-            Full Standings
-        </h2>
-
-        {% if leaderboard %}
-        <!-- Desktop Table -->
-        <div class="d-none d-md-block">
-            <div class="glass-card lb-table-wrapper p-0">
-                <table class="table table-dark table-borderless mb-0 lb-table">
-                    <thead>
-                        <tr>
-                            <th class="ps-4" style="width:70px;">Rank</th>
-                            <th>Name</th>
-                            <th class="text-center" style="width:120px;">Points</th>
-                            <th class="text-center" style="width:140px;">Exact</th>
-                            <th class="text-center pe-4" style="width:140px;">Predicted</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for entry in leaderboard %}
-                        <tr class="{% if entry.rank == 1 %}rank-1-row{% endif %}">
-                            <td class="ps-4">
-                                <div class="lb-rank-circle {% if entry.rank == 1 %}rank-1{% elif entry.rank == 2 %}rank-2{% elif entry.rank == 3 %}rank-3{% endif %}">
-                                    {% if entry.rank == 1 %}&#127942;{% else %}{{ entry.rank }}{% endif %}
-                                </div>
-                            </td>
-                            <td>
-                                <span style="font-weight:700;color:{% if entry.rank == 1 %}#f5d442{% else %}#fff{% endif %};font-size:{% if entry.rank == 1 %}1.1rem{% else %}0.95rem{% endif %};">
-                                    {{ entry.participant.name }}
-                                    {% if entry.rank == 1 %} &#129351;{% elif entry.rank == 2 %} &#129352;{% elif entry.rank == 3 %} &#129353;{% endif %}
-                                </span>
-                            </td>
-                            <td class="text-center">
-                                <span style="font-family:'JetBrains Mono',monospace;font-weight:800;color:#f5d442;font-size:1.2rem;">{{ entry.points }}</span>
-                                <span style="display:block;font-size:0.65rem;color:#6b7280;text-transform:uppercase;letter-spacing:1px;">pts</span>
-                            </td>
-                            <td class="text-center" style="color:#9ca3af;font-weight:600;">{{ entry.exact_predictions }}</td>
-                            <td class="text-center pe-4" style="color:#9ca3af;font-weight:600;">{{ entry.matches_predicted }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Mobile Cards -->
-        <div class="d-md-none">
-            {% for entry in leaderboard %}
-            <div class="lb-mobile-card {% if entry.rank == 1 %}top-1{% endif %}" data-aos="fade-up">
-                <div class="lb-rank-circle {% if entry.rank == 1 %}rank-1{% elif entry.rank == 2 %}rank-2{% elif entry.rank == 3 %}rank-3{% endif %}">
-                    {% if entry.rank == 1 %}&#127942;{% else %}{{ entry.rank }}{% endif %}
-                </div>
-                <div class="lb-mobile-info">
-                    <div class="lb-mobile-name">{{ entry.participant.name }}</div>
-                    <div class="lb-mobile-detail">{{ entry.exact_predictions }} exact &middot; {{ entry.matches_predicted }} predicted</div>
-                </div>
-                <div class="text-center">
-                    <div class="lb-mobile-pts">{{ entry.points }}</div>
-                    <div class="lb-mobile-pts-label">pts</div>
+    {% if leaderboard %}
+    <div class="glass-card p-4">
+        <!-- Top 3 Podium -->
+        {% if leaderboard|length >= 3 %}
+        <div class="row mb-4 text-center">
+            <div class="col-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="glass-card p-3" style="border-color:rgba(192,192,192,0.2);">
+                    <div style="font-size:2rem;">&#127968;</div>
+                    <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#C0C0C0,#e8e8e8);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-family:var(--font-heading);color:#0a0e17;">2</div>
+                    <div style="font-family:var(--font-heading);font-weight:700;font-size:0.85rem;color:#fff;">{{ leaderboard.1.participant.name }}</div>
+                    <div class="mono-number" style="color:#C0C0C0;font-size:1.2rem;">{{ leaderboard.1.points }}<span style="font-size:0.6rem;color:#6b7280;">pts</span></div>
                 </div>
             </div>
-            {% endfor %}
-        </div>
-
-        {% else %}
-        <div class="glass-card text-center py-5" data-aos="fade-up">
-            <div style="font-size:3rem;margin-bottom:1rem;">&#128202;</div>
-            <h3 style="color:#9ca3af;">No participants yet</h3>
-            <p class="text-muted">The leaderboard will populate once predictions are made.</p>
+            <div class="col-4" data-aos="fade-up" data-aos-delay="0">
+                <div class="glass-card-gold p-3" style="border-color:rgba(255,215,0,0.3);">
+                    <div style="font-size:2.5rem;">&#127942;</div>
+                    <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#FFD700,#f5d442);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-family:var(--font-heading);color:#0a0e17;font-size:1.1rem;box-shadow:0 0 20px rgba(255,215,0,0.3);">1</div>
+                    <div style="font-family:var(--font-heading);font-weight:800;font-size:0.95rem;color:#fff;">{{ leaderboard.0.participant.name }}</div>
+                    <div class="mono-number" style="color:#f5d442;font-size:1.4rem;">{{ leaderboard.0.points }}<span style="font-size:0.6rem;color:#6b7280;">pts</span></div>
+                </div>
+            </div>
+            <div class="col-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="glass-card p-3" style="border-color:rgba(205,127,50,0.2);">
+                    <div style="font-size:2rem;">&#129351;</div>
+                    <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#CD7F32,#e8a857);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-family:var(--font-heading);color:#0a0e17;">3</div>
+                    <div style="font-family:var(--font-heading);font-weight:700;font-size:0.85rem;color:#fff;">{{ leaderboard.2.participant.name }}</div>
+                    <div class="mono-number" style="color:#CD7F32;font-size:1.2rem;">{{ leaderboard.2.points }}<span style="font-size:0.6rem;color:#6b7280;">pts</span></div>
+                </div>
+            </div>
         </div>
         {% endif %}
-    </section>
-</div>
 
-<!-- Champion Celebration -->
-{% if leaderboard|length >= 1 %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var championCard = document.querySelector('.celebrate');
-    if (championCard && typeof triggerConfetti === 'function') {
-        setTimeout(function() { triggerConfetti(); }, 800);
-    }
-});
-</script>
-{% endif %}
+        <!-- Full List -->
+        {% for entry in leaderboard %}
+        <div class="lb-row {% if entry.rank <= 3 %}top-{{ entry.rank }}{% endif %}" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}">
+            <div class="lb-rank {% if entry.rank == 1 %}gold{% elif entry.rank == 2 %}silver{% elif entry.rank == 3 %}bronze{% else %}normal{% endif %}">
+                {% if entry.rank == 1 %}&#127942;{% else %}{{ entry.rank }}{% endif %}
+            </div>
+            <div class="lb-name">{{ entry.participant.name }}</div>
+            <div class="lb-exact">{{ entry.exact_predictions }}<span style="font-size:0.55rem;color:#6b7280;margin-left:2px;">exact</span></div>
+            <div class="lb-pts">{{ entry.points }}<span style="font-size:0.55rem;color:#6b7280;margin-left:2px;">pts</span></div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <div class="glass-card p-5">
+            <p class="text-muted" style="font-size:1.1rem;">No results yet. Predictions will appear here once matches are completed.</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

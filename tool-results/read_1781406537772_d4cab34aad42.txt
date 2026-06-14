@@ -1,0 +1,1235 @@
+     1→/* ==========================================================================
+     2→   FIFA World Cup 2026 Family Prediction League
+     3→   Premium LIQUID GLASS Theme — Deep Space & Gold
+     4→   ==========================================================================
+     5→   Design: Liquid glassmorphism with deep parallax backgrounds,
+     6→   player silhouettes, stadium atmosphere, and scroll interactions.
+     7→   ========================================================================== */
+     8→
+     9→/* --------------------------------------------------------------------------
+    10→   CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+    11→   -------------------------------------------------------------------------- */
+    12→:root {
+    13→  /* — Deep Space Backgrounds — */
+    14→  --bg-primary:           #060a12;
+    15→  --bg-secondary:         #0c1220;
+    16→  --bg-tertiary:          #0f1520;
+    17→  --bg-card:              rgba(12, 18, 32, 0.65);
+    18→  --bg-card-hover:        rgba(12, 18, 32, 0.85);
+    19→  --bg-glass:             rgba(12, 18, 32, 0.45);
+    20→  --bg-glass-light:       rgba(20, 28, 48, 0.35);
+    21→  --bg-glass-hover:       rgba(20, 28, 48, 0.65);
+    22→  --bg-glass-premium:     rgba(15, 22, 40, 0.5);
+    23→  --bg-input:             rgba(15, 22, 38, 0.8);
+    24→  --bg-input-focus:       rgba(20, 28, 48, 0.9);
+    25→
+    26→  /* — Gold Accent — */
+    27→  --gold:                 #d4af37;
+    28→  --gold-light:           #f5d442;
+    29→  --gold-dark:            #b8960c;
+    30→  --gold-gradient:        linear-gradient(135deg, #d4af37, #f5d442, #d4af37);
+    31→  --gold-gradient-hover:  linear-gradient(135deg, #e6c44e, #fde68a, #e6c44e);
+    32→  --gold-text-gradient:   linear-gradient(135deg, #d4af37 0%, #f5d442 50%, #d4af37 100%);
+    33→  --gold-shimmer:         linear-gradient(
+    34→                            115deg,
+    35→                            transparent 30%,
+    36→                            rgba(245, 212, 66, 0.08) 45%,
+    37→                            rgba(245, 212, 66, 0.18) 50%,
+    38→                            rgba(245, 212, 66, 0.08) 55%,
+    39→                            transparent 70%
+    40→                          );
+    41→
+    42→  /* — Text — */
+    43→  --text-primary:         #f0f0f0;
+    44→  --text-secondary:       #9ca3af;
+    45→  --text-muted:           #6b7280;
+    46→  --text-gold:            #f5d442;
+    47→
+    48→  /* — Liquid Glass — */
+    49→  --glass-border:         rgba(255, 255, 255, 0.06);
+    50→  --glass-border-hover:   rgba(255, 255, 255, 0.12);
+    51→  --glass-border-gold:    rgba(212, 175, 55, 0.2);
+    52→  --glass-shadow:         0 8px 32px rgba(0, 0, 0, 0.5),
+    53→                          0 2px 8px rgba(0, 0, 0, 0.3),
+    54→                          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    55→  --glass-shadow-hover:   0 16px 48px rgba(0, 0, 0, 0.6),
+    56→                          0 4px 16px rgba(0, 0, 0, 0.4),
+    57→                          inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    58→  --glass-glow:           0 0 20px rgba(212, 175, 55, 0.06);
+    59→  --glass-glow-hover:     0 0 40px rgba(212, 175, 55, 0.12);
+    60→  --glass-inner-glow:     inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    61→  --glass-inner-glow-strong: inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+    62→
+    63→  /* — Liquid Glass Extra (refraction, depth) — */
+    64→  --liquid-blur:          20px;
+    65→  --liquid-blur-strong:   30px;
+    66→  --liquid-saturate:      1.4;
+    67→  --liquid-brightness:    1.1;
+    68→  --liquid-refraction:    blur(0.4px) brightness(1.05) saturate(1.2);
+    69→
+    70→  /* — Borders — */
+    71→  --border-subtle:        rgba(255, 255, 255, 0.04);
+    72→  --border-gold:          rgba(212, 175, 55, 0.25);
+    73→
+    74→  /* — Status Colors — */
+    75→  --success:              #10b981;
+    76→  --success-bg:           rgba(16, 185, 129, 0.1);
+    77→  --danger:               #ef4444;
+    78→  --danger-bg:            rgba(239, 68, 68, 0.1);
+    79→  --warning:              #f59e0b;
+    80→  --warning-bg:           rgba(245, 158, 11, 0.1);
+    81→  --info:                 #3b82f6;
+    82→  --info-bg:              rgba(59, 130, 246, 0.1);
+    83→
+    84→  /* — Fonts — */
+    85→  --font-sans:            'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    86→  --font-mono:            'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    87→  --font-display:         'Inter', var(--font-sans);
+    88→
+    89→  /* — Medals — */
+    90→  --medal-gold:           #FFD700;
+    91→  --medal-silver:         #C0C0C0;
+    92→  --medal-bronze:         #CD7F32;
+    93→
+    94→  /* — Radius — */
+    95→  --radius-sm:            0.5rem;
+    96→  --radius-md:            0.75rem;
+    97→  --radius-lg:            1rem;
+    98→  --radius-xl:            1.25rem;
+    99→  --radius-2xl:           1.5rem;
+   100→
+   101→  /* — Transitions — */
+   102→  --transition-fast:      150ms ease;
+   103→  --transition-normal:    250ms ease;
+   104→  --transition-slow:      400ms cubic-bezier(0.4, 0, 0.2, 1);
+   105→  --transition-glass:     0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+   106→}
+   107→
+   108→
+   109→/* ==========================================================================
+   110→   BASE RESET & BODY
+   111→   ========================================================================== */
+   112→*,
+   113→*::before,
+   114→*::after {
+   115→  box-sizing: border-box;
+   116→}
+   117→
+   118→html {
+   119→  scroll-behavior: smooth;
+   120→  -webkit-font-smoothing: antialiased;
+   121→  -moz-osx-font-smoothing: grayscale;
+   122→}
+   123→
+   124→body {
+   125→  font-family: var(--font-sans);
+   126→  background-color: var(--bg-primary);
+   127→  color: var(--text-primary);
+   128→  line-height: 1.6;
+   129→  overflow-x: hidden;
+   130→  min-height: 100vh;
+   131→  position: relative;
+   132→}
+   133→
+   134→::selection {
+   135→  background: rgba(212, 175, 55, 0.3);
+   136→  color: var(--text-primary);
+   137→}
+   138→
+   139→
+   140→/* ==========================================================================
+   141→   DEEP SPACE BACKGROUND SYSTEM
+   142→   Multi-layered parallax background with player images, gradients, patterns
+   143→   ========================================================================== */
+   144→
+   145→/* Layer 1: Deep gradient base */
+   146→.bg-layer-base {
+   147→  position: fixed;
+   148→  inset: 0;
+   149→  z-index: 0;
+   150→  background:
+   151→    radial-gradient(ellipse at 20% 0%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+   152→    radial-gradient(ellipse at 80% 10%, rgba(59, 130, 246, 0.02) 0%, transparent 40%),
+   153→    radial-gradient(ellipse at 50% 100%, rgba(212, 175, 55, 0.02) 0%, transparent 40%),
+   154→    linear-gradient(180deg, #060a12 0%, #0a1020 40%, #0c1225 70%, #060a12 100%);
+   155→  pointer-events: none;
+   156→}
+   157→
+   158→/* Layer 2: Stadium background image */
+   159→.bg-layer-stadium {
+   160→  position: fixed;
+   161→  inset: 0;
+   162→  z-index: 0;
+   163→  background-image: url('/static/images/bg/stadium_bg.jpg');
+   164→  background-size: cover;
+   165→  background-position: center top;
+   166→  background-repeat: no-repeat;
+   167→  opacity: 0.06;
+   168→  filter: blur(2px) saturate(0.5);
+   169→  pointer-events: none;
+   170→}
+   171→
+   172→/* Layer 3: Hexagonal pattern overlay */
+   173→.bg-layer-pattern {
+   174→  position: fixed;
+   175→  inset: 0;
+   176→  z-index: 0;
+   177→  background-image: url('/static/images/bg/dark_pattern_bg.jpg');
+   178→  background-size: cover;
+   179→  background-position: center;
+   180→  background-repeat: no-repeat;
+   181→  opacity: 0.08;
+   182→  mix-blend-mode: overlay;
+   183→  pointer-events: none;
+   184→}
+   185→
+   186→/* Layer 4: Animated gradient orbs */
+   187→.bg-layer-orbs {
+   188→  position: fixed;
+   189→  inset: 0;
+   190→  z-index: 0;
+   191→  pointer-events: none;
+   192→  overflow: hidden;
+   193→}
+   194→
+   195→.bg-orb {
+   196→  position: absolute;
+   197→  border-radius: 50%;
+   198→  filter: blur(80px);
+   199→  opacity: 0.12;
+   200→  animation: orbFloat 20s ease-in-out infinite;
+   201→}
+   202→
+   203→.bg-orb-1 {
+   204→  width: 500px;
+   205→  height: 500px;
+   206→  background: radial-gradient(circle, rgba(212, 175, 55, 0.3), transparent 70%);
+   207→  top: -10%;
+   208→  left: -10%;
+   209→  animation-duration: 25s;
+   210→}
+   211→
+   212→.bg-orb-2 {
+   213→  width: 400px;
+   214→  height: 400px;
+   215→  background: radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent 70%);
+   216→  top: 50%;
+   217→  right: -10%;
+   218→  animation-duration: 30s;
+   219→  animation-delay: -10s;
+   220→}
+   221→
+   222→.bg-orb-3 {
+   223→  width: 350px;
+   224→  height: 350px;
+   225→  background: radial-gradient(circle, rgba(212, 175, 55, 0.15), transparent 70%);
+   226→  bottom: -5%;
+   227→  left: 30%;
+   228→  animation-duration: 22s;
+   229→  animation-delay: -5s;
+   230→}
+   231→
+   232→.bg-orb-4 {
+   233→  width: 300px;
+   234→  height: 300px;
+   235→  background: radial-gradient(circle, rgba(139, 92, 246, 0.12), transparent 70%);
+   236→  top: 30%;
+   237→  left: 50%;
+   238→  animation-duration: 28s;
+   239→  animation-delay: -15s;
+   240→}
+   241→
+   242→@keyframes orbFloat {
+   243→  0%, 100% { transform: translate(0, 0) scale(1); }
+   244→  25% { transform: translate(30px, -40px) scale(1.05); }
+   245→  50% { transform: translate(-20px, 20px) scale(0.95); }
+   246→  75% { transform: translate(15px, 35px) scale(1.02); }
+   247→}
+   248→
+   249→
+   250→/* Layer 5: Parallax player silhouettes */
+   251→.bg-player-parallax {
+   252→  position: fixed;
+   253→  z-index: 0;
+   254→  pointer-events: none;
+   255→  opacity: 0;
+   256→  transition: opacity 1.5s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+   257→  will-change: transform, opacity;
+   258→}
+   259→
+   260→.bg-player-parallax.visible {
+   261→  opacity: 1;
+   262→}
+   263→
+   264→.bg-player-parallax img {
+   265→  height: 100%;
+   266→  width: auto;
+   267→  filter: grayscale(30%) brightness(0.4) contrast(1.1) saturate(0.6);
+   268→  mask-image: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+   269→  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+   270→}
+   271→
+   272→.bg-player-left-1 {
+   273→  left: -60px;
+   274→  bottom: 5%;
+   275→  height: 45vh;
+   276→  max-height: 450px;
+   277→}
+   278→
+   279→.bg-player-right-1 {
+   280→  right: -60px;
+   281→  bottom: 10%;
+   282→  height: 40vh;
+   283→  max-height: 400px;
+   284→}
+   285→
+   286→.bg-player-left-2 {
+   287→  left: -40px;
+   288→  top: 25%;
+   289→  height: 35vh;
+   290→  max-height: 350px;
+   291→}
+   292→
+   293→.bg-player-right-2 {
+   294→  right: -50px;
+   295→  top: 15%;
+   296→  height: 38vh;
+   297→  max-height: 380px;
+   298→}
+   299→
+   300→/* Layer 6: WC Logo & Trophy watermarks */
+   301→.bg-watermark {
+   302→  position: fixed;
+   303→  z-index: 0;
+   304→  pointer-events: none;
+   305→  opacity: 0.03;
+   306→  filter: brightness(2) saturate(0.3);
+   307→  animation: watermarkFloat 30s ease-in-out infinite;
+   308→}
+   309→
+   310→.bg-watermark-logo {
+   311→  top: 10%;
+   312→  right: 5%;
+   313→  width: 200px;
+   314→  height: auto;
+   315→}
+   316→
+   317→.bg-watermark-trophy {
+   318→  bottom: 15%;
+   319→  left: 5%;
+   320→  width: 180px;
+   321→  height: auto;
+   322→  animation-delay: -15s;
+   323→}
+   324→
+   325→@keyframes watermarkFloat {
+   326→  0%, 100% { transform: translateY(0) rotate(0deg); }
+   327→  50% { transform: translateY(-15px) rotate(2deg); }
+   328→}
+   329→
+   330→/* Layer 7: Stadium lights effect */
+   331→.stadium-lights {
+   332→  position: fixed;
+   333→  top: 0;
+   334→  left: 0;
+   335→  width: 100%;
+   336→  height: 100%;
+   337→  pointer-events: none;
+   338→  z-index: 0;
+   339→  overflow: hidden;
+   340→}
+   341→
+   342→.stadium-lights::before {
+   343→  content: '';
+   344→  position: absolute;
+   345→  top: -20%;
+   346→  left: 10%;
+   347→  width: 35%;
+   348→  height: 60%;
+   349→  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.015) 0%, transparent 70%);
+   350→  transform: rotate(-15deg);
+   351→  animation: stadiumLightSway1 12s ease-in-out infinite;
+   352→}
+   353→
+   354→.stadium-lights::after {
+   355→  content: '';
+   356→  position: absolute;
+   357→  top: -15%;
+   358→  right: 10%;
+   359→  width: 30%;
+   360→  height: 55%;
+   361→  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.01) 0%, transparent 70%);
+   362→  transform: rotate(15deg);
+   363→  animation: stadiumLightSway2 14s ease-in-out infinite;
+   364→}
+   365→
+   366→@keyframes stadiumLightSway1 {
+   367→  0%, 100% { transform: rotate(-15deg) translateX(0); opacity: 0.7; }
+   368→  50% { transform: rotate(-10deg) translateX(3%); opacity: 1; }
+   369→}
+   370→
+   371→@keyframes stadiumLightSway2 {
+   372→  0%, 100% { transform: rotate(15deg) translateX(0); opacity: 0.6; }
+   373→  50% { transform: rotate(12deg) translateX(-3%); opacity: 1; }
+   374→}
+   375→
+   376→/* Layer 8: Grid lines overlay (subtle) */
+   377→.bg-layer-grid {
+   378→  position: fixed;
+   379→  inset: 0;
+   380→  z-index: 0;
+   381→  pointer-events: none;
+   382→  background-image:
+   383→    linear-gradient(rgba(212, 175, 55, 0.015) 1px, transparent 1px),
+   384→    linear-gradient(90deg, rgba(212, 175, 55, 0.015) 1px, transparent 1px);
+   385→  background-size: 80px 80px;
+   386→  mask-image: radial-gradient(ellipse at 50% 50%, black 20%, transparent 70%);
+   387→  -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 20%, transparent 70%);
+   388→  opacity: 0.5;
+   389→}
+   390→
+   391→/* Main content sits above all background layers */
+   392→main, .main-content {
+   393→  position: relative;
+   394→  z-index: 2;
+   395→}
+   396→
+   397→
+   398→/* ==========================================================================
+   399→   PARTICLES CANVAS
+   400→   ========================================================================== */
+   401→#particles-canvas {
+   402→  position: fixed;
+   403→  inset: 0;
+   404→  z-index: 0;
+   405→  pointer-events: none;
+   406→  opacity: 0.4;
+   407→}
+   408→
+   409→
+   410→/* ==========================================================================
+   411→   FLOATING FOOTBALLS
+   412→   ========================================================================== */
+   413→#floating-footballs {
+   414→  position: fixed;
+   415→  inset: 0;
+   416→  pointer-events: none;
+   417→  z-index: 1;
+   418→  overflow: hidden;
+   419→}
+   420→
+   421→.floating-football {
+   422→  position: absolute;
+   423→  font-size: 1.5rem;
+   424→  opacity: 0;
+   425→  animation: floatUp 12s ease-in infinite;
+   426→  filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.15));
+   427→  z-index: 1;
+   428→}
+   429→
+   430→@keyframes floatUp {
+   431→  0% {
+   432→    opacity: 0;
+   433→    transform: translateY(100vh) rotate(0deg) scale(0.6);
+   434→  }
+   435→  10% {
+   436→    opacity: 0.15;
+   437→  }
+   438→  50% {
+   439→    opacity: 0.08;
+   440→  }
+   441→  90% {
+   442→    opacity: 0.12;
+   443→  }
+   444→  100% {
+   445→    opacity: 0;
+   446→    transform: translateY(-20vh) rotate(720deg) scale(1);
+   447→  }
+   448→}
+   449→
+   450→
+   451→/* ==========================================================================
+   452→   LIQUID GLASS CARD SYSTEM
+   453→   The core of the visual design — frosted glass with depth, refraction,
+   454→   and subtle glow effects
+   455→   ========================================================================== */
+   456→
+   457→/* Standard glass card */
+   458→.glass-card {
+   459→  background: rgba(12, 18, 32, 0.5);
+   460→  backdrop-filter: blur(var(--liquid-blur)) saturate(var(--liquid-saturate)) brightness(var(--liquid-brightness));
+   461→  -webkit-backdrop-filter: blur(var(--liquid-blur)) saturate(var(--liquid-saturate)) brightness(var(--liquid-brightness));
+   462→  border: 1px solid var(--glass-border);
+   463→  border-radius: var(--radius-xl);
+   464→  box-shadow: var(--glass-shadow);
+   465→  transition: all var(--transition-glass);
+   466→  position: relative;
+   467→  overflow: hidden;
+   468→}
+   469→
+   470→/* Refraction highlight on glass */
+   471→.glass-card::before {
+   472→  content: '';
+   473→  position: absolute;
+   474→  top: 0;
+   475→  left: 0;
+   476→  right: 0;
+   477→  height: 50%;
+   478→  background: linear-gradient(
+   479→    180deg,
+   480→    rgba(255, 255, 255, 0.03) 0%,
+   481→    rgba(255, 255, 255, 0.01) 40%,
+   482→    transparent 100%
+   483→  );
+   484→  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+   485→  pointer-events: none;
+   486→  z-index: 0;
+   487→}
+   488→
+   489→/* Shimmer sweep on hover */
+   490→.glass-card::after {
+   491→  content: '';
+   492→  position: absolute;
+   493→  top: 0;
+   494→  left: -100%;
+   495→  width: 100%;
+   496→  height: 100%;
+   497→  background: var(--gold-shimmer);
+   498→  pointer-events: none;
+   499→  z-index: 1;
+   500→  transition: left 0.6s ease;
+   501→  border-radius: var(--radius-xl);
+   502→}
+   503→
+   504→.glass-card:hover {
+   505→  background: rgba(12, 18, 32, 0.65);
+   506→  border-color: var(--glass-border-hover);
+   507→  box-shadow: var(--glass-shadow-hover);
+   508→  transform: translateY(-2px);
+   509→}
+   510→
+   511→.glass-card:hover::after {
+   512→  left: 100%;
+   513→}
+   514→
+   515→/* Premium glass card (gold accents) */
+   516→.glass-card-premium {
+   517→  background: rgba(15, 22, 40, 0.45);
+   518→  backdrop-filter: blur(var(--liquid-blur-strong)) saturate(var(--liquid-saturate)) brightness(var(--liquid-brightness));
+   519→  -webkit-backdrop-filter: blur(var(--liquid-blur-strong)) saturate(var(--liquid-saturate)) brightness(var(--liquid-brightness));
+   520→  border: 1px solid rgba(212, 175, 55, 0.15);
+   521→  border-radius: var(--radius-2xl);
+   522→  box-shadow: var(--glass-shadow), var(--glass-glow);
+   523→  transition: all var(--transition-glass);
+   524→  position: relative;
+   525→  overflow: hidden;
+   526→}
+   527→
+   528→.glass-card-premium::before {
+   529→  content: '';
+   530→  position: absolute;
+   531→  top: 0;
+   532→  left: 0;
+   533→  right: 0;
+   534→  height: 40%;
+   535→  background: linear-gradient(
+   536→    180deg,
+   537→    rgba(212, 175, 55, 0.04) 0%,
+   538→    rgba(212, 175, 55, 0.01) 50%,
+   539→    transparent 100%
+   540→  );
+   541→  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+   542→  pointer-events: none;
+   543→  z-index: 0;
+   544→}
+   545→
+   546→.glass-card-premium::after {
+   547→  content: '';
+   548→  position: absolute;
+   549→  top: 0;
+   550→  left: -100%;
+   551→  width: 100%;
+   552→  height: 100%;
+   553→  background: var(--gold-shimmer);
+   554→  pointer-events: none;
+   555→  z-index: 1;
+   556→  transition: left 0.8s ease;
+   557→  border-radius: var(--radius-2xl);
+   558→}
+   559→
+   560→.glass-card-premium:hover {
+   561→  background: rgba(15, 22, 40, 0.6);
+   562→  border-color: rgba(212, 175, 55, 0.25);
+   563→  box-shadow: var(--glass-shadow-hover), var(--glass-glow-hover);
+   564→  transform: translateY(-3px);
+   565→}
+   566→
+   567→.glass-card-premium:hover::after {
+   568→  left: 100%;
+   569→}
+   570→
+   571→/* Gold-bordered glass card */
+   572→.glass-card-gold {
+   573→  background: rgba(12, 18, 32, 0.5);
+   574→  backdrop-filter: blur(var(--liquid-blur)) saturate(var(--liquid-saturate)) brightness(var(--liquid-brightness));
+   575→  -webkit-backdrop-filter: blur(var(--liquid-blur)) saturate(var(--liquid-saturate)) brightness(var(--liquid-brightness));
+   576→  border: 1px solid rgba(212, 175, 55, 0.15);
+   577→  border-radius: var(--radius-xl);
+   578→  box-shadow: var(--glass-shadow), 0 0 15px rgba(212, 175, 55, 0.04);
+   579→  transition: all var(--transition-glass);
+   580→  position: relative;
+   581→  overflow: hidden;
+   582→}
+   583→
+   584→.glass-card-gold::before {
+   585→  content: '';
+   586→  position: absolute;
+   587→  top: 0;
+   588→  left: 0;
+   589→  right: 0;
+   590→  height: 45%;
+   591→  background: linear-gradient(
+   592→    180deg,
+   593→    rgba(212, 175, 55, 0.03) 0%,
+   594→    transparent 100%
+   595→  );
+   596→  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+   597→  pointer-events: none;
+   598→  z-index: 0;
+   599→}
+   600→
+   601→.glass-card-gold::after {
+   602→  content: '';
+   603→  position: absolute;
+   604→  top: 0;
+   605→  left: -100%;
+   606→  width: 100%;
+   607→  height: 100%;
+   608→  background: var(--gold-shimmer);
+   609→  pointer-events: none;
+   610→  z-index: 1;
+   611→  transition: left 0.7s ease;
+   612→  border-radius: var(--radius-xl);
+   613→}
+   614→
+   615→.glass-card-gold:hover {
+   616→  background: rgba(12, 18, 32, 0.65);
+   617→  border-color: rgba(212, 175, 55, 0.3);
+   618→  box-shadow: var(--glass-shadow-hover), 0 0 25px rgba(212, 175, 55, 0.08);
+   619→  transform: translateY(-2px);
+   620→}
+   621→
+   622→.glass-card-gold:hover::after {
+   623→  left: 100%;
+   624→}
+   625→
+   626→/* Ultra glass (maximum liquid glass effect for hero elements) */
+   627→.glass-ultra {
+   628→  background: rgba(10, 14, 24, 0.35);
+   629→  backdrop-filter: blur(40px) saturate(1.6) brightness(1.15);
+   630→  -webkit-backdrop-filter: blur(40px) saturate(1.6) brightness(1.15);
+   631→  border: 1px solid rgba(255, 255, 255, 0.08);
+   632→  border-radius: var(--radius-2xl);
+   633→  box-shadow:
+   634→    0 8px 32px rgba(0, 0, 0, 0.5),
+   635→    0 0 0 1px rgba(255, 255, 255, 0.03),
+   636→    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+   637→    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+   638→  position: relative;
+   639→  overflow: hidden;
+   640→}
+   641→
+   642→.glass-ultra::before {
+   643→  content: '';
+   644→  position: absolute;
+   645→  top: 0;
+   646→  left: 0;
+   647→  right: 0;
+   648→  height: 50%;
+   649→  background: linear-gradient(
+   650→    180deg,
+   651→    rgba(255, 255, 255, 0.05) 0%,
+   652→    rgba(255, 255, 255, 0.02) 30%,
+   653→    transparent 100%
+   654→  );
+   655→  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+   656→  pointer-events: none;
+   657→  z-index: 0;
+   658→}
+   659→
+   660→.glass-ultra::after {
+   661→  content: '';
+   662→  position: absolute;
+   663→  top: -1px;
+   664→  left: 10%;
+   665→  right: 10%;
+   666→  height: 1px;
+   667→  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+   668→  pointer-events: none;
+   669→  z-index: 2;
+   670→}
+   671→
+   672→/* Ensure card content is above pseudo elements */
+   673→.glass-card > *,
+   674→.glass-card-premium > *,
+   675→.glass-card-gold > *,
+   676→.glass-ultra > * {
+   677→  position: relative;
+   678→  z-index: 2;
+   679→}
+   680→
+   681→
+   682→/* ==========================================================================
+   683→   NAVBAR — Liquid Glass
+   684→   ========================================================================== */
+   685→.navbar-dark-custom {
+   686→  background: rgba(6, 10, 18, 0.7) !important;
+   687→  backdrop-filter: blur(30px) saturate(1.4) brightness(1.1) !important;
+   688→  -webkit-backdrop-filter: blur(30px) saturate(1.4) brightness(1.1) !important;
+   689→  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+   690→  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+   691→  transition: all 0.3s ease;
+   692→  padding: 0.6rem 0;
+   693→}
+   694→
+   695→.navbar-dark-custom.scrolled {
+   696→  background: rgba(6, 10, 18, 0.9) !important;
+   697→  border-bottom-color: rgba(212, 175, 55, 0.08);
+   698→  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+   699→}
+   700→
+   701→/* Top edge highlight on navbar */
+   702→.navbar-dark-custom::after {
+   703→  content: '';
+   704→  position: absolute;
+   705→  top: 0;
+   706→  left: 15%;
+   707→  right: 15%;
+   708→  height: 1px;
+   709→  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.15), transparent);
+   710→  pointer-events: none;
+   711→}
+   712→
+   713→.navbar-dark-custom .navbar-brand .brand-text {
+   714→  font-family: var(--font-mono);
+   715→  font-weight: 800;
+   716→  font-size: 1.2rem;
+   717→  letter-spacing: 1px;
+   718→}
+   719→
+   720→.navbar-dark-custom .nav-link {
+   721→  color: rgba(255, 255, 255, 0.6) !important;
+   722→  font-weight: 500;
+   723→  font-size: 0.9rem;
+   724→  padding: 0.5rem 0.75rem !important;
+   725→  border-radius: var(--radius-md);
+   726→  transition: all 0.25s ease;
+   727→  position: relative;
+   728→}
+   729→
+   730→.navbar-dark-custom .nav-link:hover {
+   731→  color: rgba(255, 255, 255, 0.9) !important;
+   732→  background: rgba(255, 255, 255, 0.04);
+   733→}
+   734→
+   735→.navbar-dark-custom .nav-link.active {
+   736→  color: var(--gold-light) !important;
+   737→  background: rgba(212, 175, 55, 0.08);
+   738→}
+   739→
+   740→.navbar-dark-custom .nav-link i {
+   741→  margin-right: 4px;
+   742→  font-size: 0.85rem;
+   743→}
+   744→
+   745→.navbar-toggler.border-gold {
+   746→  border-color: rgba(212, 175, 55, 0.3) !important;
+   747→}
+   748→
+   749→.participant-chip {
+   750→  display: inline-flex;
+   751→  align-items: center;
+   752→  gap: 5px;
+   753→  padding: 5px 12px;
+   754→  border-radius: 20px;
+   755→  background: rgba(212, 175, 55, 0.08);
+   756→  border: 1px solid rgba(212, 175, 55, 0.15);
+   757→  color: var(--gold-light);
+   758→  font-size: 0.8rem;
+   759→  font-weight: 600;
+   760→  backdrop-filter: blur(10px);
+   761→}
+   762→
+   763→
+   764→/* ==========================================================================
+   765→   BUTTONS — Enhanced Liquid Glass
+   766→   ========================================================================== */
+   767→
+   768→/* Gold primary button — prominent & glowing */
+   769→.btn-gold {
+   770→  background: linear-gradient(135deg, #d4af37, #c9a02e);
+   771→  color: #0a0e17;
+   772→  border: none;
+   773→  font-weight: 700;
+   774→  letter-spacing: 0.3px;
+   775→  border-radius: 10px;
+   776→  padding: 10px 22px;
+   777→  position: relative;
+   778→  overflow: hidden;
+   779→  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+   780→  transition: all 0.3s ease;
+   781→}
+   782→
+   783→.btn-gold::before {
+   784→  content: '';
+   785→  position: absolute;
+   786→  top: 0;
+   787→  left: -100%;
+   788→  width: 200%;
+   789→  height: 100%;
+   790→  background: linear-gradient(
+   791→    115deg,
+   792→    transparent 30%,
+   793→    rgba(255, 255, 255, 0.25) 48%,
+   794→    rgba(255, 255, 255, 0.35) 50%,
+   795→    rgba(255, 255, 255, 0.25) 52%,
+   796→    transparent 70%
+   797→  );
+   798→  transition: left 0.5s ease;
+   799→}
+   800→
+   801→.btn-gold:hover {
+   802→  background: linear-gradient(135deg, #e6c44e, #d4af37);
+   803→  color: #0a0e17;
+   804→  transform: translateY(-1px);
+   805→  box-shadow: 0 6px 25px rgba(212, 175, 55, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+   806→}
+   807→
+   808→.btn-gold:hover::before {
+   809→  left: 100%;
+   810→}
+   811→
+   812→.btn-gold:active {
+   813→  transform: translateY(0);
+   814→  box-shadow: 0 2px 10px rgba(212, 175, 55, 0.2);
+   815→}
+   816→
+   817→/* Glowing gold button — CTA emphasis */
+   818→.btn-glow {
+   819→  animation: btnGlow 3s ease-in-out infinite;
+   820→}
+   821→
+   822→@keyframes btnGlow {
+   823→  0%, 100% { box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25), 0 0 0 0 rgba(212, 175, 55, 0); }
+   824→  50% { box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35), 0 0 25px rgba(212, 175, 55, 0.15); }
+   825→}
+   826→
+   827→/* Pulsing CTA button — maximum emphasis */
+   828→.btn-cta-pulse {
+   829→  animation: ctaPulse 2.5s ease-in-out infinite;
+   830→  position: relative;
+   831→}
+   832→
+   833→.btn-cta-pulse::after {
+   834→  content: '';
+   835→  position: absolute;
+   836→  inset: -3px;
+   837→  border-radius: inherit;
+   838→  border: 2px solid rgba(212, 175, 55, 0.3);
+   839→  animation: ctaRing 2.5s ease-in-out infinite;
+   840→  pointer-events: none;
+   841→}
+   842→
+   843→@keyframes ctaPulse {
+   844→  0%, 100% { transform: scale(1); }
+   845→  50% { transform: scale(1.03); }
+   846→}
+   847→
+   848→@keyframes ctaRing {
+   849→  0%, 100% { opacity: 0; transform: scale(1); }
+   850→  50% { opacity: 1; transform: scale(1.05); }
+   851→}
+   852→
+   853→/* Gold outline button */
+   854→.btn-gold-outline {
+   855→  background: rgba(212, 175, 55, 0.06);
+   856→  color: var(--gold-light);
+   857→  border: 1px solid rgba(212, 175, 55, 0.25);
+   858→  font-weight: 600;
+   859→  border-radius: 10px;
+   860→  padding: 10px 22px;
+   861→  backdrop-filter: blur(10px);
+   862→  transition: all 0.3s ease;
+   863→}
+   864→
+   865→.btn-gold-outline:hover {
+   866→  background: rgba(212, 175, 55, 0.12);
+   867→  color: var(--gold-light);
+   868→  border-color: rgba(212, 175, 55, 0.4);
+   869→  box-shadow: 0 0 20px rgba(212, 175, 55, 0.08);
+   870→}
+   871→
+   872→
+   873→/* ==========================================================================
+   874→   GOLD TEXT
+   875→   ========================================================================== */
+   876→.gold-text {
+   877→  background: var(--gold-text-gradient);
+   878→  -webkit-background-clip: text;
+   879→  -webkit-text-fill-color: transparent;
+   880→  background-clip: text;
+   881→}
+   882→
+   883→
+   884→/* ==========================================================================
+   885→   STATUS BADGES
+   886→   ========================================================================== */
+   887→.status-badge {
+   888→  display: inline-flex;
+   889→  align-items: center;
+   890→  padding: 4px 10px;
+   891→  border-radius: 6px;
+   892→  font-size: 0.65rem;
+   893→  font-weight: 700;
+   894→  letter-spacing: 1px;
+   895→  text-transform: uppercase;
+   896→}
+   897→
+   898→.status-open {
+   899→  background: rgba(16, 185, 129, 0.1);
+   900→  color: #34d399;
+   901→  border: 1px solid rgba(16, 185, 129, 0.2);
+   902→}
+   903→
+   904→.status-live {
+   905→  background: rgba(239, 68, 68, 0.1);
+   906→  color: #f87171;
+   907→  border: 1px solid rgba(239, 68, 68, 0.2);
+   908→  animation: livePulse 2s ease-in-out infinite;
+   909→}
+   910→
+   911→@keyframes livePulse {
+   912→  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+   913→  50% { box-shadow: 0 0 12px rgba(239, 68, 68, 0.2); }
+   914→}
+   915→
+   916→.status-locked {
+   917→  background: rgba(245, 158, 11, 0.08);
+   918→  color: #fbbf24;
+   919→  border: 1px solid rgba(245, 158, 11, 0.15);
+   920→}
+   921→
+   922→.status-completed {
+   923→  background: rgba(59, 130, 246, 0.08);
+   924→  color: #60a5fa;
+   925→  border: 1px solid rgba(59, 130, 246, 0.15);
+   926→}
+   927→
+   928→
+   929→/* ==========================================================================
+   930→   FORMS — Glass Inputs
+   931→   ========================================================================== */
+   932→.form-control, .form-select {
+   933→  background-color: var(--bg-input);
+   934→  color: var(--text-primary);
+   935→  border: 1px solid rgba(255, 255, 255, 0.06);
+   936→  border-radius: 10px;
+   937→  padding: 10px 14px;
+   938→  font-size: 0.95rem;
+   939→  transition: all 0.3s ease;
+   940→  backdrop-filter: blur(10px);
+   941→}
+   942→
+   943→.form-control:focus, .form-select:focus {
+   944→  background-color: var(--bg-input-focus);
+   945→  border-color: rgba(212, 175, 55, 0.3);
+   946→  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1), 0 0 20px rgba(212, 175, 55, 0.05);
+   947→  color: var(--text-primary);
+   948→}
+   949→
+   950→.form-control::placeholder {
+   951→  color: rgba(255, 255, 255, 0.2);
+   952→}
+   953→
+   954→.form-select option {
+   955→  background-color: var(--bg-secondary);
+   956→  color: var(--text-primary);
+   957→}
+   958→
+   959→
+   960→/* ==========================================================================
+   961→   LOADING BAR
+   962→   ========================================================================== */
+   963→.loading-bar {
+   964→  position: fixed;
+   965→  top: 0;
+   966→  left: 0;
+   967→  height: 2px;
+   968→  background: var(--gold-gradient);
+   969→  z-index: 9999;
+   970→  transition: width 0.3s ease;
+   971→  box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+   972→}
+   973→
+   974→
+   975→/* ==========================================================================
+   976→   TOAST NOTIFICATIONS
+   977→   ========================================================================== */
+   978→.toast-container {
+   979→  position: fixed;
+   980→  top: 80px;
+   981→  right: 20px;
+   982→  z-index: 9999;
+   983→  display: flex;
+   984→  flex-direction: column;
+   985→  gap: 8px;
+   986→  max-width: 360px;
+   987→}
+   988→
+   989→.custom-toast {
+   990→  background: rgba(12, 18, 32, 0.85);
+   991→  backdrop-filter: blur(20px) saturate(1.3);
+   992→  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+   993→  border: 1px solid rgba(255, 255, 255, 0.06);
+   994→  border-radius: 12px;
+   995→  padding: 12px 16px;
+   996→  color: var(--text-primary);
+   997→  font-size: 0.9rem;
+   998→  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+   999→  animation: toastSlideIn 0.3s ease;
+  1000→  display: flex;
+  1001→  align-items: center;
+  1002→  gap: 10px;
+  1003→}
+  1004→
+  1005→.custom-toast.toast-success { border-left: 3px solid var(--success); }
+  1006→.custom-toast.toast-error   { border-left: 3px solid var(--danger); }
+  1007→.custom-toast.toast-info    { border-left: 3px solid var(--info); }
+  1008→.custom-toast.toast-warning { border-left: 3px solid var(--warning); }
+  1009→
+  1010→@keyframes toastSlideIn {
+  1011→  from { transform: translateX(100%); opacity: 0; }
+  1012→  to   { transform: translateX(0); opacity: 1; }
+  1013→}
+  1014→
+  1015→
+  1016→/* ==========================================================================
+  1017→   ALERTS
+  1018→   ========================================================================== */
+  1019→.alert.glass-card {
+  1020→  backdrop-filter: blur(15px) saturate(1.2);
+  1021→  border-radius: 12px;
+  1022→}
+  1023→
+  1024→
+  1025→/* ==========================================================================
+  1026→   CONFETTI
+  1027→   ========================================================================== */
+  1028→.confetti-container {
+  1029→  position: fixed;
+  1030→  inset: 0;
+  1031→  pointer-events: none;
+  1032→  z-index: 9999;
+  1033→  overflow: hidden;
+  1034→}
+  1035→
+  1036→.confetti-piece {
+  1037→  position: absolute;
+  1038→  width: 10px;
+  1039→  height: 10px;
+  1040→  top: -10px;
+  1041→  animation: confettiFall linear forwards;
+  1042→}
+  1043→
+  1044→@keyframes confettiFall {
+  1045→  0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+  1046→  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  1047→}
+  1048→
+  1049→
+  1050→/* ==========================================================================
+  1051→   FOOTER
+  1052→   ========================================================================== */
+  1053→.footer {
+  1054→  background: rgba(6, 10, 18, 0.8);
+  1055→  backdrop-filter: blur(20px) saturate(1.2);
+  1056→  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  1057→  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  1058→  position: relative;
+  1059→  z-index: 2;
+  1060→}
+  1061→
+  1062→.footer::before {
+  1063→  content: '';
+  1064→  position: absolute;
+  1065→  top: 0;
+  1066→  left: 20%;
+  1067→  right: 20%;
+  1068→  height: 1px;
+  1069→  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+  1070→}
+  1071→
+  1072→
+  1073→/* ==========================================================================
+  1074→   SCROLLBAR
+  1075→   ========================================================================== */
+  1076→::-webkit-scrollbar {
+  1077→  width: 8px;
+  1078→}
+  1079→
+  1080→::-webkit-scrollbar-track {
+  1081→  background: var(--bg-primary);
+  1082→}
+  1083→
+  1084→::-webkit-scrollbar-thumb {
+  1085→  background: rgba(212, 175, 55, 0.15);
+  1086→  border-radius: 4px;
+  1087→}
+  1088→
+  1089→::-webkit-scrollbar-thumb:hover {
+  1090→  background: rgba(212, 175, 55, 0.25);
+  1091→}
+  1092→
+  1093→/* Firefox scrollbar */
+  1094→* {
+  1095→  scrollbar-width: thin;
+  1096→  scrollbar-color: rgba(212, 175, 55, 0.15) var(--bg-primary);
+  1097→}
+  1098→
+  1099→
+  1100→/* ==========================================================================
+  1101→   UTILITY CLASSES
+  1102→   ========================================================================== */
+  1103→.text-gold      { color: var(--gold) !important; }
+  1104→.text-gold-light { color: var(--gold-light) !important; }
+  1105→.text-success-c { color: var(--success) !important; }
+  1106→.text-danger-c  { color: var(--danger) !important; }
+  1107→
+  1108→.celebrate {
+  1109→  animation: celebratePulse 2s ease-in-out infinite;
+  1110→}
+  1111→
+  1112→@keyframes celebratePulse {
+  1113→  0%, 100% { box-shadow: var(--glass-shadow), var(--glass-glow); }
+  1114→  50% { box-shadow: var(--glass-shadow), 0 0 40px rgba(212, 175, 55, 0.15); }
+  1115→}
+  1116→
+  1117→/* Countdown timer */
+  1118→.countdown-unit {
+  1119→  display: flex;
+  1120→  flex-direction: column;
+  1121→  align-items: center;
+  1122→  min-width: 60px;
+  1123→}
+  1124→
+  1125→.countdown-value {
+  1126→  font-family: var(--font-mono);
+  1127→  font-weight: 900;
+  1128→  font-size: 2rem;
+  1129→  color: var(--gold-light);
+  1130→  text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+  1131→  line-height: 1;
+  1132→}
+  1133→
+  1134→.countdown-label {
+  1135→  font-size: 0.65rem;
+  1136→  color: var(--text-muted);
+  1137→  text-transform: uppercase;
+  1138→  letter-spacing: 1.5px;
+  1139→  margin-top: 4px;
+  1140→}
+  1141→
+  1142→.countdown-separator {
+  1143→  font-family: var(--font-mono);
+  1144→  font-weight: 800;
+  1145→  font-size: 1.8rem;
+  1146→  color: rgba(212, 175, 55, 0.3);
+  1147→  margin: 0 2px;
+  1148→  animation: colonBlink 1s step-end infinite;
+  1149→}
+  1150→
+  1151→@keyframes colonBlink {
+  1152→  0%, 100% { opacity: 1; }
+  1153→  50% { opacity: 0.3; }
+  1154→}
+  1155→
+  1156→
+  1157→/* ==========================================================================
+  1158→   RESPONSIVE ADJUSTMENTS
+  1159→   ========================================================================== */
+  1160→@media (max-width: 768px) {
+  1161→  .bg-player-parallax {
+  1162→    display: none !important;
+  1163→  }
+  1164→
+  1165→  .bg-watermark {
+  1166→    opacity: 0.02;
+  1167→  }
+  1168→
+  1169→  .bg-watermark-logo {
+  1170→    width: 120px;
+  1171→  }
+  1172→
+  1173→  .bg-watermark-trophy {
+  1174→    width: 100px;
+  1175→  }
+  1176→
+  1177→  .bg-layer-pattern {
+  1178→    opacity: 0.04;
+  1179→  }
+  1180→
+  1181→  .bg-orb {
+  1182→    filter: blur(60px);
+  1183→    opacity: 0.08;
+  1184→  }
+  1185→
+  1186→  .countdown-value {
+  1187→    font-size: 1.5rem;
+  1188→  }
+  1189→
+  1190→  .countdown-unit {
+  1191→    min-width: 45px;
+  1192→  }
+  1193→
+  1194→  .navbar-dark-custom {
+  1195→    background: rgba(6, 10, 18, 0.9) !important;
+  1196→  }
+  1197→
+  1198→  .glass-card,
+  1199→  .glass-card-premium,
+  1200→  .glass-card-gold,
+  1201→  .glass-ultra {
+  1202→    backdrop-filter: blur(15px) saturate(1.2) brightness(1.05);
+  1203→    -webkit-backdrop-filter: blur(15px) saturate(1.2) brightness(1.05);
+  1204→  }
+  1205→}
+  1206→
+  1207→@media (max-width: 480px) {
+  1208→  .bg-layer-grid {
+  1209→    display: none;
+  1210→  }
+  1211→
+  1212→  .bg-layer-stadium {
+  1213→    opacity: 0.03;
+  1214→  }
+  1215→
+  1216→  .countdown-value {
+  1217→    font-size: 1.3rem;
+  1218→  }
+  1219→}
+  1220→
+  1221→/* Prefers reduced motion */
+  1222→@media (prefers-reduced-motion: reduce) {
+  1223→  *, *::before, *::after {
+  1224→    animation-duration: 0.01ms !important;
+  1225→    animation-iteration-count: 1 !important;
+  1226→    transition-duration: 0.01ms !important;
+  1227→  }
+  1228→
+  1229→  .bg-player-parallax,
+  1230→  .floating-football,
+  1231→  .bg-orb {
+  1232→    display: none !important;
+  1233→  }
+  1234→}
+  1235→

@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
 from .forms import InlinePredictionForm, ParticipantLoginForm, PredictionForm
-from .models import Match, Participant, Prediction
+from .models import Match, Participant, Prediction, KnockoutMatch
 
 
 def get_leaderboard():
@@ -163,6 +163,9 @@ def home(request):
     # Current participant
     current_participant = get_current_participant(request)
 
+    match_count = Match.objects.count()
+    total_predictions = Prediction.objects.count()
+
     context = {
         'next_match': next_match,
         'participant_count': participant_count,
@@ -170,6 +173,8 @@ def home(request):
         'upcoming_matches': upcoming_matches,
         'recent_matches': recent_matches,
         'current_participant': current_participant,
+        'match_count': match_count,
+        'total_predictions': total_predictions,
     }
     return render(request, 'predictor/home.html', context)
 
@@ -487,3 +492,181 @@ def countdown_api(request):
         'seconds_remaining': 0,
         'venue': None,
     })
+
+
+# ---------------------------------------------------------------------------
+# Admin Dashboard view
+# ---------------------------------------------------------------------------
+
+def admin_dashboard(request):
+    """Custom admin dashboard for managing matches, results, and knockout bracket."""
+    # Check if user is admin participant
+    participant_id = request.session.get('participant_id')
+    is_admin = False
+    if participant_id:
+        try:
+            participant = Participant.objects.get(pk=participant_id, is_admin=True, is_active=True)
+            is_admin = True
+        except Participant.DoesNotExist:
+            pass
+
+    if not is_admin:
+        from django.contrib import messages
+        messages.error(request, "You don't have admin access.")
+        return redirect('predictor:home')
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'set_result':
+            match_id = request.POST.get('match_id')
+            home_score = request.POST.get('home_score')
+            away_score = request.POST.get('away_score')
+            try:
+                match = Match.objects.get(pk=match_id)
+                match.home_score = int(home_score)
+                match.away_score = int(away_score)
+                match.status = 'completed'
+                match.save()
+                messages.success(request, f"Result set: {match.home_team} {home_score} - {away_score} {match.away_team}")
+            except (Match.DoesNotExist, ValueError, TypeError) as e:
+                messages.error(request, f"Error setting result: {e}")
+
+        elif action == 'update_knockout':
+            ko_id = request.POST.get('ko_id')
+            home_team = request.POST.get('home_team', '')
+            away_team = request.POST.get('away_team', '')
+            home_score = request.POST.get('home_score')
+            away_score = request.POST.get('away_score')
+            try:
+                ko = KnockoutMatch.objects.get(pk=ko_id)
+                ko.home_team = home_team
+                ko.away_team = away_team
+                if home_score and away_score:
+                    ko.home_score = int(home_score)
+                    ko.away_score = int(away_score)
+                    ko.is_completed = True
+                ko.save()
+                messages.success(request, f"Knockout match updated: {ko}")
+            except (KnockoutMatch.DoesNotExist, ValueError, TypeError) as e:
+                messages.error(request, f"Error updating knockout: {e}")
+
+        elif action == 'create_match':
+            home_team = request.POST.get('home_team')
+            away_team = request.POST.get('away_team')
+            match_date = request.POST.get('match_date')
+            kickoff = request.POST.get('kickoff_datetime')
+            group = request.POST.get('group_stage', '')
+            stage = request.POST.get('stage', 'group')
+            venue = request.POST.get('venue', '')
+            try:
+                from datetime import datetime
+                match = Match.objects.create(
+                    home_team=home_team,
+                    away_team=away_team,
+                    match_date=match_date,
+                    kickoff_datetime=kickoff,
+                    group_stage=group,
+                    stage=stage,
+                    venue=venue,
+                )
+                messages.success(request, f"Match created: {match}")
+            except Exception as e:
+                messages.error(request, f"Error creating match: {e}")
+
+        elif action == 'delete_match':
+            match_id = request.POST.get('match_id')
+            try:
+                match = Match.objects.get(pk=match_id)
+                match.delete()
+                messages.success(request, "Match deleted successfully.")
+            except Match.DoesNotExist:
+                messages.error(request, "Match not found.")
+
+        elif action == 'init_knockout':
+            # Initialize knockout bracket slots
+            stages = [
+                ('r32', 16),  # 16 matches in R32
+                ('r16', 8),
+                ('qf', 4),
+                ('sf', 2),
+                ('3rd', 1),
+                ('final', 1),
+            ]
+            count = 0
+            for stage_code, num_matches in stages:
+                for pos in range(1, num_matches + 1):
+                    ko, created = KnockoutMatch.objects.get_or_create(
+                        stage=stage_code,
+                        position=pos,
+                    )
+                    if created:
+                        count += 1
+            messages.success(request, f"Knockout bracket initialized with {count} slots.")
+
+        return redirect('predictor:admin_dashboard')
+
+    # GET - show dashboard
+    from django.db.models import Count, Q
+    all_matches = Match.objects.all().order_by('kickoff_datetime')
+    upcoming = Match.objects.filter(status='upcoming').count()
+    live = Match.objects.filter(status='live').count()
+    completed = Match.objects.filter(status='completed').count()
+    total_predictions = Prediction.objects.count()
+
+    # Knockout bracket data
+    knockout_matches = KnockoutMatch.objects.all().order_by('stage', 'position')
+
+    # Available teams for dropdowns
+    available_teams = sorted(set(
+        list(Match.objects.values_list('home_team', flat=True)) +
+        list(Match.objects.values_list('away_team', flat=True))
+    ))
+
+    context = {
+        'all_matches': all_matches,
+        'upcoming_count': upcoming,
+        'live_count': live,
+        'completed_count': completed,
+        'total_predictions': total_predictions,
+        'knockout_matches': knockout_matches,
+        'available_teams': available_teams,
+        'current_participant': Participant.objects.get(pk=participant_id) if participant_id else None,
+    }
+    return render(request, 'predictor/admin_dashboard.html', context)
+
+
+def bracket(request):
+    """Render the knockout bracket page."""
+    participant_id = request.session.get('participant_id')
+    current_participant = Participant.objects.get(pk=participant_id) if participant_id else None
+
+    knockout_matches = KnockoutMatch.objects.select_related('match').all().order_by('stage', 'position')
+
+    # Organize by stage as a list of (label, matches) pairs
+    stage_labels = {
+        'r32': 'Round of 32', 'r16': 'Round of 16',
+        'qf': 'Quarter Finals', 'sf': 'Semi Finals',
+        '3rd': '3rd Place', 'final': 'Final',
+    }
+    stage_order = ['r32', 'r16', 'qf', 'sf', '3rd', 'final']
+    stages_dict = {}
+    for km in knockout_matches:
+        if km.stage not in stages_dict:
+            stages_dict[km.stage] = []
+        stages_dict[km.stage].append(km)
+
+    bracket_stages = []
+    for stage_key in stage_order:
+        if stage_key in stages_dict:
+            bracket_stages.append({
+                'key': stage_key,
+                'label': stage_labels.get(stage_key, stage_key),
+                'matches': stages_dict[stage_key],
+            })
+
+    context = {
+        'bracket_stages': bracket_stages,
+        'current_participant': current_participant,
+    }
+    return render(request, 'predictor/bracket.html', context)

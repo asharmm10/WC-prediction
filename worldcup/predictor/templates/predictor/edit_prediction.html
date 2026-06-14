@@ -1,141 +1,49 @@
 {% extends "predictor/base.html" %}
 {% load static %}
 
-{% block title %}Edit Prediction: {{ match.home_team }} vs {{ match.away_team }} | WC2026{% endblock %}
-{% block nav_matches %} active{% endblock %}
+{% block title %}Edit Prediction: {{ match.home_team }} vs {{ match.away_team }} - WC2026{% endblock %}
 
 {% block content %}
-<section style="padding-top:90px;" data-aos="fade-down">
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb justify-content-center mb-0" style="font-size:0.8rem;">
-      <li class="breadcrumb-item"><a href="{% url 'predictor:matches' %}" style="color:#6b7280;">Matches</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'predictor:match_detail' match.id %}" style="color:#6b7280;">{{ match.home_team }} vs {{ match.away_team }}</a></li>
-      <li class="breadcrumb-item active" aria-current="page" style="color:#f5d442;">Edit</li>
-    </ol>
-  </nav>
-</section>
-
-<div class="container pb-5">
-  <div class="mx-auto" style="max-width:500px;">
-
-    <!-- Match Info -->
-    <div class="glass-card-gold p-3 mb-3 text-center" data-aos="fade-up" style="border-radius:14px;">
-      <div class="d-flex align-items-center justify-content-center gap-3">
-        <div class="text-center">
-          <div style="width:40px;height:40px;border-radius:50%;background:#1a4d2e;display:inline-flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;color:#fff;border:2px solid rgba(255,255,255,0.15);">{{ match.home_team|first }}</div>
-          <div class="fw-bold text-white small mt-1">{{ match.home_team }}</div>
+<div class="container" style="margin-top:120px;max-width:500px;">
+    <div class="glass-card-gold p-4" data-aos="fade-up">
+        <div class="text-center mb-4">
+            <h2 class="gold-text" style="font-family:var(--font-heading);font-weight:900;">Edit Prediction</h2>
         </div>
-        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#d4af37,#f5d442);display:inline-flex;align-items:center;justify-content:center;color:#0a0e17;font-weight:900;font-size:0.6rem;">VS</div>
-        <div class="text-center">
-          <div style="width:40px;height:40px;border-radius:50%;background:#8b1a1a;display:inline-flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;color:#fff;border:2px solid rgba(255,255,255,0.15);">{{ match.away_team|first }}</div>
-          <div class="fw-bold text-white small mt-1">{{ match.away_team }}</div>
+        
+        <!-- Match Info -->
+        <div class="d-flex justify-content-center align-items-center gap-3 mb-4">
+            <div class="text-center">
+                {% if match.home_team_logo %}
+                <img src="{% static match.home_team_logo %}" alt="" class="team-logo-md mb-1">
+                {% endif %}
+                <div style="font-family:var(--font-heading);font-weight:700;font-size:0.85rem;">{{ match.home_team }}</div>
+            </div>
+            <span class="text-muted" style="font-family:var(--font-mono);font-weight:800;">VS</span>
+            <div class="text-center">
+                {% if match.away_team_logo %}
+                <img src="{% static match.away_team_logo %}" alt="" class="team-logo-md mb-1">
+                {% endif %}
+                <div style="font-family:var(--font-heading);font-weight:700;font-size:0.85rem;">{{ match.away_team }}</div>
+            </div>
         </div>
-      </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="d-flex justify-content-center align-items-center gap-4 mb-4">
+                <div class="text-center">
+                    <label class="form-label">{{ match.home_team }}</label>
+                    {{ form.home_score }}
+                </div>
+                <span style="color:var(--text-muted);font-size:2rem;font-weight:700;">-</span>
+                <div class="text-center">
+                    <label class="form-label">{{ match.away_team }}</label>
+                    {{ form.away_score }}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-gold btn-glow w-100" style="min-height:50px;font-family:var(--font-heading);font-weight:800;border-radius:14px;">
+                <i class="bi bi-pencil"></i> Update Prediction
+            </button>
+        </form>
     </div>
-
-    <!-- Current Prediction -->
-    <div class="glass-card p-3 mb-3 text-center" data-aos="fade-up" style="border-radius:12px;border-color:rgba(212,175,55,0.2);background:rgba(212,175,55,0.04);">
-      <div style="font-size:0.75rem;color:#6b7280;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Current Prediction</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:1.25rem;font-weight:800;color:#f5d442;">
-        {{ match.home_team }} {{ prediction.home_score }} &ndash; {{ prediction.away_score }} {{ match.away_team }}
-      </div>
-    </div>
-
-    <!-- Edit Form -->
-    <div class="glass-card-premium p-4" data-aos="fade-up" data-aos-delay="150" style="border-radius:16px;">
-      <h2 class="text-center mb-2" style="font-size:1.4rem;font-weight:800;">
-        <span class="gold-text">&#9998;</span> Update Prediction
-      </h2>
-
-      <!-- Time remaining warning -->
-      <div class="text-center mb-4" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:0.75rem;">
-        <span style="color:#f59e0b;font-weight:700;">&#9888;&#65039; Editable until kickoff</span>
-        <div id="timeRemaining" style="font-family:'JetBrains Mono',monospace;font-weight:800;color:#f59e0b;font-size:1rem;margin-top:4px;">
-          Calculating...
-        </div>
-      </div>
-
-      {% if form.errors %}
-      <div class="mb-3" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:1rem;">
-        <p style="color:#f87171;font-weight:700;margin-bottom:0.5rem;">Please fix the errors:</p>
-        <ul style="color:#f87171;font-size:0.85rem;margin-bottom:0;padding-left:1.25rem;">
-          {% for field in form %}{% for error in field.errors %}<li>{{ field.label }}: {{ error }}</li>{% endfor %}{% endfor %}
-        </ul>
-      </div>
-      {% endif %}
-
-      <form method="post" action="{% url 'predictor:edit_prediction' match.id %}" class="prediction-form">
-        {% csrf_token %}
-
-        <!-- Score Input -->
-        <div class="d-flex align-items-center justify-content-center gap-3">
-          <div class="text-center" style="flex:1;">
-            <div class="text-secondary small fw-bold mb-2">{{ match.home_team }}</div>
-            <input type="number" name="home_score" min="0" max="20" value="{{ prediction.home_score }}"
-                   class="form-control text-center fw-bold"
-                   style="width:80px;height:70px;font-size:2rem;font-family:'JetBrains Mono',monospace;font-weight:800;background:rgba(31,41,55,0.8);border:2px solid rgba(212,175,55,0.25);color:#f5d442;border-radius:12px;margin:0 auto;"
-                   aria-label="Home score">
-          </div>
-
-          <div style="font-size:1.5rem;color:#6b7280;font-weight:800;padding-top:20px;">&ndash;</div>
-
-          <div class="text-center" style="flex:1;">
-            <div class="text-secondary small fw-bold mb-2">{{ match.away_team }}</div>
-            <input type="number" name="away_score" min="0" max="20" value="{{ prediction.away_score }}"
-                   class="form-control text-center fw-bold"
-                   style="width:80px;height:70px;font-size:2rem;font-family:'JetBrains Mono',monospace;font-weight:800;background:rgba(31,41,55,0.8);border:2px solid rgba(212,175,55,0.25);color:#f5d442;border-radius:12px;margin:0 auto;"
-                   aria-label="Away score">
-          </div>
-        </div>
-
-        <!-- Update Button -->
-        <div class="text-center mt-4">
-          <button type="submit" class="btn btn-gold btn-lg btn-glow" style="min-width:220px;border-radius:12px;font-size:1.1rem;">
-            &#9998; Update Prediction
-          </button>
-        </div>
-
-        <div class="text-center mt-3">
-          <a href="{% url 'predictor:match_detail' match.id %}" class="text-secondary" style="font-size:0.9rem;">
-            &#8592; Cancel
-          </a>
-        </div>
-      </form>
-    </div>
-
-  </div>
 </div>
-
-{% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  var kickoffISO = "{{ match.kickoff_datetime|date:'c' }}";
-  if (kickoffISO) {
-    var kickoffTime = new Date(kickoffISO).getTime();
-    var remainingEl = document.getElementById('timeRemaining');
-
-    function updateRemaining() {
-      var now = Date.now();
-      var diff = kickoffTime - now;
-      if (diff <= 0) {
-        remainingEl.textContent = 'Kickoff passed!';
-        return;
-      }
-      var days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      var seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      var parts = [];
-      if (days > 0) parts.push(days + 'd');
-      if (hours > 0 || days > 0) parts.push(hours + 'h');
-      parts.push(minutes + 'm');
-      parts.push(seconds + 's');
-      remainingEl.textContent = parts.join(' ');
-    }
-    updateRemaining();
-    setInterval(updateRemaining, 1000);
-  }
-});
-</script>
-{% endblock %}
 {% endblock %}

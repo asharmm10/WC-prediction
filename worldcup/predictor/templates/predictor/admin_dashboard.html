@@ -1,0 +1,219 @@
+{% extends "predictor/base.html" %}
+{% load static %}
+{% load predictor_tags %}
+
+{% block title %}Admin Dashboard - WC2026{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="margin-top: 80px;">
+    <div class="section-header mb-4">
+        <div class="accent-bar"></div>
+        <h1 class="gold-text"><i class="bi bi-shield-lock"></i> Admin Dashboard</h1>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="glass-card p-3 text-center">
+                <div class="hero-stat-value">{{ upcoming_count }}</div>
+                <div class="hero-stat-label">Upcoming</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="glass-card p-3 text-center">
+                <div class="hero-stat-value" style="color: #10b981;">{{ live_count }}</div>
+                <div class="hero-stat-label">Live</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="glass-card p-3 text-center">
+                <div class="hero-stat-value" style="color: #3b82f6;">{{ completed_count }}</div>
+                <div class="hero-stat-label">Completed</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="glass-card p-3 text-center">
+                <div class="hero-stat-value">{{ total_predictions }}</div>
+                <div class="hero-stat-label">Predictions</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Match -->
+    <div class="glass-card p-4 mb-4">
+        <h3 class="gold-text mb-3"><i class="bi bi-plus-circle"></i> Create Match</h3>
+        <form method="post" action="">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="create_match">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label text-secondary small">Home Team</label>
+                    <input type="text" name="home_team" class="form-control" placeholder="Home Team" required list="team-list">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label text-secondary small">Away Team</label>
+                    <input type="text" name="away_team" class="form-control" placeholder="Away Team" required list="team-list">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label text-secondary small">Date</label>
+                    <input type="date" name="match_date" class="form-control" required>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label text-secondary small">Kickoff</label>
+                    <input type="datetime-local" name="kickoff_datetime" class="form-control" required>
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label text-secondary small">Group</label>
+                    <input type="text" name="group_stage" class="form-control" placeholder="A">
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label text-secondary small">Stage</label>
+                    <select name="stage" class="form-select">
+                        <option value="group">Group</option>
+                        <option value="r32">R32</option>
+                        <option value="r16">R16</option>
+                        <option value="qf">QF</option>
+                        <option value="sf">SF</option>
+                        <option value="3rd">3rd</option>
+                        <option value="final">Final</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-3">
+                <button type="submit" class="btn btn-gold"><i class="bi bi-plus-lg"></i> Create Match</button>
+            </div>
+            <datalist id="team-list">
+                {% for team in available_teams %}
+                <option value="{{ team }}">
+                {% endfor %}
+            </datalist>
+        </form>
+    </div>
+
+    <!-- Match Management -->
+    <div class="glass-card p-4 mb-4">
+        <h3 class="gold-text mb-3"><i class="bi bi-trophy"></i> Match Management & Set Results</h3>
+        <div class="table-responsive">
+            <table class="table table-dark table-hover" style="font-size:0.85rem;">
+                <thead>
+                    <tr>
+                        <th>Match</th>
+                        <th>Date</th>
+                        <th>Stage</th>
+                        <th>Status</th>
+                        <th>Result</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for match in all_matches %}
+                    <tr>
+                        <td>
+                            {% if match.home_team_logo %}
+                            <img src="{% static match.home_team_logo %}" alt="" class="team-logo-inline">
+                            {% endif %}
+                            <span class="text-white fw-bold">{{ match.home_team }}</span>
+                            <span class="text-muted"> vs </span>
+                            {% if match.away_team_logo %}
+                            <img src="{% static match.away_team_logo %}" alt="" class="team-logo-inline">
+                            {% endif %}
+                            <span class="text-white fw-bold">{{ match.away_team }}</span>
+                        </td>
+                        <td class="text-secondary">{{ match.kickoff_datetime|date:"M j, H:i" }}</td>
+                        <td><span class="badge" style="background:rgba(59,130,246,0.15);color:#60a5fa;">{{ match.get_stage_display }}</span></td>
+                        <td>
+                            <span class="badge {% if match.status == 'completed' %}bg-success{% elif match.status == 'live' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                {{ match.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if match.status == 'completed' %}
+                                <span class="gold-text fw-bold">{{ match.home_score }} - {{ match.away_score }}</span>
+                            {% else %}
+                                <form method="post" class="d-inline-flex align-items-center gap-1" action="">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="set_result">
+                                    <input type="hidden" name="match_id" value="{{ match.id }}">
+                                    <input type="number" name="home_score" class="form-control form-control-sm" style="width:50px;" placeholder="H" min="0">
+                                    <span class="text-muted">-</span>
+                                    <input type="number" name="away_score" class="form-control form-control-sm" style="width:50px;" placeholder="A" min="0">
+                                    <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-check-lg"></i></button>
+                                </form>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form method="post" class="d-inline" action="">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete_match">
+                                <input type="hidden" name="match_id" value="{{ match.id }}">
+                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Delete this match?')"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Knockout Bracket Management -->
+    <div class="glass-card p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="gold-text mb-0"><i class="bi bi-diagram-3"></i> Knockout Bracket</h3>
+            <form method="post" class="d-inline">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="init_knockout">
+                <button type="submit" class="btn btn-gold-outline btn-sm"><i class="bi bi-arrow-repeat"></i> Initialize Bracket</button>
+            </form>
+        </div>
+        
+        {% if knockout_matches %}
+        <div class="table-responsive">
+            <table class="table table-dark table-hover" style="font-size:0.85rem;">
+                <thead>
+                    <tr>
+                        <th>Stage</th>
+                        <th>Match</th>
+                        <th>Home Team</th>
+                        <th>Away Team</th>
+                        <th>Score</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ko in knockout_matches %}
+                    <tr>
+                        <td><span class="badge" style="background:rgba(212,175,55,0.15);color:#f5d442;">{{ ko.get_stage_display }}</span></td>
+                        <td>{{ ko.position }}</td>
+                        <td>
+                            <form method="post" class="d-inline" action="">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="update_knockout">
+                                <input type="hidden" name="ko_id" value="{{ ko.id }}">
+                                <input type="text" name="home_team" value="{{ ko.home_team }}" class="form-control form-control-sm" style="width:120px;" list="team-list">
+                        </td>
+                        <td>
+                                <input type="text" name="away_team" value="{{ ko.away_team }}" class="form-control form-control-sm" style="width:120px;" list="team-list">
+                        </td>
+                        <td>
+                                <input type="number" name="home_score" value="{% if ko.home_score is not None %}{{ ko.home_score }}{% endif %}" class="form-control form-control-sm d-inline" style="width:45px;" placeholder="H" min="0">
+                                <span class="text-muted">-</span>
+                                <input type="number" name="away_score" value="{% if ko.away_score is not None %}{{ ko.away_score }}{% endif %}" class="form-control form-control-sm d-inline" style="width:45px;" placeholder="A" min="0">
+                        </td>
+                        <td>
+                                <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-check-lg"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+            <p class="text-muted">No knockout bracket initialized. Click "Initialize Bracket" to create slots.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

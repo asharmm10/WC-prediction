@@ -16,4 +16,6 @@ urlpatterns = [
     path('predict/<int:match_id>/', views.submit_prediction, name='submit_prediction'),
     path('predict/<int:match_id>/edit/', views.edit_prediction, name='edit_prediction'),
     path('api/countdown/', views.countdown_api, name='countdown_api'),
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('bracket/', views.bracket, name='bracket'),
 ]

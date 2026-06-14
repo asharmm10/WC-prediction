@@ -1,238 +1,106 @@
 {% extends "predictor/base.html" %}
 {% load static %}
+{% load predictor_tags %}
 
-{% block title %}{{ match.home_team }} vs {{ match.away_team }} | WC2026{% endblock %}
-{% block nav_matches %} active{% endblock %}
+{% block title %}{{ match.home_team }} vs {{ match.away_team }} - WC2026{% endblock %}
 
 {% block content %}
-<section style="padding-top:90px;" data-aos="fade-down">
-  <nav aria-label="breadcrumb" style="margin-bottom:0.5rem;">
-    <ol class="breadcrumb justify-content-center mb-0" style="font-size:0.8rem;">
-      <li class="breadcrumb-item"><a href="{% url 'predictor:matches' %}" style="color:#6b7280;">Matches</a></li>
-      <li class="breadcrumb-item active" aria-current="page" style="color:#f5d442;">{{ match.home_team }} vs {{ match.away_team }}</li>
-    </ol>
-  </nav>
-</section>
-
-<div class="container pb-5">
-  <div class="mx-auto" style="max-width:700px;">
-
-    <!-- MATCH HEADER CARD -->
-    <div class="glass-card-gold p-4 mb-4 text-center" data-aos="fade-up" data-aos-duration="700" style="border-radius:16px;">
-      <!-- Group & Status -->
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        {% if match.group_stage %}
-        <span class="badge rounded-pill" style="background:rgba(59,130,246,0.1);color:#3b82f6;border:1px solid rgba(59,130,246,0.2);">{{ match.group_stage }}</span>
-        {% else %}
-        <span></span>
-        {% endif %}
-
-        {% if match.status == 'completed' %}
-        <span class="status-badge status-completed">&#9989; Completed</span>
-        {% elif match.status == 'live' %}
-        <span class="status-badge status-live">&#128308; Live</span>
-        {% elif match.is_locked %}
-        <span class="status-badge status-locked">&#128274; Locked</span>
-        {% else %}
-        <span class="status-badge status-open">&#128994; Open</span>
-        {% endif %}
-      </div>
-
-      <!-- Teams & Score -->
-      <div class="d-flex align-items-center justify-content-center gap-3 py-3">
-        <div class="text-center" style="flex:1;">
-          <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
-            <div style="width:48px;height:48px;min-width:48px;border-radius:50%;background:#1a4d2e;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:800;color:#fff;border:2px solid rgba(255,255,255,0.15);">{{ match.home_team|first }}</div>
-            <span class="fw-bold text-white" style="font-size:1.1rem;">{{ match.home_team }}</span>
-          </div>
-        </div>
-
-        <div class="text-center" style="min-width:80px;">
-          {% if match.status == 'completed' and match.home_score is not None %}
-          <div style="font-family:'JetBrains Mono',monospace;font-weight:900;font-size:2rem;color:#f5d442;">
-            {{ match.home_score }} <span class="text-secondary" style="font-size:1.2rem;">&ndash;</span> {{ match.away_score }}
-          </div>
-          {% elif match.status == 'live' and match.home_score is not None %}
-          <div style="font-family:'JetBrains Mono',monospace;font-weight:900;font-size:2rem;color:#ef4444;">
-            {{ match.home_score }} <span class="text-secondary" style="font-size:1.2rem;">&ndash;</span> {{ match.away_score }}
-          </div>
-          {% else %}
-          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#d4af37,#f5d442);color:#0a0e17;font-weight:900;font-size:0.7rem;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 0 15px rgba(212,175,55,0.3);">VS</div>
-          {% endif %}
-        </div>
-
-        <div class="text-center" style="flex:1;">
-          <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
-            <span class="fw-bold text-white" style="font-size:1.1rem;">{{ match.away_team }}</span>
-            <div style="width:48px;height:48px;min-width:48px;border-radius:50%;background:#8b1a1a;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:800;color:#fff;border:2px solid rgba(255,255,255,0.15);">{{ match.away_team|first }}</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Match Info -->
-      <div class="d-flex justify-content-center gap-4 text-secondary small pt-2" style="border-top:1px solid rgba(255,255,255,0.06);">
-        <span>&#128205; {{ match.venue|default:"TBD" }}</span>
-        <span>&#128197; {{ match.kickoff_datetime|date:"M d, Y" }} &middot; {{ match.kickoff_datetime|date:"g:i A" }}</span>
-      </div>
-    </div>
-
-    <!-- PREDICTION SECTION -->
-    <div class="mb-4" data-aos="fade-up" data-aos-delay="150">
-      {% if not match.is_locked and match.status != 'completed' %}
-        {% if current_participant %}
-          {% if has_predicted %}
-          <div class="glass-card p-4 text-center" style="border-radius:14px;">
-            <div style="font-size:2rem;margin-bottom:0.5rem;">&#9989;</div>
-            <h4 style="color:#10b981;margin-bottom:0.5rem;">You've predicted this match</h4>
-            {% for pred in predictions %}
-              {% if pred.participant.id == current_participant.id %}
-              <p style="font-family:'JetBrains Mono',monospace;font-size:1.25rem;font-weight:800;color:#f5d442;margin-bottom:1rem;">
-                {{ match.home_team }} {{ pred.home_score }} &ndash; {{ pred.away_score }} {{ match.away_team }}
-              </p>
-              {% endif %}
-            {% endfor %}
-            <a href="{% url 'predictor:edit_prediction' match.id %}" class="btn btn-gold-outline" style="min-height:44px;border-radius:10px;">
-              &#9999;&#65039; Edit Prediction
-            </a>
-          </div>
-          {% else %}
-          <div class="glass-card-premium p-4 text-center" style="border-radius:14px;">
-            <div style="font-size:2rem;margin-bottom:0.5rem;">&#127922;</div>
-            <h4 class="text-white mb-2">Make Your Prediction</h4>
-            <p class="text-secondary mb-3">This match is still open for predictions!</p>
-            <a href="{% url 'predictor:submit_prediction' match.id %}" class="btn btn-gold btn-lg btn-glow" style="min-width:200px;border-radius:12px;">
-              &#9917; Predict Now
-            </a>
-          </div>
-          {% endif %}
-        {% else %}
-        <div class="glass-card p-4 text-center" style="border-radius:14px;">
-          <div style="font-size:2rem;margin-bottom:0.5rem;">&#128274;</div>
-          <h4 style="color:#9ca3af;margin-bottom:0.5rem;">Login to Predict</h4>
-          <p class="text-secondary mb-3">Sign in with your name and secret code to make predictions.</p>
-          <a href="{% url 'predictor:login' %}?next={% url 'predictor:match_detail' match.id %}" class="btn btn-gold btn-glow" style="min-width:160px;border-radius:10px;">
-            &#128100; Login
-          </a>
-        </div>
-        {% endif %}
-      {% elif match.is_locked and match.status != 'completed' %}
-      <div class="glass-card p-4 text-center" style="border-radius:14px;opacity:0.8;">
-        <span style="font-size:2rem;">&#128274;</span>
-        <h4 style="color:#f87171;margin-bottom:0.5rem;">Predictions are locked</h4>
-        <p class="text-secondary mb-0">This match has kicked off &mdash; no more predictions accepted.</p>
-      </div>
-      {% elif match.status == 'completed' %}
-      <div class="glass-card-gold p-4 text-center" style="border-radius:14px;">
-        <div style="font-size:2rem;margin-bottom:0.5rem;">&#127942;</div>
-        <h4 style="color:#f5d442;margin-bottom:0.5rem;">Match Completed</h4>
-        <p style="font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:900;color:#f5d442;margin-bottom:0;">
-          {{ match.home_score }} &ndash; {{ match.away_score }}
-        </p>
-      </div>
-      {% endif %}
-    </div>
-
-    <!-- ALL PREDICTIONS TABLE -->
-    {% if predictions %}
-    <section data-aos="fade-up" data-aos-delay="250">
-      <h2 class="gold-text fw-bold mb-3" style="font-size:1.2rem;">
-        <span style="display:inline-block;width:4px;height:18px;background:#d4af37;border-radius:2px;margin-right:8px;vertical-align:middle;"></span>
-        All Predictions
-      </h2>
-
-      <!-- Desktop Table -->
-      <div class="d-none d-md-block">
-        <div class="glass-card p-0 overflow-hidden" style="border-radius:14px;">
-          <table class="table table-dark table-borderless mb-0" style="background:transparent;">
-            <thead>
-              <tr style="border-bottom:1px solid rgba(212,175,55,0.15);">
-                <th class="ps-4 py-3" style="color:#6b7280;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;">Participant</th>
-                <th class="text-center py-3" style="color:#6b7280;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;">Score</th>
-                {% if match.status == 'completed' %}
-                <th class="text-center pe-4 py-3" style="color:#6b7280;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;">Points</th>
+<div class="container" style="margin-top:100px;">
+    <!-- Match Header -->
+    <div class="glass-card p-4 mb-4" style="--home-color:{{ match.home_team_color }};--away-color:{{ match.away_team_color }};">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,{{ match.home_team_color }},rgba(255,255,255,0.1),{{ match.away_team_color }});opacity:0.5;"></div>
+        <div class="row align-items-center text-center">
+            <div class="col-4">
+                {% if match.home_team_logo %}
+                <img src="{% static match.home_team_logo %}" alt="{{ match.home_team }}" class="team-logo-lg mb-2">
                 {% endif %}
-              </tr>
-            </thead>
-            <tbody>
-              {% for pred in predictions|dictsort:"participant.name" %}
-              <tr style="border-bottom:1px solid rgba(255,255,255,0.04);
-                         {% if match.status == 'completed' and pred.is_exact %}background:rgba(16,185,129,0.06);
-                         {% elif current_participant and pred.participant.id == current_participant.id %}background:rgba(212,175,55,0.04);{% endif %}">
-                <td class="ps-4 py-3">
-                  <span style="font-weight:700;color:{% if current_participant and pred.participant.id == current_participant.id %}#f5d442{% else %}#fff{% endif %};">
-                    {{ pred.participant.name }}
-                    {% if current_participant and pred.participant.id == current_participant.id %}
-                    <span style="font-size:0.7rem;color:#6b7280;">(You)</span>
-                    {% endif %}
-                  </span>
-                </td>
-                <td class="text-center py-3">
-                  <span style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1.1rem;color:#fff;">
-                    {{ pred.home_score }} &ndash; {{ pred.away_score }}
-                  </span>
-                </td>
-                {% if match.status == 'completed' %}
-                <td class="text-center pe-4 py-3">
-                  {% if pred.is_exact %}
-                  <span style="color:#f5d442;font-weight:800;">&#9989; 3 pts</span>
-                  {% else %}
-                  <span style="color:#f87171;font-weight:600;">&#10060; 0 pts</span>
-                  {% endif %}
-                </td>
-                {% endif %}
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Mobile Cards -->
-      <div class="d-md-none">
-        {% for pred in predictions|dictsort:"participant.name" %}
-        <div class="glass-card mb-2 p-3" style="border-radius:10px;
-             {% if match.status == 'completed' and pred.is_exact %}border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.06);
-             {% elif current_participant and pred.participant.id == current_participant.id %}border-color:rgba(212,175,55,0.3);{% endif %}">
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <div style="font-weight:700;color:{% if current_participant and pred.participant.id == current_participant.id %}#f5d442{% else %}#fff{% endif %};">
-                {{ pred.participant.name }}
-                {% if current_participant and pred.participant.id == current_participant.id %}
-                <span style="font-size:0.7rem;color:#6b7280;">(You)</span>
-                {% endif %}
-              </div>
-              <div style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1.1rem;color:#fff;">
-                {{ pred.home_score }} &ndash; {{ pred.away_score }}
-              </div>
+                <h3 style="font-family:var(--font-heading);font-weight:800;font-size:1.2rem;">{{ match.home_team }}</h3>
             </div>
-            {% if match.status == 'completed' %}
-            <div class="text-end">
-              {% if pred.is_exact %}
-              <span style="color:#f5d442;font-weight:800;">&#9989; 3pts</span>
-              {% else %}
-              <span style="color:#f87171;font-weight:600;">&#10060;</span>
-              {% endif %}
+            <div class="col-4">
+                {% if match.status == 'completed' and match.home_score is not None %}
+                <div class="mono-number gold-text" style="font-size:3rem;">{{ match.home_score }} - {{ match.away_score }}</div>
+                <span class="match-status-badge completed">Full Time</span>
+                {% else %}
+                <div class="text-muted" style="font-family:var(--font-mono);font-weight:800;font-size:0.8rem;letter-spacing:2px;">VS</div>
+                <div class="text-secondary" style="font-size:0.85rem;">{{ match.kickoff_datetime|date:"M j, Y H:i" }}</div>
+                {% endif %}
+                {% if match.venue %}
+                <div class="text-muted mt-1" style="font-size:0.75rem;"><i class="bi bi-geo-alt"></i> {{ match.venue }}</div>
+                {% endif %}
             </div>
+            <div class="col-4">
+                {% if match.away_team_logo %}
+                <img src="{% static match.away_team_logo %}" alt="{{ match.away_team }}" class="team-logo-lg mb-2">
+                {% endif %}
+                <h3 style="font-family:var(--font-heading);font-weight:800;font-size:1.2rem;">{{ match.away_team }}</h3>
+            </div>
+        </div>
+        <div class="text-center mt-3">
+            {% if match.group_stage %}
+            <span class="match-stage-badge group">{{ match.group_stage }}</span>
             {% endif %}
-          </div>
+            {% if match.stage != 'group' %}
+            <span class="match-stage-badge knockout">{{ match.get_stage_display }}</span>
+            {% endif %}
         </div>
-        {% endfor %}
-      </div>
-    </section>
-    {% else %}
-    <div class="glass-card text-center py-4" data-aos="fade-up" style="border-radius:14px;">
-      <div style="font-size:2rem;margin-bottom:0.5rem;">&#128172;</div>
-      <p style="color:#9ca3af;margin-bottom:0;">No predictions yet for this match.</p>
+    </div>
+
+    <!-- Prediction Action -->
+    {% if not match.is_locked and current_participant %}
+    <div class="glass-card-gold p-4 mb-4 text-center">
+        <h4 class="gold-text mb-3" style="font-family:var(--font-heading);font-weight:800;">{% if has_predicted %}Edit Your Prediction{% else %}Submit Your Prediction{% endif %}</h4>
+        <form method="post" action="{% if has_predicted %}{% url 'predictor:edit_prediction' match.id %}{% else %}{% url 'predictor:submit_prediction' match.id %}{% endif %}">
+            {% csrf_token %}
+            <div class="d-flex justify-content-center align-items-center gap-3">
+                <div>
+                    <label class="form-label" style="font-size:0.75rem;">{{ match.home_team }}</label>
+                    <input type="number" name="home_score" min="0" max="20" class="score-input-lg" placeholder="-" required>
+                </div>
+                <span style="color:var(--text-muted);font-size:1.5rem;font-weight:700;">-</span>
+                <div>
+                    <label class="form-label" style="font-size:0.75rem;">{{ match.away_team }}</label>
+                    <input type="number" name="away_score" min="0" max="20" class="score-input-lg" placeholder="-" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-gold btn-glow mt-3" style="min-width:200px;">
+                {% if has_predicted %}<i class="bi bi-pencil"></i> Update{% else %}<i class="bi bi-send"></i> Submit{% endif %} Prediction
+            </button>
+        </form>
+    </div>
+    {% elif not match.is_locked and not current_participant %}
+    <div class="text-center mb-4">
+        <a href="{% url 'predictor:login' %}?next={% url 'predictor:match_detail' match.id %}" class="btn btn-gold btn-glow btn-cta-pulse">
+            <i class="bi bi-box-arrow-in-right"></i> Login to Predict
+        </a>
+    </div>
+    {% elif match.is_locked and not match.is_locked %}
+    <div class="text-center mb-4">
+        <span class="match-status-badge locked" style="font-size:0.85rem;"><i class="bi bi-lock-fill"></i> Predictions Locked</span>
     </div>
     {% endif %}
 
-    <!-- Back -->
-    <div class="text-center mt-4" data-aos="fade-up">
-      <a href="{% url 'predictor:matches' %}" class="btn btn-gold-outline btn-sm" style="border-radius:10px;">
-        &#8592; Back to Matches
-      </a>
+    <!-- Predictions List -->
+    {% if predictions %}
+    <div class="glass-card p-4">
+        <h4 class="gold-text mb-3" style="font-family:var(--font-heading);font-weight:800;"><i class="bi bi-people"></i> Predictions ({{ predictions|length }})</h4>
+        <div class="row g-2">
+            {% for pred in predictions %}
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card p-3" style="{% if pred.is_exact %}border-color:rgba(16,185,129,0.3);{% endif %}">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span style="font-family:var(--font-heading);font-weight:700;font-size:0.85rem;">{{ pred.participant.name }}</span>
+                        <span class="mono-number" style="font-size:1.1rem;{% if pred.is_exact %}color:#10b981;{% else %}color:var(--gold-light);{% endif %}">
+                            {{ pred.home_score }} - {{ pred.away_score }}
+                        </span>
+                    </div>
+                    {% if pred.is_exact %}
+                    <div class="mt-1"><span class="predicted-badge" style="font-size:0.65rem;"><i class="bi bi-star-fill"></i> Exact! +3 pts</span></div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
-
-  </div>
+    {% endif %}
 </div>
 {% endblock %}

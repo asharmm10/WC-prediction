@@ -1,6 +1,7 @@
 from django import template
+from django.templatetags.static import static
 
-from ..models import Participant, Prediction
+from ..models import Participant, Prediction, get_team_logo, get_team_color
 
 register = template.Library()
 
@@ -48,3 +49,37 @@ def get_participant_points(participant):
     for pred in predictions:
         points += pred.points
     return points
+
+
+@register.simple_tag
+def team_logo(team_name):
+    """Return the static URL for a team's logo.
+    Usage: {% team_logo "Brazil" as logo_url %}
+    """
+    logo_path = get_team_logo(team_name)
+    if logo_path:
+        return static(logo_path)
+    return ''
+
+
+@register.simple_tag
+def team_color(team_name):
+    """Return the theme color for a team.
+    Usage: {% team_color "Brazil" as color %}
+    """
+    return get_team_color(team_name)
+
+
+@register.filter
+def team_logo_url(team_name):
+    """Filter version: {{ "Brazil"|team_logo_url }}"""
+    logo_path = get_team_logo(team_name)
+    if logo_path:
+        return static(logo_path)
+    return ''
+
+
+@register.filter
+def team_color_hex(team_name):
+    """Filter version: {{ "Brazil"|team_color_hex }}"""
+    return get_team_color(team_name)

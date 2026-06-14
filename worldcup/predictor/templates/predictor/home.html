@@ -1,5 +1,6 @@
 {% extends "predictor/base.html" %}
 {% load static %}
+{% load predictor_tags %}
 
 {% block title %}FIFA World Cup 2026 - Family Prediction League{% endblock %}
 
@@ -19,43 +20,45 @@
     .hero-content {
         position: relative;
         z-index: 3;
-        max-width: 700px;
+        max-width: 750px;
     }
     .hero-logo {
-        width: 130px;
+        width: 140px;
         height: auto;
-        margin-bottom: 1.2rem;
-        filter: drop-shadow(0 0 40px rgba(212,175,55,0.5));
+        margin-bottom: 1.5rem;
+        filter: drop-shadow(0 0 50px rgba(212,175,55,0.5));
         animation: floatSlow 6s ease-in-out infinite;
     }
     @keyframes floatSlow {
         0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-12px); }
+        50% { transform: translateY(-15px); }
     }
     .hero-title {
-        font-size: clamp(2.2rem, 7vw, 4rem);
+        font-family: var(--font-heading);
+        font-size: clamp(2.4rem, 7vw, 4.2rem);
         font-weight: 900;
-        line-height: 1.1;
+        line-height: 1.05;
         margin-bottom: 1rem;
-        letter-spacing: -0.5px;
+        letter-spacing: -1px;
     }
     .hero-subtitle {
-        font-size: clamp(1rem, 2.5vw, 1.25rem);
-        color: rgba(255,255,255,0.6);
-        font-weight: 300;
+        font-family: var(--font-sans);
+        font-size: clamp(1rem, 2.5vw, 1.2rem);
+        color: rgba(255,255,255,0.5);
+        font-weight: 400;
         margin-bottom: 2rem;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
     }
 
     /* Hero glass panel */
     .hero-glass-panel {
-        background: rgba(10, 14, 24, 0.3);
-        backdrop-filter: blur(40px) saturate(1.5) brightness(1.1);
-        -webkit-backdrop-filter: blur(40px) saturate(1.5) brightness(1.1);
-        border: 1px solid rgba(255,255,255,0.06);
-        border-radius: 24px;
-        padding: 2rem 1.5rem;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+        background: rgba(8, 12, 22, 0.3);
+        backdrop-filter: blur(40px) saturate(1.6) brightness(1.15);
+        -webkit-backdrop-filter: blur(40px) saturate(1.6) brightness(1.15);
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 28px;
+        padding: 2.5rem 2rem;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
         position: relative;
         overflow: hidden;
     }
@@ -64,8 +67,8 @@
         position: absolute;
         top: 0; left: 0; right: 0;
         height: 50%;
-        background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
-        border-radius: 24px 24px 0 0;
+        background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
+        border-radius: 28px 28px 0 0;
         pointer-events: none;
     }
     .hero-glass-panel::after {
@@ -73,7 +76,7 @@
         position: absolute;
         top: -1px; left: 15%; right: 15%;
         height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
         pointer-events: none;
     }
 
@@ -90,43 +93,46 @@
     .hero-stats {
         display: flex;
         justify-content: center;
-        gap: 20px;
+        gap: 16px;
         flex-wrap: wrap;
         margin-top: 1.5rem;
     }
     .hero-stat {
         text-align: center;
-        padding: 10px 16px;
+        padding: 12px 18px;
         background: rgba(212,175,55,0.04);
         border: 1px solid rgba(212,175,55,0.1);
-        border-radius: 12px;
+        border-radius: 16px;
         min-width: 100px;
     }
     .hero-stat-value {
         font-family: var(--font-mono);
         font-weight: 900;
-        font-size: 1.4rem;
+        font-size: 1.5rem;
         color: var(--gold-light);
         text-shadow: 0 0 12px rgba(212,175,55,0.2);
     }
     .hero-stat-label {
-        font-size: 0.7rem;
+        font-family: var(--font-heading);
+        font-size: 0.65rem;
         color: var(--text-muted);
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 2px;
+        font-weight: 700;
     }
 
     /* Hero CTA */
     .hero-cta {
-        margin-top: 1.5rem;
+        margin-top: 2rem;
     }
     .hero-cta .btn {
-        min-height: 54px;
-        font-size: 1.1rem;
-        padding: 12px 32px;
-        border-radius: 14px;
-        font-weight: 700;
+        min-height: 58px;
+        font-size: 1.15rem;
+        padding: 14px 36px;
+        border-radius: 16px;
+        font-weight: 800;
         letter-spacing: 0.5px;
+        font-family: var(--font-heading);
     }
 
     /* ── Section Styles ── */
@@ -140,13 +146,14 @@
     }
     .section-header .accent-bar {
         width: 4px;
-        height: 24px;
+        height: 28px;
         background: var(--gold-gradient);
         border-radius: 2px;
     }
     .section-header h2 {
-        font-size: 1.3rem;
+        font-family: var(--font-heading);
         font-weight: 800;
+        font-size: 1.3rem;
         margin: 0;
     }
 
@@ -155,30 +162,32 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        padding: 10px 14px;
-        border-radius: 10px;
-        background: rgba(12,18,32,0.3);
+        padding: 12px 16px;
+        border-radius: 14px;
+        background: rgba(10,15,30,0.3);
         border: 1px solid rgba(255,255,255,0.03);
         margin-bottom: 6px;
         transition: all 0.3s ease;
     }
     .mini-lb-item:hover {
-        background: rgba(12,18,32,0.5);
+        background: rgba(12,18,35,0.5);
         border-color: rgba(212,175,55,0.1);
     }
     .mini-lb-rank {
-        width: 32px; height: 32px;
+        width: 36px; height: 36px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 800;
+        font-weight: 900;
         font-size: 0.85rem;
+        font-family: var(--font-heading);
         flex-shrink: 0;
     }
     .mini-lb-rank.gold {
         background: linear-gradient(135deg, #FFD700, #f5d442);
         color: #0a0e17;
+        box-shadow: 0 0 12px rgba(255,215,0,0.25);
     }
     .mini-lb-rank.silver {
         background: linear-gradient(135deg, #C0C0C0, #e8e8e8);
@@ -194,7 +203,8 @@
     }
     .mini-lb-name {
         flex: 1;
-        font-weight: 600;
+        font-weight: 700;
+        font-family: var(--font-heading);
         color: #fff;
         font-size: 0.9rem;
     }
@@ -205,14 +215,14 @@
         font-size: 1rem;
     }
 
-    /* Upcoming match card */
+    /* Upcoming match mini card */
     .upcoming-match {
         display: flex;
         align-items: center;
         gap: 12px;
         padding: 14px 16px;
-        border-radius: 12px;
-        background: rgba(12,18,32,0.3);
+        border-radius: 14px;
+        background: rgba(10,15,30,0.3);
         border: 1px solid rgba(255,255,255,0.03);
         margin-bottom: 8px;
         transition: all 0.3s ease;
@@ -220,7 +230,7 @@
         color: inherit;
     }
     .upcoming-match:hover {
-        background: rgba(12,18,32,0.5);
+        background: rgba(12,18,35,0.5);
         border-color: rgba(212,175,55,0.1);
         transform: translateX(4px);
         color: inherit;
@@ -229,19 +239,46 @@
         font-family: var(--font-mono);
         font-weight: 800;
         color: var(--gold-light);
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         min-width: 48px;
         text-align: center;
     }
     .upcoming-match .match-teams {
         flex: 1;
         font-weight: 600;
-        font-size: 0.9rem;
+        font-family: var(--font-heading);
+        font-size: 0.85rem;
     }
     .upcoming-match .match-vs {
         color: var(--text-muted);
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         margin: 0 4px;
+    }
+    .upcoming-match .team-logo-inline {
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+        vertical-align: middle;
+        margin-right: 3px;
+    }
+
+    /* Recent results */
+    .recent-result-card {
+        text-align: center;
+        padding: 1rem;
+        background: rgba(10,15,30,0.3);
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.03);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+    .recent-result-card:hover {
+        background: rgba(12,18,35,0.5);
+        border-color: rgba(212,175,55,0.1);
+        transform: translateY(-2px);
+        color: inherit;
     }
 
     @media (max-width: 768px) {
@@ -271,7 +308,7 @@
         <!-- Title -->
         <h1 class="hero-title">
             <span class="gold-text">FIFA World Cup 2026</span><br>
-            <span style="font-weight:300;color:rgba(255,255,255,0.6);font-size:clamp(1.2rem,3.5vw,2rem);">Family Prediction League</span>
+            <span style="font-weight:300;color:rgba(255,255,255,0.5);font-size:clamp(1.2rem,3.5vw,2rem);font-family:var(--font-sans);">Family Prediction League</span>
         </h1>
         <p class="hero-subtitle">Predict scores. Compete with family. Win the league.</p>
 
@@ -279,9 +316,19 @@
         <div class="hero-glass-panel">
             <!-- Countdown -->
             {% if next_match %}
-            <p class="text-secondary mb-2" style="font-size:0.8rem;text-transform:uppercase;letter-spacing:2px;">Next Match</p>
+            <p class="text-secondary mb-2" style="font-size:0.7rem;text-transform:uppercase;letter-spacing:3px;font-family:var(--font-heading);font-weight:700;">Next Match</p>
             <div class="hero-countdown" id="countdown"></div>
-            <p class="text-secondary small mb-0">{{ next_match.home_team }} vs {{ next_match.away_team }}</p>
+            <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
+                {% if next_match.home_team_logo %}
+                <img src="{% static next_match.home_team_logo %}" alt="" class="team-logo-sm">
+                {% endif %}
+                <span class="text-secondary small">{{ next_match.home_team }}</span>
+                <span class="text-muted" style="font-size:0.7rem;">vs</span>
+                <span class="text-secondary small">{{ next_match.away_team }}</span>
+                {% if next_match.away_team_logo %}
+                <img src="{% static next_match.away_team_logo %}" alt="" class="team-logo-sm">
+                {% endif %}
+            </div>
             {% else %}
             <p class="gold-text fw-bold" style="font-size:1.2rem;">&#9917; Tournament Coming Soon!</p>
             {% endif %}
@@ -309,7 +356,7 @@
                     &#9917; Predict Today's Matches
                 </a>
                 {% else %}
-                <a href="{% url 'predictor:login' %}" class="btn btn-gold btn-glow btn-cta-pulse">
+                <a href="{% url 'predictor:login' %}?next={% url 'predictor:today' %}" class="btn btn-gold btn-glow btn-cta-pulse">
                     &#128273; Login to Predict
                 </a>
                 {% endif %}
@@ -330,18 +377,18 @@
                 <h2 class="gold-text">&#127942; Leaderboard</h2>
             </div>
             <div class="glass-card p-4">
-                {% if leaderboard %}
-                    {% for entry in leaderboard|slice:":5" %}
+                {% if top5 %}
+                    {% for entry in top5 %}
                     <div class="mini-lb-item">
                         <div class="mini-lb-rank {% if entry.rank == 1 %}gold{% elif entry.rank == 2 %}silver{% elif entry.rank == 3 %}bronze{% else %}normal{% endif %}">
                             {% if entry.rank == 1 %}&#127942;{% else %}{{ entry.rank }}{% endif %}
                         </div>
                         <div class="mini-lb-name">{{ entry.participant.name }}</div>
-                        <div class="mini-lb-pts">{{ entry.points }}<span style="font-size:0.6rem;color:#6b7280;margin-left:2px;">pts</span></div>
+                        <div class="mini-lb-pts">{{ entry.points }}<span style="font-size:0.55rem;color:#6b7280;margin-left:2px;">pts</span></div>
                     </div>
                     {% endfor %}
                     <div class="text-center mt-3">
-                        <a href="{% url 'predictor:leaderboard' %}" class="btn btn-gold-outline btn-sm" style="border-radius:8px;">
+                        <a href="{% url 'predictor:leaderboard' %}" class="btn btn-gold-outline btn-sm" style="border-radius:10px;">
                             View Full Leaderboard <i class="bi bi-arrow-right ms-1"></i>
                         </a>
                     </div>
@@ -365,8 +412,14 @@
                     <a href="{% url 'predictor:match_detail' match.id %}" class="upcoming-match">
                         <div class="match-time">{{ match.kickoff_datetime|date:"M j" }}</div>
                         <div class="match-teams">
+                            {% if match.home_team_logo %}
+                            <img src="{% static match.home_team_logo %}" alt="" class="team-logo-inline">
+                            {% endif %}
                             <span class="text-white">{{ match.home_team }}</span>
                             <span class="match-vs">vs</span>
+                            {% if match.away_team_logo %}
+                            <img src="{% static match.away_team_logo %}" alt="" class="team-logo-inline">
+                            {% endif %}
                             <span class="text-white">{{ match.away_team }}</span>
                         </div>
                         {% if match.group_stage %}
@@ -375,7 +428,7 @@
                     </a>
                     {% endfor %}
                     <div class="text-center mt-3">
-                        <a href="{% url 'predictor:schedule' %}" class="btn btn-gold-outline btn-sm" style="border-radius:8px;">
+                        <a href="{% url 'predictor:schedule' %}" class="btn btn-gold-outline btn-sm" style="border-radius:10px;">
                             Full Schedule <i class="bi bi-arrow-right ms-1"></i>
                         </a>
                     </div>
@@ -389,7 +442,7 @@
     </div>
 
     <!-- Recent Results -->
-    {% if recent_results %}
+    {% if recent_matches %}
     <div class="row mt-4" data-aos="fade-up" data-aos-delay="300">
         <div class="col-12">
             <div class="section-header">
@@ -398,16 +451,24 @@
             </div>
             <div class="glass-card-gold p-4">
                 <div class="row g-3">
-                    {% for match in recent_results|slice:":4" %}
+                    {% for match in recent_matches|slice:":4" %}
                     <div class="col-md-6 col-lg-3">
-                        <a href="{% url 'predictor:match_detail' match.id %}" class="text-decoration-none">
-                            <div class="text-center p-3" style="background:rgba(12,18,32,0.3);border-radius:12px;border:1px solid rgba(255,255,255,0.03);">
-                                <div class="small text-secondary mb-1">{{ match.home_team }} vs {{ match.away_team }}</div>
-                                <div class="d-flex align-items-center justify-content-center gap-2">
-                                    <span class="gold-text fw-bold" style="font-size:1.6rem;font-family:var(--font-mono);">{{ match.home_score }}</span>
-                                    <span class="text-secondary">&ndash;</span>
-                                    <span class="gold-text fw-bold" style="font-size:1.6rem;font-family:var(--font-mono);">{{ match.away_score }}</span>
-                                </div>
+                        <a href="{% url 'predictor:match_detail' match.id %}" class="recent-result-card">
+                            <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
+                                {% if match.home_team_logo %}
+                                <img src="{% static match.home_team_logo %}" alt="" class="team-logo-sm">
+                                {% endif %}
+                                <span class="text-secondary" style="font-size:0.75rem;">{{ match.home_team }}</span>
+                                <span class="text-muted" style="font-size:0.6rem;">vs</span>
+                                <span class="text-secondary" style="font-size:0.75rem;">{{ match.away_team }}</span>
+                                {% if match.away_team_logo %}
+                                <img src="{% static match.away_team_logo %}" alt="" class="team-logo-sm">
+                                {% endif %}
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                <span class="gold-text fw-bold mono-number" style="font-size:1.8rem;">{{ match.home_score }}</span>
+                                <span class="text-secondary">&ndash;</span>
+                                <span class="gold-text fw-bold mono-number" style="font-size:1.8rem;">{{ match.away_score }}</span>
                             </div>
                         </a>
                     </div>

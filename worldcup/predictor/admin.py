@@ -2,18 +2,21 @@ import csv
 import io
 
 from django.contrib import admin, messages
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
+from django.urls import path, reverse
 from django.utils import timezone
 
-from .models import Match, Participant, Prediction
+from .models import Match, Participant, Prediction, KnockoutMatch
 
 
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
-    list_display = ('name', 'secret_code', 'is_active')
+    list_display = ('name', 'secret_code', 'is_active', 'is_admin')
     search_fields = ('name',)
-    list_filter = ('is_active',)
+    list_filter = ('is_active', 'is_admin')
     readonly_fields = ('created_at',)
+    list_editable = ('is_active', 'is_admin')
 
 
 @admin.register(Match)
@@ -24,16 +27,18 @@ class MatchAdmin(admin.ModelAdmin):
         'match_date',
         'kickoff_datetime',
         'status',
+        'stage',
         'home_score',
         'away_score',
     )
-    list_filter = ('status', 'match_date', 'group_stage')
+    list_filter = ('status', 'match_date', 'group_stage', 'stage')
     search_fields = ('home_team', 'away_team')
     date_hierarchy = 'match_date'
+    list_editable = ('status', 'home_score', 'away_score')
     actions = [
         'lock_predictions',
         'unlock_predictions',
-        'recalculate_scores',
+        'mark_completed',
         'export_csv',
         'export_excel',
     ]
@@ -56,16 +61,12 @@ class MatchAdmin(admin.ModelAdmin):
             messages.SUCCESS,
         )
 
-    @admin.action(description="Recalculate scores for selected matches")
-    def recalculate_scores(self, request, queryset):
-        count = 0
-        for match in queryset:
-            if match.status == 'completed':
-                count += match.predictions.count()
+    @admin.action(description="Mark selected matches as completed")
+    def mark_completed(self, request, queryset):
+        updated = queryset.filter(status='live').update(status='completed')
         self.message_user(
             request,
-            f"Score recalculation triggered for {count} prediction(s) across "
-            f"{queryset.count()} match(es).",
+            f"{updated} match(es) marked as completed.",
             messages.SUCCESS,
         )
 
@@ -125,16 +126,9 @@ class MatchAdmin(admin.ModelAdmin):
         ws.title = "Predictions"
 
         headers = [
-            'Participant',
-            'Match',
-            'Home Team',
-            'Away Team',
-            'Predicted Home Score',
-            'Predicted Away Score',
-            'Actual Home Score',
-            'Actual Away Score',
-            'Points',
-            'Submitted At',
+            'Participant', 'Match', 'Home Team', 'Away Team',
+            'Predicted Home Score', 'Predicted Away Score',
+            'Actual Home Score', 'Actual Away Score', 'Points', 'Submitted At',
         ]
         ws.append(headers)
 
@@ -144,19 +138,15 @@ class MatchAdmin(admin.ModelAdmin):
 
         for pred in predictions:
             ws.append([
-                pred.participant.name,
-                str(pred.match),
-                pred.match.home_team,
-                pred.match.away_team,
-                pred.home_score,
-                pred.away_score,
+                pred.participant.name, str(pred.match),
+                pred.match.home_team, pred.match.away_team,
+                pred.home_score, pred.away_score,
                 pred.match.home_score if pred.match.home_score is not None else '',
                 pred.match.away_score if pred.match.away_score is not None else '',
                 pred.points,
                 pred.submitted_at.strftime('%Y-%m-%d %H:%M:%S'),
             ])
 
-        # Auto-adjust column widths
         for column_cells in ws.columns:
             max_length = max(
                 len(str(cell.value or '')) for cell in column_cells
@@ -182,6 +172,15 @@ class MatchAdmin(admin.ModelAdmin):
 @admin.register(Prediction)
 class PredictionAdmin(admin.ModelAdmin):
     list_display = ('participant', 'match', 'home_score', 'away_score', 'submitted_at')
-    list_filter = ('match__match_date',)
+    list_filter = ('match__match_date', 'match__status')
     search_fields = ('participant__name',)
     readonly_fields = ('submitted_at', 'updated_at')
+    list_select_related = ('participant', 'match')
+
+
+@admin.register(KnockoutMatch)
+class KnockoutMatchAdmin(admin.ModelAdmin):
+    list_display = ('stage', 'position', 'home_team', 'away_team', 'home_score', 'away_score', 'is_completed')
+    list_filter = ('stage', 'is_completed')
+    list_editable = ('home_team', 'away_team', 'home_score', 'away_score', 'is_completed')
+    ordering = ('stage', 'position')
