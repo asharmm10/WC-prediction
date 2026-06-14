@@ -38,7 +38,7 @@ class ParticipantLoginForm(forms.Form):
     """Form for participant login with name dropdown and secret code."""
 
     name = forms.ModelChoiceField(
-        queryset=Participant.objects.filter(is_active=True),
+        queryset=Participant.objects.filter(is_active=True, is_admin=False),
         widget=forms.Select(
             attrs={
                 'class': 'form-select form-select-lg',

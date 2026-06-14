@@ -354,7 +354,7 @@
       return originalFetch.call(this, url, options);
     };
 
-    // Fix existing links & forms
+    // Fix existing links, forms, and images
     function fixAll() {
       document.querySelectorAll('a[href]').forEach(function (link) {
         const href = link.getAttribute('href');
@@ -365,6 +365,21 @@
         const action = form.getAttribute('action');
         const fixed = fixUrl(action);
         if (fixed !== action) form.setAttribute('action', fixed);
+      });
+      // Fix img src attributes to include XTransformPort
+      document.querySelectorAll('img[src]').forEach(function (img) {
+        const src = img.getAttribute('src');
+        const fixed = fixUrl(src);
+        if (fixed !== src) img.setAttribute('src', fixed);
+      });
+      // Fix CSS background-image URLs in style attributes
+      document.querySelectorAll('[style*="url("]').forEach(function (el) {
+        const style = el.getAttribute('style');
+        const fixed = style.replace(/url\(['"]?(\/[^'")\s]+)['"]?\)/g, function(match, url) {
+          const fixedUrl = fixUrl(url);
+          return match.replace(url, fixedUrl);
+        });
+        if (fixed !== style) el.setAttribute('style', fixed);
       });
     }
 

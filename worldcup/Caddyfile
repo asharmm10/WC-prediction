@@ -1,0 +1,13 @@
+:80 {
+    handle /static/* {
+        root * /app
+        file_server
+    }
+    handle /media/* {
+        root * /app
+        file_server
+    }
+    handle {
+        reverse_proxy web:8000
+    }
+}

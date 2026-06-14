@@ -1,0 +1,1780 @@
+     1→/* ==========================================================================
+     2→   FIFA World Cup 2026 Family Prediction League
+     3→   Premium LIQUID GLASS Theme — Vibrant Deep Space & Gold
+     4→   ==========================================================================
+     5→   Design: Liquid glassmorphism with vibrant multi-colored parallax backgrounds,
+     6→   player silhouettes with scroll interaction, stadium atmosphere.
+     7→   ========================================================================== */
+     8→
+     9→/* --------------------------------------------------------------------------
+    10→   CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+    11→   -------------------------------------------------------------------------- */
+    12→:root {
+    13→  /* — Deep Space Backgrounds — */
+    14→  --bg-primary:           #050810;
+    15→  --bg-secondary:         #0a1020;
+    16→  --bg-tertiary:          #0f1525;
+    17→  --bg-card:              rgba(10, 15, 30, 0.6);
+    18→  --bg-card-hover:        rgba(12, 18, 35, 0.8);
+    19→  --bg-glass:             rgba(10, 15, 30, 0.4);
+    20→  --bg-glass-light:       rgba(15, 22, 42, 0.3);
+    21→  --bg-glass-hover:       rgba(18, 26, 50, 0.6);
+    22→  --bg-glass-premium:     rgba(12, 18, 38, 0.45);
+    23→  --bg-input:             rgba(12, 18, 35, 0.8);
+    24→  --bg-input-focus:       rgba(18, 26, 50, 0.9);
+    25→
+    26→  /* — Gold Accent — */
+    27→  --gold:                 #d4af37;
+    28→  --gold-light:           #f5d442;
+    29→  --gold-dark:            #b8960c;
+    30→  --gold-gradient:        linear-gradient(135deg, #d4af37, #f5d442, #d4af37);
+    31→  --gold-gradient-hover:  linear-gradient(135deg, #e6c44e, #fde68a, #e6c44e);
+    32→  --gold-text-gradient:   linear-gradient(135deg, #d4af37 0%, #f5d442 50%, #d4af37 100%);
+    33→  --gold-shimmer:         linear-gradient(
+    34→                            115deg,
+    35→                            transparent 30%,
+    36→                            rgba(245, 212, 66, 0.1) 45%,
+    37→                            rgba(245, 212, 66, 0.22) 50%,
+    38→                            rgba(245, 212, 66, 0.1) 55%,
+    39→                            transparent 70%
+    40→                          );
+    41→
+    42→  /* — Text — */
+    43→  --text-primary:         #f0f0f0;
+    44→  --text-secondary:       #9ca3af;
+    45→  --text-muted:           #6b7280;
+    46→  --text-gold:            #f5d442;
+    47→
+    48→  /* — Liquid Glass — */
+    49→  --glass-border:         rgba(255, 255, 255, 0.08);
+    50→  --glass-border-hover:   rgba(255, 255, 255, 0.15);
+    51→  --glass-border-gold:    rgba(212, 175, 55, 0.25);
+    52→  --glass-shadow:         0 8px 32px rgba(0, 0, 0, 0.5),
+    53→                          0 2px 8px rgba(0, 0, 0, 0.3),
+    54→                          inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    55→  --glass-shadow-hover:   0 20px 60px rgba(0, 0, 0, 0.6),
+    56→                          0 4px 16px rgba(0, 0, 0, 0.4),
+    57→                          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    58→  --glass-glow:           0 0 20px rgba(212, 175, 55, 0.08);
+    59→  --glass-glow-hover:     0 0 50px rgba(212, 175, 55, 0.15);
+    60→  --glass-inner-glow:     inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    61→  --glass-inner-glow-strong: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    62→
+    63→  /* — Liquid Glass Extra (refraction, depth) — */
+    64→  --liquid-blur:          24px;
+    65→  --liquid-blur-strong:   40px;
+    66→  --liquid-saturate:      1.6;
+    67→  --liquid-brightness:    1.15;
+    68→  --liquid-refraction:    blur(0.5px) brightness(1.08) saturate(1.3);
+    69→
+    70→  /* — Borders — */
+    71→  --border-subtle:        rgba(255, 255, 255, 0.05);
+    72→  --border-gold:          rgba(212, 175, 55, 0.3);
+    73→
+    74→  /* — Status Colors — */
+    75→  --success:              #10b981;
+    76→  --success-bg:           rgba(16, 185, 129, 0.1);
+    77→  --danger:               #ef4444;
+    78→  --danger-bg:            rgba(239, 68, 68, 0.1);
+    79→  --warning:              #f59e0b;
+    80→  --warning-bg:           rgba(245, 158, 11, 0.1);
+    81→  --info:                 #3b82f6;
+    82→  --info-bg:              rgba(59, 130, 246, 0.1);
+    83→
+    84→  /* — Fonts — */
+    85→  --font-sans:            'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    86→  --font-mono:            'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    87→  --font-display:         'Montserrat', 'Outfit', var(--font-sans);
+    88→  --font-heading:         'Montserrat', sans-serif;
+    89→
+    90→  /* — Medals — */
+    91→  --medal-gold:           #FFD700;
+    92→  --medal-silver:         #C0C0C0;
+    93→  --medal-bronze:         #CD7F32;
+    94→
+    95→  /* — Radius — */
+    96→  --radius-sm:            0.5rem;
+    97→  --radius-md:            0.75rem;
+    98→  --radius-lg:            1rem;
+    99→  --radius-xl:            1.25rem;
+   100→  --radius-2xl:           1.5rem;
+   101→  --radius-3xl:           2rem;
+   102→
+   103→  /* — Transitions — */
+   104→  --transition-fast:      150ms ease;
+   105→  --transition-normal:    250ms ease;
+   106→  --transition-slow:      400ms cubic-bezier(0.4, 0, 0.2, 1);
+   107→  --transition-glass:     0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+   108→}
+   109→
+   110→
+   111→/* ==========================================================================
+   112→   BASE RESET & BODY
+   113→   ========================================================================== */
+   114→*,
+   115→*::before,
+   116→*::after {
+   117→  box-sizing: border-box;
+   118→}
+   119→
+   120→html {
+   121→  scroll-behavior: smooth;
+   122→  -webkit-font-smoothing: antialiased;
+   123→  -moz-osx-font-smoothing: grayscale;
+   124→}
+   125→
+   126→body {
+   127→  font-family: var(--font-sans);
+   128→  background-color: var(--bg-primary);
+   129→  color: var(--text-primary);
+   130→  line-height: 1.6;
+   131→  overflow-x: hidden;
+   132→  min-height: 100vh;
+   133→  position: relative;
+   134→}
+   135→
+   136→::selection {
+   137→  background: rgba(212, 175, 55, 0.3);
+   138→  color: var(--text-primary);
+   139→}
+   140→
+   141→
+   142→/* ==========================================================================
+   143→   VIBRANT MULTI-COLOR BACKGROUND SYSTEM
+   144→   Rich, colorful gradient layers that make glassmorphism POP
+   145→   ========================================================================== */
+   146→
+   147→/* Layer 1: Deep gradient base with more color */
+   148→.bg-layer-base {
+   149→  position: fixed;
+   150→  inset: 0;
+   151→  z-index: 0;
+   152→  background:
+   153→    radial-gradient(ellipse at 15% 5%, rgba(212, 175, 55, 0.06) 0%, transparent 45%),
+   154→    radial-gradient(ellipse at 85% 10%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+   155→    radial-gradient(ellipse at 50% 90%, rgba(16, 185, 129, 0.04) 0%, transparent 40%),
+   156→    radial-gradient(ellipse at 70% 50%, rgba(139, 92, 246, 0.03) 0%, transparent 35%),
+   157→    radial-gradient(ellipse at 20% 70%, rgba(239, 68, 68, 0.03) 0%, transparent 35%),
+   158→    linear-gradient(180deg, #050810 0%, #080e1c 30%, #0a1225 60%, #050810 100%);
+   159→  pointer-events: none;
+   160→}
+   161→
+   162→/* Layer 2: Stadium background image */
+   163→.bg-layer-stadium {
+   164→  position: fixed;
+   165→  inset: 0;
+   166→  z-index: 0;
+   167→  background-image: url('/static/images/bg/stadium_bg.jpg');
+   168→  background-size: cover;
+   169→  background-position: center top;
+   170→  background-repeat: no-repeat;
+   171→  opacity: 0.07;
+   172→  filter: blur(2px) saturate(0.5);
+   173→  pointer-events: none;
+   174→}
+   175→
+   176→/* Layer 3: Hexagonal pattern overlay */
+   177→.bg-layer-pattern {
+   178→  position: fixed;
+   179→  inset: 0;
+   180→  z-index: 0;
+   181→  background-image: url('/static/images/bg/dark_pattern_bg.jpg');
+   182→  background-size: cover;
+   183→  background-position: center;
+   184→  background-repeat: no-repeat;
+   185→  opacity: 0.1;
+   186→  mix-blend-mode: overlay;
+   187→  pointer-events: none;
+   188→}
+   189→
+   190→/* Layer 4: ANIMATED VIBRANT GRADIENT ORBS - More colors, higher opacity */
+   191→.bg-layer-orbs {
+   192→  position: fixed;
+   193→  inset: 0;
+   194→  z-index: 0;
+   195→  pointer-events: none;
+   196→  overflow: hidden;
+   197→}
+   198→
+   199→.bg-orb {
+   200→  position: absolute;
+   201→  border-radius: 50%;
+   202→  filter: blur(100px);
+   203→  opacity: 0.18;
+   204→  animation: orbFloat 20s ease-in-out infinite;
+   205→}
+   206→
+   207→.bg-orb-1 {
+   208→  width: 600px;
+   209→  height: 600px;
+   210→  background: radial-gradient(circle, rgba(212, 175, 55, 0.4), transparent 70%);
+   211→  top: -8%;
+   212→  left: -8%;
+   213→  animation-duration: 25s;
+   214→}
+   215→
+   216→.bg-orb-2 {
+   217→  width: 500px;
+   218→  height: 500px;
+   219→  background: radial-gradient(circle, rgba(59, 130, 246, 0.35), transparent 70%);
+   220→  top: 40%;
+   221→  right: -8%;
+   222→  animation-duration: 30s;
+   223→  animation-delay: -10s;
+   224→}
+   225→
+   226→.bg-orb-3 {
+   227→  width: 450px;
+   228→  height: 450px;
+   229→  background: radial-gradient(circle, rgba(16, 185, 129, 0.3), transparent 70%);
+   230→  bottom: -5%;
+   231→  left: 20%;
+   232→  animation-duration: 22s;
+   233→  animation-delay: -5s;
+   234→}
+   235→
+   236→.bg-orb-4 {
+   237→  width: 400px;
+   238→  height: 400px;
+   239→  background: radial-gradient(circle, rgba(139, 92, 246, 0.25), transparent 70%);
+   240→  top: 25%;
+   241→  left: 45%;
+   242→  animation-duration: 28s;
+   243→  animation-delay: -15s;
+   244→}
+   245→
+   246→.bg-orb-5 {
+   247→  width: 350px;
+   248→  height: 350px;
+   249→  background: radial-gradient(circle, rgba(239, 68, 68, 0.2), transparent 70%);
+   250→  top: 60%;
+   251→  left: 5%;
+   252→  animation-duration: 26s;
+   253→  animation-delay: -8s;
+   254→}
+   255→
+   256→.bg-orb-6 {
+   257→  width: 380px;
+   258→  height: 380px;
+   259→  background: radial-gradient(circle, rgba(6, 182, 212, 0.2), transparent 70%);
+   260→  top: 10%;
+   261→  right: 25%;
+   262→  animation-duration: 32s;
+   263→  animation-delay: -18s;
+   264→}
+   265→
+   266→.bg-orb-7 {
+   267→  width: 300px;
+   268→  height: 300px;
+   269→  background: radial-gradient(circle, rgba(245, 158, 11, 0.25), transparent 70%);
+   270→  bottom: 20%;
+   271→  right: 10%;
+   272→  animation-duration: 24s;
+   273→  animation-delay: -12s;
+   274→}
+   275→
+   276→@keyframes orbFloat {
+   277→  0%, 100% { transform: translate(0, 0) scale(1); }
+   278→  25% { transform: translate(40px, -50px) scale(1.08); }
+   279→  50% { transform: translate(-30px, 30px) scale(0.92); }
+   280→  75% { transform: translate(20px, 45px) scale(1.05); }
+   281→}
+   282→
+   283→
+   284→/* Player parallax removed — caused mobile flickering */
+   285→
+   286→/* Layer 6: WC Logo & Trophy watermarks — MORE VISIBLE */
+   287→.bg-watermark {
+   288→  position: fixed;
+   289→  z-index: 0;
+   290→  pointer-events: none;
+   291→  opacity: 0.06;
+   292→  filter: brightness(1.5) saturate(0.5);
+   293→  animation: watermarkFloat 30s ease-in-out infinite;
+   294→}
+   295→
+   296→.bg-watermark-logo {
+   297→  top: 8%;
+   298→  right: 5%;
+   299→  width: 250px;
+   300→  height: auto;
+   301→}
+   302→
+   303→.bg-watermark-trophy {
+   304→  bottom: 12%;
+   305→  left: 5%;
+   306→  width: 200px;
+   307→  height: auto;
+   308→  animation-delay: -15s;
+   309→}
+   310→
+   311→@keyframes watermarkFloat {
+   312→  0%, 100% { transform: translateY(0) rotate(0deg); }
+   313→  50% { transform: translateY(-20px) rotate(2deg); }
+   314→}
+   315→
+   316→/* Layer 7: Stadium lights effect */
+   317→.stadium-lights {
+   318→  position: fixed;
+   319→  top: 0;
+   320→  left: 0;
+   321→  width: 100%;
+   322→  height: 100%;
+   323→  pointer-events: none;
+   324→  z-index: 0;
+   325→  overflow: hidden;
+   326→}
+   327→
+   328→.stadium-lights::before {
+   329→  content: '';
+   330→  position: absolute;
+   331→  top: -20%;
+   332→  left: 10%;
+   333→  width: 35%;
+   334→  height: 60%;
+   335→  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.02) 0%, transparent 70%);
+   336→  transform: rotate(-15deg);
+   337→  animation: stadiumLightSway1 12s ease-in-out infinite;
+   338→}
+   339→
+   340→.stadium-lights::after {
+   341→  content: '';
+   342→  position: absolute;
+   343→  top: -15%;
+   344→  right: 10%;
+   345→  width: 30%;
+   346→  height: 55%;
+   347→  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.015) 0%, transparent 70%);
+   348→  transform: rotate(15deg);
+   349→  animation: stadiumLightSway2 14s ease-in-out infinite;
+   350→}
+   351→
+   352→@keyframes stadiumLightSway1 {
+   353→  0%, 100% { transform: rotate(-15deg) translateX(0); opacity: 0.7; }
+   354→  50% { transform: rotate(-10deg) translateX(3%); opacity: 1; }
+   355→}
+   356→
+   357→@keyframes stadiumLightSway2 {
+   358→  0%, 100% { transform: rotate(15deg) translateX(0); opacity: 0.6; }
+   359→  50% { transform: rotate(12deg) translateX(-3%); opacity: 1; }
+   360→}
+   361→
+   362→/* Layer 8: Grid lines overlay (subtle) */
+   363→.bg-layer-grid {
+   364→  position: fixed;
+   365→  inset: 0;
+   366→  z-index: 0;
+   367→  pointer-events: none;
+   368→  background-image:
+   369→    linear-gradient(rgba(212, 175, 55, 0.02) 1px, transparent 1px),
+   370→    linear-gradient(90deg, rgba(212, 175, 55, 0.02) 1px, transparent 1px);
+   371→  background-size: 80px 80px;
+   372→  mask-image: radial-gradient(ellipse at 50% 50%, black 20%, transparent 70%);
+   373→  -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 20%, transparent 70%);
+   374→  opacity: 0.5;
+   375→}
+   376→
+   377→/* Main content sits above all background layers */
+   378→main, .main-content {
+   379→  position: relative;
+   380→  z-index: 2;
+   381→}
+   382→
+   383→
+   384→/* ==========================================================================
+   385→   PARTICLES CANVAS
+   386→   ========================================================================== */
+   387→/* Particle canvas removed — caused mobile flickering */
+   388→
+   389→
+   390→/* ==========================================================================
+   391→   FLOATING FOOTBALLS
+   392→   ========================================================================== */
+   393→/* Floating footballs removed — caused mobile flickering */
+   394→
+   395→
+   396→/* ==========================================================================
+   397→   LIQUID GLASS CARD SYSTEM
+   398→   Enhanced glassmorphism with deeper refraction, stronger blur,
+   399→   more visible borders, and team color accents
+   400→   ========================================================================== */
+   401→
+   402→/* Standard glass card */
+   403→.glass-card {
+   404→  background: rgba(10, 15, 30, 0.45);
+   405→  backdrop-filter: blur(var(--liquid-blur)) saturate(var(--liquid-saturate)) brightness(var(--liquid-brightness));
+   406→  -webkit-backdrop-filter: blur(var(--liquid-blur)) saturate(var(--liquid-saturate)) brightness(var(--liquid-brightness));
+   407→  border: 1px solid var(--glass-border);
+   408→  border-radius: var(--radius-2xl);
+   409→  box-shadow: var(--glass-shadow);
+   410→  transition: all var(--transition-glass);
+   411→  position: relative;
+   412→  overflow: hidden;
+   413→}
+   414→
+   415→/* Refraction highlight on glass — more visible */
+   416→.glass-card::before {
+   417→  content: '';
+   418→  position: absolute;
+   419→  top: 0;
+   420→  left: 0;
+   421→  right: 0;
+   422→  height: 50%;
+   423→  background: linear-gradient(
+   424→    180deg,
+   425→    rgba(255, 255, 255, 0.05) 0%,
+   426→    rgba(255, 255, 255, 0.02) 40%,
+   427→    transparent 100%
+   428→  );
+   429→  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+   430→  pointer-events: none;
+   431→  z-index: 0;
+   432→}
+   433→
+   434→/* Shimmer sweep on hover */
+   435→.glass-card::after {
+   436→  content: '';
+   437→  position: absolute;
+   438→  top: 0;
+   439→  left: -100%;
+   440→  width: 100%;
+   441→  height: 100%;
+   442→  background: var(--gold-shimmer);
+   443→  pointer-events: none;
+   444→  z-index: 1;
+   445→  transition: left 0.6s ease;
+   446→}
+   447→
+   448→.glass-card:hover {
+   449→  background: rgba(12, 18, 35, 0.6);
+   450→  border-color: var(--glass-border-hover);
+   451→  box-shadow: var(--glass-shadow-hover), var(--glass-glow);
+   452→  transform: translateY(-2px);
+   453→}
+   454→
+   455→.glass-card:hover::after {
+   456→  left: 100%;
+   457→}
+   458→
+   459→/* Content inside glass cards should be above pseudo-elements */
+   460→.glass-card > * {
+   461→  position: relative;
+   462→  z-index: 2;
+   463→}
+   464→
+   465→/* Gold-accented glass card */
+   466→.glass-card-gold {
+   467→  background: rgba(10, 15, 30, 0.45);
+   468→  backdrop-filter: blur(var(--liquid-blur)) saturate(var(--liquid-saturate)) brightness(var(--liquid-brightness));
+   469→  -webkit-backdrop-filter: blur(var(--liquid-blur)) saturate(var(--liquid-saturate)) brightness(var(--liquid-brightness));
+   470→  border: 1px solid var(--glass-border-gold);
+   471→  border-radius: var(--radius-2xl);
+   472→  box-shadow: var(--glass-shadow), var(--glass-glow);
+   473→  transition: all var(--transition-glass);
+   474→  position: relative;
+   475→  overflow: hidden;
+   476→}
+   477→
+   478→.glass-card-gold::before {
+   479→  content: '';
+   480→  position: absolute;
+   481→  top: 0;
+   482→  left: 0;
+   483→  right: 0;
+   484→  height: 45%;
+   485→  background: linear-gradient(
+   486→    180deg,
+   487→    rgba(212, 175, 55, 0.04) 0%,
+   488→    transparent 100%
+   489→  );
+   490→  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+   491→  pointer-events: none;
+   492→}
+   493→
+   494→.glass-card-gold:hover {
+   495→  border-color: rgba(212, 175, 55, 0.4);
+   496→  box-shadow: var(--glass-shadow-hover), var(--glass-glow-hover);
+   497→}
+   498→
+   499→.glass-card-gold > * {
+   500→  position: relative;
+   501→  z-index: 2;
+   502→}
+   503→
+   504→
+   505→/* ==========================================================================
+   506→   TYPOGRAPHY — Montserrat Headings, Outfit Body, JetBrains Mono Numbers
+   507→   ========================================================================== */
+   508→
+   509→h1, h2, h3, h4, h5, h6,
+   510→.h1, .h2, .h3, .h4, .h5, .h6 {
+   511→  font-family: var(--font-heading);
+   512→  letter-spacing: -0.02em;
+   513→}
+   514→
+   515→h1, .h1 {
+   516→  font-weight: 900;
+   517→  letter-spacing: -0.03em;
+   518→}
+   519→
+   520→h2, .h2 {
+   521→  font-weight: 800;
+   522→}
+   523→
+   524→h3, .h3 {
+   525→  font-weight: 700;
+   526→}
+   527→
+   528→/* Gold gradient text */
+   529→.gold-text {
+   530→  background: var(--gold-text-gradient);
+   531→  -webkit-background-clip: text;
+   532→  -webkit-text-fill-color: transparent;
+   533→  background-clip: text;
+   534→  background-size: 200% auto;
+   535→  animation: goldShimmerText 4s linear infinite;
+   536→}
+   537→
+   538→@keyframes goldShimmerText {
+   539→  0% { background-position: 0% center; }
+   540→  100% { background-position: 200% center; }
+   541→}
+   542→
+   543→/* Monospace numbers */
+   544→.mono-number {
+   545→  font-family: var(--font-mono);
+   546→  font-weight: 800;
+   547→  letter-spacing: 0.02em;
+   548→}
+   549→
+   550→/* Display heading — big bold titles */
+   551→.display-title {
+   552→  font-family: var(--font-heading);
+   553→  font-weight: 900;
+   554→  font-size: clamp(2.5rem, 8vw, 5rem);
+   555→  line-height: 1;
+   556→  letter-spacing: -0.04em;
+   557→  text-transform: uppercase;
+   558→}
+   559→
+   560→
+   561→/* ==========================================================================
+   562→   NAVBAR — Liquid Glass
+   563→   ========================================================================== */
+   564→.navbar-dark-custom {
+   565→  background: rgba(5, 8, 16, 0.7);
+   566→  backdrop-filter: blur(30px) saturate(1.5) brightness(1.1);
+   567→  -webkit-backdrop-filter: blur(30px) saturate(1.5) brightness(1.1);
+   568→  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+   569→  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+   570→  padding: 0.5rem 0;
+   571→  transition: all 0.3s ease;
+   572→}
+   573→
+   574→.navbar-dark-custom.scrolled {
+   575→  background: rgba(5, 8, 16, 0.9);
+   576→  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.6);
+   577→}
+   578→
+   579→.brand-text {
+   580→  font-family: var(--font-heading);
+   581→  font-weight: 900;
+   582→  font-size: 1.3rem;
+   583→  letter-spacing: 1px;
+   584→}
+   585→
+   586→.navbar-dark-custom .nav-link {
+   587→  color: rgba(255, 255, 255, 0.7);
+   588→  font-weight: 600;
+   589→  font-size: 0.9rem;
+   590→  padding: 0.5rem 1rem;
+   591→  border-radius: var(--radius-md);
+   592→  transition: all 0.2s ease;
+   593→  font-family: var(--font-sans);
+   594→}
+   595→
+   596→.navbar-dark-custom .nav-link:hover {
+   597→  color: #fff;
+   598→  background: rgba(212, 175, 55, 0.08);
+   599→}
+   600→
+   601→.navbar-dark-custom .nav-link.active {
+   602→  color: var(--gold-light) !important;
+   603→  background: rgba(212, 175, 55, 0.12);
+   604→  border-bottom: 2px solid var(--gold);
+   605→}
+   606→
+   607→.border-gold {
+   608→  border-color: rgba(212, 175, 55, 0.3) !important;
+   609→}
+   610→
+   611→.participant-chip {
+   612→  display: inline-flex;
+   613→  align-items: center;
+   614→  gap: 6px;
+   615→  padding: 4px 14px;
+   616→  background: rgba(212, 175, 55, 0.08);
+   617→  border: 1px solid rgba(212, 175, 55, 0.15);
+   618→  border-radius: 50px;
+   619→  color: var(--gold-light);
+   620→  font-size: 0.82rem;
+   621→  font-weight: 600;
+   622→  white-space: nowrap;
+   623→}
+   624→
+   625→
+   626→/* ==========================================================================
+   627→   BUTTONS
+   628→   ========================================================================== */
+   629→
+   630→/* Gold Primary Button — MORE PROMINENT */
+   631→.btn-gold {
+   632→  background: var(--gold-gradient);
+   633→  color: #0a0e17;
+   634→  font-weight: 700;
+   635→  font-family: var(--font-heading);
+   636→  border: none;
+   637→  border-radius: var(--radius-xl);
+   638→  padding: 0.6rem 1.8rem;
+   639→  font-size: 0.95rem;
+   640→  letter-spacing: 0.5px;
+   641→  position: relative;
+   642→  overflow: hidden;
+   643→  transition: all 0.3s ease;
+   644→  text-decoration: none;
+   645→}
+   646→
+   647→.btn-gold:hover {
+   648→  background: var(--gold-gradient-hover);
+   649→  color: #0a0e17;
+   650→  transform: translateY(-2px);
+   651→  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3), 0 0 60px rgba(212, 175, 55, 0.15);
+   652→}
+   653→
+   654→.btn-gold:active {
+   655→  transform: translateY(0);
+   656→}
+   657→
+   658→.btn-gold::after {
+   659→  content: '';
+   660→  position: absolute;
+   661→  top: -50%;
+   662→  left: -50%;
+   663→  width: 200%;
+   664→  height: 200%;
+   665→  background: linear-gradient(
+   666→    45deg,
+   667→    transparent 40%,
+   668→    rgba(255, 255, 255, 0.2) 50%,
+   669→    transparent 60%
+   670→  );
+   671→  transform: rotate(45deg) translateX(-100%);
+   672→  transition: transform 0.6s ease;
+   673→}
+   674→
+   675→.btn-gold:hover::after {
+   676→  transform: rotate(45deg) translateX(100%);
+   677→}
+   678→
+   679→/* Gold Outline Button */
+   680→.btn-gold-outline {
+   681→  background: transparent;
+   682→  color: var(--gold);
+   683→  font-weight: 600;
+   684→  font-family: var(--font-heading);
+   685→  border: 1.5px solid rgba(212, 175, 55, 0.35);
+   686→  border-radius: var(--radius-xl);
+   687→  padding: 0.5rem 1.5rem;
+   688→  font-size: 0.9rem;
+   689→  transition: all 0.3s ease;
+   690→  text-decoration: none;
+   691→}
+   692→
+   693→.btn-gold-outline:hover {
+   694→  background: rgba(212, 175, 55, 0.08);
+   695→  border-color: rgba(212, 175, 55, 0.6);
+   696→  color: var(--gold-light);
+   697→  box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+   698→}
+   699→
+   700→/* Glow pulse animation for CTA buttons */
+   701→.btn-glow {
+   702→  animation: btnGlowPulse 2.5s ease-in-out infinite;
+   703→}
+   704→
+   705→@keyframes btnGlowPulse {
+   706→  0%, 100% {
+   707→    box-shadow: 0 0 15px rgba(212, 175, 55, 0.15), 0 0 30px rgba(212, 175, 55, 0.05);
+   708→  }
+   709→  50% {
+   710→    box-shadow: 0 0 25px rgba(212, 175, 55, 0.3), 0 0 50px rgba(212, 175, 55, 0.1);
+   711→  }
+   712→}
+   713→
+   714→/* CTA pulse — even more noticeable */
+   715→.btn-cta-pulse {
+   716→  animation: ctaPulse 2s ease-in-out infinite;
+   717→  font-size: 1.1rem;
+   718→  padding: 14px 36px;
+   719→  min-height: 56px;
+   720→}
+   721→
+   722→@keyframes ctaPulse {
+   723→  0%, 100% {
+   724→    transform: scale(1);
+   725→    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2), 0 0 40px rgba(212, 175, 55, 0.08);
+   726→  }
+   727→  50% {
+   728→    transform: scale(1.03);
+   729→    box-shadow: 0 0 30px rgba(212, 175, 55, 0.4), 0 0 60px rgba(212, 175, 55, 0.15);
+   730→  }
+   731→}
+   732→
+   733→
+   734→/* ==========================================================================
+   735→   MODERN MATCH CARD
+   736→   Premium card design with team logos, color accents, score display
+   737→   ========================================================================== */
+   738→
+   739→.match-card {
+   740→  background: rgba(10, 15, 30, 0.5);
+   741→  backdrop-filter: blur(20px) saturate(1.4) brightness(1.1);
+   742→  -webkit-backdrop-filter: blur(20px) saturate(1.4) brightness(1.1);
+   743→  border: 1px solid rgba(255, 255, 255, 0.06);
+   744→  border-radius: var(--radius-2xl);
+   745→  padding: 1.5rem;
+   746→  position: relative;
+   747→  overflow: hidden;
+   748→  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+   749→  text-decoration: none;
+   750→  color: inherit;
+   751→  display: block;
+   752→}
+   753→
+   754→/* Team color accent bar at top */
+   755→.match-card .match-accent-bar {
+   756→  position: absolute;
+   757→  top: 0;
+   758→  left: 0;
+   759→  right: 0;
+   760→  height: 3px;
+   761→  background: linear-gradient(90deg, var(--home-color, rgba(59,130,246,0.5)), rgba(255,255,255,0.1), var(--away-color, rgba(239,68,68,0.5)));
+   762→  opacity: 0.6;
+   763→}
+   764→
+   765→.match-card::before {
+   766→  content: '';
+   767→  position: absolute;
+   768→  top: 0;
+   769→  left: 0;
+   770→  right: 0;
+   771→  height: 40%;
+   772→  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+   773→  pointer-events: none;
+   774→  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+   775→}
+   776→
+   777→.match-card:hover {
+   778→  border-color: rgba(212, 175, 55, 0.2);
+   779→  background: rgba(12, 18, 35, 0.65);
+   780→  transform: translateY(-4px);
+   781→  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), 0 0 30px rgba(212, 175, 55, 0.06);
+   782→}
+   783→
+   784→/* Match card inner */
+   785→.match-card-body {
+   786→  display: flex;
+   787→  align-items: center;
+   788→  gap: 0.5rem;
+   789→}
+   790→
+   791→.match-team {
+   792→  flex: 1;
+   793→  min-width: 0;
+   794→  display: flex;
+   795→  align-items: center;
+   796→  gap: 6px;
+   797→}
+   798→
+   799→.match-team.home-team {
+   800→  justify-content: flex-end;
+   801→  text-align: right;
+   802→}
+   803→
+   804→.match-team.away-team {
+   805→  justify-content: flex-start;
+   806→  text-align: left;
+   807→}
+   808→
+   809→.match-team-logo {
+   810→  width: 36px;
+   811→  height: 36px;
+   812→  object-fit: contain;
+   813→  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+   814→  flex-shrink: 0;
+   815→  transition: transform 0.3s ease;
+   816→}
+   817→
+   818→.match-card:hover .match-team-logo {
+   819→  transform: scale(1.1);
+   820→}
+   821→
+   822→.match-team-name {
+   823→  font-family: var(--font-heading);
+   824→  font-weight: 700;
+   825→  font-size: 0.8rem;
+   826→  color: #fff;
+   827→  white-space: nowrap;
+   828→  overflow: hidden;
+   829→  text-overflow: ellipsis;
+   830→  line-height: 1.2;
+   831→}
+   832→
+   833→.match-vs-section {
+   834→  display: flex;
+   835→  flex-direction: column;
+   836→  align-items: center;
+   837→  gap: 0.25rem;
+   838→}
+   839→
+   840→.match-vs-text {
+   841→  font-family: var(--font-mono);
+   842→  font-weight: 800;
+   843→  color: var(--text-muted);
+   844→  font-size: 0.7rem;
+   845→  letter-spacing: 2px;
+   846→  text-transform: uppercase;
+   847→}
+   848→
+   849→.match-score-display {
+   850→  font-family: var(--font-mono);
+   851→  font-weight: 900;
+   852→  font-size: 1.8rem;
+   853→  color: var(--gold-light);
+   854→  text-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
+   855→  letter-spacing: 2px;
+   856→}
+   857→
+   858→.match-time-badge {
+   859→  font-family: var(--font-mono);
+   860→  font-weight: 700;
+   861→  font-size: 0.7rem;
+   862→  color: rgba(255,255,255,0.5);
+   863→  letter-spacing: 1px;
+   864→}
+   865→
+   866→/* Match card meta (bottom) */
+   867→.match-card-meta {
+   868→  display: flex;
+   869→  justify-content: space-between;
+   870→  align-items: center;
+   871→  margin-top: 1rem;
+   872→  padding-top: 0.75rem;
+   873→  border-top: 1px solid rgba(255, 255, 255, 0.04);
+   874→}
+   875→
+   876→.match-stage-badge {
+   877→  font-size: 0.65rem;
+   878→  font-weight: 700;
+   879→  padding: 3px 10px;
+   880→  border-radius: 50px;
+   881→  text-transform: uppercase;
+   882→  letter-spacing: 1px;
+   883→  font-family: var(--font-heading);
+   884→}
+   885→
+   886→.match-stage-badge.group {
+   887→  background: rgba(59, 130, 246, 0.1);
+   888→  color: #60a5fa;
+   889→  border: 1px solid rgba(59, 130, 246, 0.2);
+   890→}
+   891→
+   892→.match-stage-badge.knockout {
+   893→  background: rgba(212, 175, 55, 0.1);
+   894→  color: #f5d442;
+   895→  border: 1px solid rgba(212, 175, 55, 0.2);
+   896→}
+   897→
+   898→.match-status-badge {
+   899→  font-size: 0.65rem;
+   900→  font-weight: 700;
+   901→  padding: 3px 10px;
+   902→  border-radius: 50px;
+   903→  text-transform: uppercase;
+   904→  letter-spacing: 1px;
+   905→}
+   906→
+   907→.match-status-badge.open {
+   908→  background: rgba(16, 185, 129, 0.1);
+   909→  color: #10b981;
+   910→  border: 1px solid rgba(16, 185, 129, 0.2);
+   911→}
+   912→
+   913→.match-status-badge.locked {
+   914→  background: rgba(239, 68, 68, 0.1);
+   915→  color: #ef4444;
+   916→  border: 1px solid rgba(239, 68, 68, 0.2);
+   917→}
+   918→
+   919→.match-status-badge.completed {
+   920→  background: rgba(59, 130, 246, 0.1);
+   921→  color: #60a5fa;
+   922→  border: 1px solid rgba(59, 130, 246, 0.2);
+   923→}
+   924→
+   925→/* Predicted indicator */
+   926→.match-predicted-badge {
+   927→  font-size: 0.65rem;
+   928→  font-weight: 700;
+   929→  padding: 3px 10px;
+   930→  border-radius: 50px;
+   931→  background: rgba(16, 185, 129, 0.1);
+   932→  color: #10b981;
+   933→  border: 1px solid rgba(16, 185, 129, 0.2);
+   934→}
+   935→
+   936→/* Mobile match card */
+   937→@media (max-width: 576px) {
+   938→  .match-card {
+   939→    padding: 0.75rem;
+   940→  }
+   941→  .match-team-logo {
+   942→    width: 28px;
+   943→    height: 28px;
+   944→  }
+   945→  .match-team-name {
+   946→    font-size: 0.7rem;
+   947→  }
+   948→  .match-score-display {
+   949→    font-size: 1.2rem;
+   950→  }
+   951→  .match-card-body {
+   952→    gap: 0.25rem;
+   953→  }
+   954→}
+   955→
+   956→
+   957→/* ==========================================================================
+   958→   PREDICTION INLINE FORM
+   959→   ========================================================================== */
+   960→.prediction-inline {
+   961→  display: flex;
+   962→  align-items: center;
+   963→  gap: 8px;
+   964→}
+   965→
+   966→.prediction-inline .score-input {
+   967→  width: 56px;
+   968→  text-align: center;
+   969→  background: rgba(12, 18, 35, 0.8);
+   970→  border: 1px solid rgba(255, 255, 255, 0.08);
+   971→  border-radius: var(--radius-md);
+   972→  color: var(--gold-light);
+   973→  font-family: var(--font-mono);
+   974→  font-weight: 800;
+   975→  font-size: 1.2rem;
+   976→  padding: 8px;
+   977→  transition: all 0.2s ease;
+   978→}
+   979→
+   980→.prediction-inline .score-input:focus {
+   981→  border-color: rgba(212, 175, 55, 0.4);
+   982→  box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+   983→  outline: none;
+   984→}
+   985→
+   986→.prediction-inline .score-separator {
+   987→  color: var(--text-muted);
+   988→  font-weight: 700;
+   989→  font-size: 1.2rem;
+   990→}
+   991→
+   992→.prediction-inline .btn-predict {
+   993→  background: var(--gold-gradient);
+   994→  color: #0a0e17;
+   995→  border: none;
+   996→  border-radius: var(--radius-md);
+   997→  padding: 8px 16px;
+   998→  font-weight: 700;
+   999→  font-family: var(--font-heading);
+  1000→  font-size: 0.85rem;
+  1001→  transition: all 0.3s ease;
+  1002→  white-space: nowrap;
+  1003→}
+  1004→
+  1005→.prediction-inline .btn-predict:hover {
+  1006→  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  1007→  transform: translateY(-1px);
+  1008→}
+  1009→
+  1010→
+  1011→/* ==========================================================================
+  1012→   COUNTDOWN TIMER
+  1013→   ========================================================================== */
+  1014→.countdown-unit {
+  1015→  display: inline-flex;
+  1016→  flex-direction: column;
+  1017→  align-items: center;
+  1018→  margin: 0 6px;
+  1019→}
+  1020→
+  1021→.countdown-digit {
+  1022→  width: 64px;
+  1023→  height: 72px;
+  1024→  background: rgba(10, 15, 30, 0.6);
+  1025→  backdrop-filter: blur(20px) saturate(1.4);
+  1026→  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  1027→  border: 1px solid rgba(212, 175, 55, 0.15);
+  1028→  border-radius: 12px;
+  1029→  display: flex;
+  1030→  align-items: center;
+  1031→  justify-content: center;
+  1032→  position: relative;
+  1033→  overflow: hidden;
+  1034→  box-shadow: 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+  1035→}
+  1036→
+  1037→.countdown-digit .digit-current {
+  1038→  font-family: var(--font-mono);
+  1039→  font-weight: 900;
+  1040→  font-size: 2rem;
+  1041→  color: var(--gold-light);
+  1042→  text-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
+  1043→  position: relative;
+  1044→  z-index: 1;
+  1045→}
+  1046→
+  1047→.countdown-label {
+  1048→  font-family: var(--font-heading);
+  1049→  font-size: 0.6rem;
+  1050→  font-weight: 700;
+  1051→  text-transform: uppercase;
+  1052→  letter-spacing: 2px;
+  1053→  color: var(--text-muted);
+  1054→  margin-top: 6px;
+  1055→}
+  1056→
+  1057→@media (max-width: 576px) {
+  1058→  .countdown-digit {
+  1059→    width: 52px;
+  1060→    height: 60px;
+  1061→  }
+  1062→  .countdown-digit .digit-current {
+  1063→    font-size: 1.5rem;
+  1064→  }
+  1065→}
+  1066→
+  1067→
+  1068→/* ==========================================================================
+  1069→   LEADERBOARD
+  1070→   ========================================================================== */
+  1071→.lb-row {
+  1072→  display: flex;
+  1073→  align-items: center;
+  1074→  gap: 14px;
+  1075→  padding: 14px 18px;
+  1076→  border-radius: var(--radius-xl);
+  1077→  background: rgba(10, 15, 30, 0.3);
+  1078→  border: 1px solid rgba(255, 255, 255, 0.03);
+  1079→  margin-bottom: 8px;
+  1080→  transition: all 0.3s ease;
+  1081→}
+  1082→
+  1083→.lb-row:hover {
+  1084→  background: rgba(12, 18, 35, 0.5);
+  1085→  border-color: rgba(212, 175, 55, 0.1);
+  1086→  transform: translateX(4px);
+  1087→}
+  1088→
+  1089→.lb-row.top-1 {
+  1090→  background: rgba(212, 175, 55, 0.06);
+  1091→  border: 1px solid rgba(212, 175, 55, 0.15);
+  1092→}
+  1093→
+  1094→.lb-row.top-2 {
+  1095→  background: rgba(192, 192, 192, 0.04);
+  1096→  border: 1px solid rgba(192, 192, 192, 0.1);
+  1097→}
+  1098→
+  1099→.lb-row.top-3 {
+  1100→  background: rgba(205, 127, 50, 0.04);
+  1101→  border: 1px solid rgba(205, 127, 50, 0.1);
+  1102→}
+  1103→
+  1104→.lb-rank {
+  1105→  width: 40px;
+  1106→  height: 40px;
+  1107→  border-radius: 50%;
+  1108→  display: flex;
+  1109→  align-items: center;
+  1110→  justify-content: center;
+  1111→  font-weight: 900;
+  1112→  font-size: 0.9rem;
+  1113→  font-family: var(--font-heading);
+  1114→  flex-shrink: 0;
+  1115→}
+  1116→
+  1117→.lb-rank.gold {
+  1118→  background: linear-gradient(135deg, #FFD700, #f5d442);
+  1119→  color: #0a0e17;
+  1120→  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+  1121→}
+  1122→
+  1123→.lb-rank.silver {
+  1124→  background: linear-gradient(135deg, #C0C0C0, #e8e8e8);
+  1125→  color: #0a0e17;
+  1126→  box-shadow: 0 0 10px rgba(192, 192, 192, 0.2);
+  1127→}
+  1128→
+  1129→.lb-rank.bronze {
+  1130→  background: linear-gradient(135deg, #CD7F32, #e8a857);
+  1131→  color: #0a0e17;
+  1132→  box-shadow: 0 0 10px rgba(205, 127, 50, 0.2);
+  1133→}
+  1134→
+  1135→.lb-rank.normal {
+  1136→  background: rgba(255, 255, 255, 0.06);
+  1137→  color: var(--text-muted);
+  1138→}
+  1139→
+  1140→.lb-name {
+  1141→  flex: 1;
+  1142→  font-weight: 700;
+  1143→  font-family: var(--font-heading);
+  1144→  color: #fff;
+  1145→  font-size: 0.95rem;
+  1146→}
+  1147→
+  1148→.lb-pts {
+  1149→  font-family: var(--font-mono);
+  1150→  font-weight: 800;
+  1151→  color: var(--gold-light);
+  1152→  font-size: 1.1rem;
+  1153→}
+  1154→
+  1155→.lb-exact {
+  1156→  font-family: var(--font-mono);
+  1157→  font-weight: 600;
+  1158→  color: var(--text-muted);
+  1159→  font-size: 0.8rem;
+  1160→  min-width: 40px;
+  1161→  text-align: right;
+  1162→}
+  1163→
+  1164→
+  1165→/* ==========================================================================
+  1166→   FORM STYLES
+  1167→   ========================================================================== */
+  1168→.form-control, .form-select {
+  1169→  background: rgba(12, 18, 35, 0.8);
+  1170→  border: 1px solid rgba(255, 255, 255, 0.08);
+  1171→  color: var(--text-primary);
+  1172→  border-radius: var(--radius-md);
+  1173→  transition: all 0.2s ease;
+  1174→}
+  1175→
+  1176→.form-control:focus, .form-select:focus {
+  1177→  background: rgba(18, 26, 50, 0.9);
+  1178→  border-color: rgba(212, 175, 55, 0.4);
+  1179→  box-shadow: 0 0 15px rgba(212, 175, 55, 0.08);
+  1180→  color: var(--text-primary);
+  1181→}
+  1182→
+  1183→.form-control::placeholder {
+  1184→  color: rgba(255, 255, 255, 0.2);
+  1185→}
+  1186→
+  1187→.form-label {
+  1188→  color: var(--text-secondary);
+  1189→  font-weight: 600;
+  1190→  font-size: 0.85rem;
+  1191→  font-family: var(--font-heading);
+  1192→}
+  1193→
+  1194→.form-select option {
+  1195→  background: #0a1020;
+  1196→  color: #fff;
+  1197→}
+  1198→
+  1199→
+  1200→/* ==========================================================================
+  1201→   KNOCKOUT BRACKET TREE
+  1202→   ========================================================================== */
+  1203→
+  1204→.bracket-container {
+  1205→  overflow-x: auto;
+  1206→  padding: 2rem 0;
+  1207→}
+  1208→
+  1209→.bracket-tree {
+  1210→  display: flex;
+  1211→  align-items: stretch;
+  1212→  gap: 2rem;
+  1213→  min-width: max-content;
+  1214→}
+  1215→
+  1216→.bracket-round {
+  1217→  display: flex;
+  1218→  flex-direction: column;
+  1219→  justify-content: space-around;
+  1220→  min-width: 200px;
+  1221→  gap: 1rem;
+  1222→}
+  1223→
+  1224→.bracket-round-header {
+  1225→  text-align: center;
+  1226→  font-family: var(--font-heading);
+  1227→  font-weight: 800;
+  1228→  font-size: 0.8rem;
+  1229→  text-transform: uppercase;
+  1230→  letter-spacing: 2px;
+  1231→  color: var(--gold);
+  1232→  margin-bottom: 0.5rem;
+  1233→  padding: 6px 12px;
+  1234→  background: rgba(212, 175, 55, 0.06);
+  1235→  border: 1px solid rgba(212, 175, 55, 0.15);
+  1236→  border-radius: 8px;
+  1237→}
+  1238→
+  1239→.bracket-match {
+  1240→  background: rgba(10, 15, 30, 0.5);
+  1241→  backdrop-filter: blur(16px) saturate(1.3);
+  1242→  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  1243→  border: 1px solid rgba(255, 255, 255, 0.06);
+  1244→  border-radius: 12px;
+  1245→  overflow: hidden;
+  1246→  transition: all 0.3s ease;
+  1247→}
+  1248→
+  1249→.bracket-match:hover {
+  1250→  border-color: rgba(212, 175, 55, 0.2);
+  1251→  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  1252→}
+  1253→
+  1254→.bracket-team {
+  1255→  display: flex;
+  1256→  align-items: center;
+  1257→  gap: 8px;
+  1258→  padding: 8px 12px;
+  1259→  font-size: 0.8rem;
+  1260→  font-weight: 600;
+  1261→  transition: background 0.2s ease;
+  1262→}
+  1263→
+  1264→.bracket-team:first-child {
+  1265→  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  1266→}
+  1267→
+  1268→.bracket-team.winner {
+  1269→  background: rgba(16, 185, 129, 0.08);
+  1270→}
+  1271→
+  1272→.bracket-team.loser {
+  1273→  opacity: 0.5;
+  1274→}
+  1275→
+  1276→.bracket-team-logo {
+  1277→  width: 24px;
+  1278→  height: 24px;
+  1279→  object-fit: contain;
+  1280→}
+  1281→
+  1282→.bracket-team-name {
+  1283→  flex: 1;
+  1284→  color: #fff;
+  1285→}
+  1286→
+  1287→.bracket-team-score {
+  1288→  font-family: var(--font-mono);
+  1289→  font-weight: 800;
+  1290→  color: var(--gold-light);
+  1291→  font-size: 0.9rem;
+  1292→}
+  1293→
+  1294→.bracket-team.tbd {
+  1295→  opacity: 0.3;
+  1296→  font-style: italic;
+  1297→}
+  1298→
+  1299→/* ==========================================================================
+  1300→   BRACKET TREE STRUCTURE — Real bracket with connecting lines
+  1301→   ========================================================================== */
+  1302→.bracket-tree-wrapper {
+  1303→  overflow-x: auto;
+  1304→  padding: 1rem 0;
+  1305→  -webkit-overflow-scrolling: touch;
+  1306→}
+  1307→
+  1308→.bracket-tree {
+  1309→  display: flex;
+  1310→  align-items: stretch;
+  1311→  gap: 0;
+  1312→  min-width: max-content;
+  1313→  padding: 0 1rem;
+  1314→}
+  1315→
+  1316→.bracket-round {
+  1317→  display: flex;
+  1318→  flex-direction: column;
+  1319→  justify-content: space-around;
+  1320→  min-width: 180px;
+  1321→  position: relative;
+  1322→}
+  1323→
+  1324→.bracket-round-header {
+  1325→  text-align: center;
+  1326→  font-family: var(--font-heading);
+  1327→  font-weight: 800;
+  1328→  font-size: 0.7rem;
+  1329→  text-transform: uppercase;
+  1330→  letter-spacing: 2px;
+  1331→  color: var(--gold);
+  1332→  margin-bottom: 0.75rem;
+  1333→  padding: 6px 12px;
+  1334→  background: rgba(212, 175, 55, 0.06);
+  1335→  border: 1px solid rgba(212, 175, 55, 0.15);
+  1336→  border-radius: 8px;
+  1337→}
+  1338→
+  1339→.bracket-match {
+  1340→  background: rgba(10, 15, 30, 0.5);
+  1341→  backdrop-filter: blur(16px) saturate(1.3);
+  1342→  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  1343→  border: 1px solid rgba(255, 255, 255, 0.06);
+  1344→  border-radius: 10px;
+  1345→  overflow: hidden;
+  1346→  transition: all 0.3s ease;
+  1347→  margin: 4px 8px 4px 0;
+  1348→}
+  1349→
+  1350→.bracket-match:hover {
+  1351→  border-color: rgba(212, 175, 55, 0.2);
+  1352→  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  1353→}
+  1354→
+  1355→.bracket-team {
+  1356→  display: flex;
+  1357→  align-items: center;
+  1358→  gap: 6px;
+  1359→  padding: 6px 10px;
+  1360→  font-size: 0.75rem;
+  1361→  font-weight: 600;
+  1362→  font-family: var(--font-heading);
+  1363→  transition: background 0.2s ease;
+  1364→}
+  1365→
+  1366→.bracket-team:first-child {
+  1367→  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  1368→}
+  1369→
+  1370→.bracket-team.winner {
+  1371→  background: rgba(16, 185, 129, 0.08);
+  1372→}
+  1373→
+  1374→.bracket-team.loser {
+  1375→  opacity: 0.4;
+  1376→}
+  1377→
+  1378→.bracket-team.tbd {
+  1379→  opacity: 0.3;
+  1380→  font-style: italic;
+  1381→}
+  1382→
+  1383→.bracket-team-logo {
+  1384→  width: 22px;
+  1385→  height: 22px;
+  1386→  object-fit: contain;
+  1387→  flex-shrink: 0;
+  1388→}
+  1389→
+  1390→.bracket-team-name {
+  1391→  flex: 1;
+  1392→  color: #fff;
+  1393→  white-space: nowrap;
+  1394→  overflow: hidden;
+  1395→  text-overflow: ellipsis;
+  1396→  min-width: 0;
+  1397→}
+  1398→
+  1399→.bracket-team-score {
+  1400→  font-family: var(--font-mono);
+  1401→  font-weight: 800;
+  1402→  color: var(--gold-light);
+  1403→  font-size: 0.85rem;
+  1404→  min-width: 16px;
+  1405→  text-align: right;
+  1406→}
+  1407→
+  1408→/* Bracket connectors between rounds */
+  1409→.bracket-connector {
+  1410→  display: flex;
+  1411→  flex-direction: column;
+  1412→  justify-content: space-around;
+  1413→  width: 24px;
+  1414→  min-width: 24px;
+  1415→  position: relative;
+  1416→}
+  1417→
+  1418→.bracket-connector-line {
+  1419→  position: relative;
+  1420→  flex: 1;
+  1421→  display: flex;
+  1422→  align-items: center;
+  1423→}
+  1424→
+  1425→.bracket-connector-line::before {
+  1426→  content: '';
+  1427→  position: absolute;
+  1428→  left: 0;
+  1429→  width: 100%;
+  1430→  height: 1px;
+  1431→  background: rgba(212, 175, 55, 0.25);
+  1432→}
+  1433→
+  1434→.bracket-connector-line::after {
+  1435→  content: '';
+  1436→  position: absolute;
+  1437→  right: 0;
+  1438→  width: 1px;
+  1439→  height: 50%;
+  1440→  background: rgba(212, 175, 55, 0.25);
+  1441→}
+  1442→
+  1443→.bracket-connector-line.top::after {
+  1444→  top: 50%;
+  1445→}
+  1446→
+  1447→.bracket-connector-line.bottom::after {
+  1448→  bottom: 50%;
+  1449→}
+  1450→
+  1451→/* Mobile bracket */
+  1452→@media (max-width: 768px) {
+  1453→  .bracket-round {
+  1454→    min-width: 150px;
+  1455→  }
+  1456→  .bracket-team {
+  1457→    font-size: 0.65rem;
+  1458→    padding: 5px 8px;
+  1459→  }
+  1460→  .bracket-team-logo {
+  1461→    width: 18px;
+  1462→    height: 18px;
+  1463→  }
+  1464→  .bracket-team-name {
+  1465→    font-size: 0.65rem;
+  1466→  }
+  1467→  .bracket-team-score {
+  1468→    font-size: 0.75rem;
+  1469→  }
+  1470→}
+  1471→
+  1472→
+  1473→/* ==========================================================================
+  1474→   ADMIN DASHBOARD
+  1475→   ========================================================================== */
+  1476→.admin-section {
+  1477→  margin-bottom: 2rem;
+  1478→}
+  1479→
+  1480→.admin-section h3 {
+  1481→  font-family: var(--font-heading);
+  1482→  font-weight: 800;
+  1483→  font-size: 1.1rem;
+  1484→}
+  1485→
+  1486→.table-dark {
+  1487→  --bs-table-bg: rgba(10, 15, 30, 0.3);
+  1488→  --bs-table-border-color: rgba(255, 255, 255, 0.04);
+  1489→  --bs-table-hover-bg: rgba(12, 18, 35, 0.4);
+  1490→  --bs-table-striped-bg: rgba(12, 18, 35, 0.15);
+  1491→}
+  1492→
+  1493→.table-dark th {
+  1494→  font-family: var(--font-heading);
+  1495→  font-weight: 700;
+  1496→  font-size: 0.75rem;
+  1497→  text-transform: uppercase;
+  1498→  letter-spacing: 1px;
+  1499→  color: var(--text-muted);
+  1500→  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  1501→}
+  1502→
+  1503→
+  1504→/* ==========================================================================
+  1505→   FOOTER
+  1506→   ========================================================================== */
+  1507→.footer {
+  1508→  background: rgba(5, 8, 16, 0.6);
+  1509→  backdrop-filter: blur(20px);
+  1510→  -webkit-backdrop-filter: blur(20px);
+  1511→  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  1512→  position: relative;
+  1513→  z-index: 10;
+  1514→}
+  1515→
+  1516→
+  1517→/* ==========================================================================
+  1518→   LOADING BAR
+  1519→   ========================================================================== */
+  1520→.loading-bar {
+  1521→  position: fixed;
+  1522→  top: 0;
+  1523→  left: 0;
+  1524→  width: 0;
+  1525→  height: 3px;
+  1526→  background: var(--gold-gradient);
+  1527→  z-index: 9999;
+  1528→  transition: width 0.3s ease;
+  1529→  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+  1530→}
+  1531→
+  1532→.loading-bar.active {
+  1533→  width: 70%;
+  1534→}
+  1535→
+  1536→.loading-bar.complete {
+  1537→  width: 100%;
+  1538→  opacity: 0;
+  1539→  transition: width 0.2s ease, opacity 0.3s ease 0.3s;
+  1540→}
+  1541→
+  1542→
+  1543→/* ==========================================================================
+  1544→   TOAST NOTIFICATIONS
+  1545→   ========================================================================== */
+  1546→.toast-container {
+  1547→  position: fixed;
+  1548→  top: 80px;
+  1549→  right: 20px;
+  1550→  z-index: 9999;
+  1551→  display: flex;
+  1552→  flex-direction: column;
+  1553→  gap: 8px;
+  1554→}
+  1555→
+  1556→.toast-custom {
+  1557→  background: rgba(10, 15, 30, 0.9);
+  1558→  backdrop-filter: blur(20px);
+  1559→  -webkit-backdrop-filter: blur(20px);
+  1560→  border: 1px solid rgba(255, 255, 255, 0.08);
+  1561→  border-radius: 12px;
+  1562→  padding: 12px 20px;
+  1563→  color: #fff;
+  1564→  font-size: 0.9rem;
+  1565→  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  1566→  animation: toastSlideIn 0.3s ease;
+  1567→  max-width: 350px;
+  1568→}
+  1569→
+  1570→.toast-custom.success {
+  1571→  border-left: 3px solid var(--success);
+  1572→}
+  1573→
+  1574→.toast-custom.error {
+  1575→  border-left: 3px solid var(--danger);
+  1576→}
+  1577→
+  1578→.toast-custom.info {
+  1579→  border-left: 3px solid var(--info);
+  1580→}
+  1581→
+  1582→@keyframes toastSlideIn {
+  1583→  from {
+  1584→    transform: translateX(100%);
+  1585→    opacity: 0;
+  1586→  }
+  1587→  to {
+  1588→    transform: translateX(0);
+  1589→    opacity: 1;
+  1590→  }
+  1591→}
+  1592→
+  1593→
+  1594→/* ==========================================================================
+  1595→   CONFETTI
+  1596→   ========================================================================== */
+  1597→.confetti-container {
+  1598→  position: fixed;
+  1599→  inset: 0;
+  1600→  pointer-events: none;
+  1601→  z-index: 9998;
+  1602→  overflow: hidden;
+  1603→}
+  1604→
+  1605→.confetti-piece {
+  1606→  position: absolute;
+  1607→  top: -10px;
+  1608→  width: 10px;
+  1609→  height: 10px;
+  1610→  animation: confettiFall 3s ease-out forwards;
+  1611→}
+  1612→
+  1613→@keyframes confettiFall {
+  1614→  0% {
+  1615→    opacity: 1;
+  1616→    transform: translateY(0) rotate(0deg) scale(1);
+  1617→  }
+  1618→  100% {
+  1619→    opacity: 0;
+  1620→    transform: translateY(100vh) rotate(720deg) scale(0.5);
+  1621→  }
+  1622→}
+  1623→
+  1624→
+  1625→/* ==========================================================================
+  1626→   ALERT STYLES (Django messages)
+  1627→   ========================================================================== */
+  1628→.alert {
+  1629→  border-radius: var(--radius-xl);
+  1630→  border: 1px solid rgba(255, 255, 255, 0.06);
+  1631→  backdrop-filter: blur(20px);
+  1632→  -webkit-backdrop-filter: blur(20px);
+  1633→}
+  1634→
+  1635→.alert-success {
+  1636→  background: rgba(16, 185, 129, 0.1);
+  1637→  border-color: rgba(16, 185, 129, 0.2);
+  1638→  color: #6ee7b7;
+  1639→}
+  1640→
+  1641→.alert-error, .alert-danger {
+  1642→  background: rgba(239, 68, 68, 0.1);
+  1643→  border-color: rgba(239, 68, 68, 0.2);
+  1644→  color: #fca5a5;
+  1645→}
+  1646→
+  1647→.alert-warning {
+  1648→  background: rgba(245, 158, 11, 0.1);
+  1649→  border-color: rgba(245, 158, 11, 0.2);
+  1650→  color: #fcd34d;
+  1651→}
+  1652→
+  1653→.alert-info {
+  1654→  background: rgba(59, 130, 246, 0.1);
+  1655→  border-color: rgba(59, 130, 246, 0.2);
+  1656→  color: #93c5fd;
+  1657→}
+  1658→
+  1659→
+  1660→/* ==========================================================================
+  1661→   UTILITY CLASSES
+  1662→   ========================================================================== */
+  1663→.text-gold { color: var(--gold) !important; }
+  1664→.text-gold-light { color: var(--gold-light) !important; }
+  1665→.bg-glass { background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+  1666→.border-glass { border: 1px solid var(--glass-border); }
+  1667→.border-gold { border-color: rgba(212, 175, 55, 0.3) !important; }
+  1668→.glow-gold { box-shadow: 0 0 20px rgba(212, 175, 55, 0.15); }
+  1669→.glow-gold-lg { box-shadow: 0 0 40px rgba(212, 175, 55, 0.2); }
+  1670→
+  1671→/* Team logo in inline text */
+  1672→.team-logo-inline {
+  1673→  width: 20px;
+  1674→  height: 20px;
+  1675→  object-fit: contain;
+  1676→  vertical-align: middle;
+  1677→  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3));
+  1678→  flex-shrink: 0;
+  1679→}
+  1680→
+  1681→.team-logo-sm {
+  1682→  width: 24px;
+  1683→  height: 24px;
+  1684→  object-fit: contain;
+  1685→  vertical-align: middle;
+  1686→  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.3));
+  1687→  flex-shrink: 0;
+  1688→}
+  1689→
+  1690→.team-logo-md {
+  1691→  width: 48px;
+  1692→  height: 48px;
+  1693→  object-fit: contain;
+  1694→  vertical-align: middle;
+  1695→  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+  1696→}
+  1697→
+  1698→.team-logo-lg {
+  1699→  width: 56px;
+  1700→  height: 56px;
+  1701→  object-fit: contain;
+  1702→  vertical-align: middle;
+  1703→  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+  1704→  flex-shrink: 0;
+  1705→}
+  1706→
+  1707→/* Score input in prediction forms */
+  1708→.score-input-lg {
+  1709→  width: 80px;
+  1710→  text-align: center;
+  1711→  background: rgba(12, 18, 35, 0.8);
+  1712→  border: 2px solid rgba(255, 255, 255, 0.08);
+  1713→  border-radius: var(--radius-lg);
+  1714→  color: var(--gold-light);
+  1715→  font-family: var(--font-mono);
+  1716→  font-weight: 900;
+  1717→  font-size: 1.8rem;
+  1718→  padding: 12px;
+  1719→  transition: all 0.2s ease;
+  1720→}
+  1721→
+  1722→.score-input-lg:focus {
+  1723→  border-color: rgba(212, 175, 55, 0.5);
+  1724→  box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+  1725→  outline: none;
+  1726→}
+  1727→
+  1728→/* Section header */
+  1729→.section-header {
+  1730→  display: flex;
+  1731→  align-items: center;
+  1732→  gap: 12px;
+  1733→  margin-bottom: 24px;
+  1734→  padding-bottom: 14px;
+  1735→  border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+  1736→}
+  1737→
+  1738→.section-header .accent-bar {
+  1739→  width: 4px;
+  1740→  height: 28px;
+  1741→  background: var(--gold-gradient);
+  1742→  border-radius: 2px;
+  1743→}
+  1744→
+  1745→.section-header h2 {
+  1746→  font-family: var(--font-heading);
+  1747→  font-weight: 800;
+  1748→  font-size: 1.3rem;
+  1749→  margin: 0;
+  1750→}
+  1751→
+  1752→/* Hide scrollbar but keep functionality */
+  1753→.no-scrollbar::-webkit-scrollbar { display: none; }
+  1754→.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  1755→
+  1756→/* Custom scrollbar */
+  1757→::-webkit-scrollbar {
+  1758→  width: 6px;
+  1759→  height: 6px;
+  1760→}
+  1761→::-webkit-scrollbar-track {
+  1762→  background: rgba(0, 0, 0, 0.2);
+  1763→}
+  1764→::-webkit-scrollbar-thumb {
+  1765→  background: rgba(212, 175, 55, 0.2);
+  1766→  border-radius: 3px;
+  1767→}
+  1768→::-webkit-scrollbar-thumb:hover {
+  1769→  background: rgba(212, 175, 55, 0.4);
+  1770→}
+  1771→
+  1772→/* Responsive helpers */
+  1773→@media (max-width: 768px) {
+  1774→  .hide-mobile { display: none !important; }
+  1775→}
+  1776→
+  1777→@media (min-width: 769px) {
+  1778→  .hide-desktop { display: none !important; }
+  1779→}
+  1780→

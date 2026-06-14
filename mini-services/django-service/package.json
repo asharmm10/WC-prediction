@@ -2,7 +2,7 @@
   "name": "django-service",
   "version": "1.0.0",
   "scripts": {
-    "dev": "cd /home/z/my-project/worldcup && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 300 --reload",
-    "start": "cd /home/z/my-project/worldcup && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 300"
+    "dev": "bash /home/z/my-project/mini-services/django-service/run.sh",
+    "start": "cd /home/z/my-project/worldcup && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 1 --timeout 300"
   }
 }

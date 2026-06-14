@@ -4,58 +4,259 @@
 
 {% block title %}Knockout Bracket - WC2026{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* ── Bracket Tree Structure ── */
+    .bracket-page { margin-top: 100px; }
+    
+    .bracket-scroll-wrapper {
+        overflow-x: auto;
+        padding: 1rem 0 2rem;
+        -webkit-overflow-scrolling: touch;
+    }
+    .bracket-scroll-wrapper::-webkit-scrollbar { height: 6px; }
+    .bracket-scroll-wrapper::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 3px; }
+    .bracket-scroll-wrapper::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.2); border-radius: 3px; }
+    
+    .bracket-tree {
+        display: flex;
+        align-items: stretch;
+        min-width: max-content;
+        padding: 0 0.5rem;
+    }
+    
+    /* Round column */
+    .bracket-round {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-width: 170px;
+        position: relative;
+    }
+    
+    .bracket-round-header {
+        text-align: center;
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--gold);
+        margin-bottom: 0.75rem;
+        padding: 5px 10px;
+        background: rgba(212, 175, 55, 0.06);
+        border: 1px solid rgba(212, 175, 55, 0.15);
+        border-radius: 6px;
+    }
+    
+    .bracket-round-matches {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        flex: 1;
+        gap: 0;
+    }
+    
+    /* Match slot */
+    .bracket-match-slot {
+        display: flex;
+        flex-direction: column;
+        margin: 6px 0;
+        background: rgba(10, 15, 30, 0.5);
+        backdrop-filter: blur(12px) saturate(1.2);
+        -webkit-backdrop-filter: blur(12px) saturate(1.2);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    .bracket-match-slot:hover {
+        border-color: rgba(212, 175, 55, 0.2);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Team row inside a match */
+    .bracket-team-row {
+        display: flex;
+        align-items: center;
+        padding: 5px 8px;
+        gap: 5px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        font-family: var(--font-heading);
+        transition: background 0.2s;
+    }
+    .bracket-team-row:first-child {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .bracket-team-row.winner {
+        background: rgba(16, 185, 129, 0.06);
+    }
+    .bracket-team-row.loser {
+        opacity: 0.4;
+    }
+    .bracket-team-row.tbd {
+        opacity: 0.25;
+        font-style: italic;
+    }
+    .bracket-team-row.home .bt-crest { order: 2; }
+    .bracket-team-row.home .bt-name { order: 1; text-align: right; flex: 1; }
+    .bracket-team-row.home .bt-score { order: 3; }
+    .bracket-team-row.away .bt-crest { order: 1; }
+    .bracket-team-row.away .bt-name { order: 2; text-align: left; flex: 1; }
+    .bracket-team-row.away .bt-score { order: 3; }
+    
+    .bt-crest {
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+    .bt-name {
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+    }
+    .bt-score {
+        font-family: var(--font-mono);
+        font-weight: 800;
+        color: var(--gold-light);
+        font-size: 0.8rem;
+        min-width: 14px;
+        text-align: right;
+    }
+    
+    /* Connector between rounds */
+    .bracket-connector-col {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 28px;
+        min-width: 28px;
+        position: relative;
+    }
+    
+    .bracket-connector-pair {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        position: relative;
+    }
+    
+    /* Draw bracket lines using CSS */
+    .bracket-connector-pair::before {
+        content: '';
+        position: absolute;
+        top: 25%;
+        bottom: 25%;
+        right: 0;
+        width: 1px;
+        background: rgba(212, 175, 55, 0.2);
+    }
+    .bracket-connector-pair::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: 0;
+        width: 14px;
+        height: 1px;
+        background: rgba(212, 175, 55, 0.2);
+    }
+    .bracket-connector-pair .top-line {
+        position: absolute;
+        top: 25%;
+        right: 14px;
+        width: 14px;
+        height: 1px;
+        background: rgba(212, 175, 55, 0.2);
+    }
+    .bracket-connector-pair .bottom-line {
+        position: absolute;
+        bottom: 25%;
+        right: 14px;
+        width: 14px;
+        height: 1px;
+        background: rgba(212, 175, 55, 0.2);
+    }
+    
+    /* Mobile bracket */
+    @media (max-width: 768px) {
+        .bracket-round { min-width: 140px; }
+        .bracket-team-row { font-size: 0.6rem; padding: 4px 6px; }
+        .bt-crest { width: 16px; height: 16px; }
+        .bt-name { font-size: 0.6rem; }
+        .bt-score { font-size: 0.7rem; }
+        .bracket-connector-col { width: 20px; min-width: 20px; }
+        .bracket-connector-pair .top-line,
+        .bracket-connector-pair .bottom-line { width: 10px; right: 10px; }
+        .bracket-connector-pair::after { width: 10px; }
+    }
+    @media (max-width: 400px) {
+        .bracket-round { min-width: 120px; }
+        .bt-name { max-width: 50px; }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container" style="margin-top:100px;">
+<div class="container bracket-page">
     <div class="text-center mb-4" data-aos="fade-up">
-        <h1 class="gold-text" style="font-family:var(--font-heading);font-weight:900;">&#127942; Knockout Bracket</h1>
-        <p class="text-muted" style="font-family:var(--font-sans);font-size:0.9rem;">Follow the road to the final</p>
+        <h1 class="gold-text" style="font-family:var(--font-display);font-weight:400;font-size:2.5rem;letter-spacing:3px;">KNOCKOUT BRACKET</h1>
+        <p class="text-muted" style="font-family:var(--font-sans);font-size:0.85rem;">Follow the road to the final</p>
     </div>
 
     {% if bracket_stages %}
-    <div class="bracket-tree-wrapper" data-aos="fade-up">
+    <div class="bracket-scroll-wrapper" data-aos="fade-up">
         <div class="bracket-tree">
             {% for stage in bracket_stages %}
-            <!-- Round column -->
+            <!-- Round Column -->
             <div class="bracket-round">
                 <div class="bracket-round-header">{{ stage.label }}</div>
-                {% for km in stage.matches %}
-                <div class="bracket-match">
-                    <!-- Home team row -->
-                    <div class="bracket-team {% if km.is_completed and km.home_score is not None and km.away_score is not None %}{% if km.home_score > km.away_score %}winner{% else %}loser{% endif %}{% endif %} {% if not km.home_team %}tbd{% endif %}">
-                        {% if km.home_team %}
+                <div class="bracket-round-matches">
+                    {% for km in stage.matches %}
+                    <div class="bracket-match-slot">
+                        <!-- Home team: name then crest -->
+                        <div class="bracket-team-row home {% if km.is_completed and km.home_score is not None and km.away_score is not None %}{% if km.home_score > km.away_score %}winner{% else %}loser{% endif %}{% endif %} {% if not km.home_team %}tbd{% endif %}">
+                            {% if km.home_team %}
+                            <span class="bt-name">{{ km.home_team }}</span>
                             {% if km.home_team_logo %}
-                            <img src="{% static km.home_team_logo %}" alt="{{ km.home_team }}" class="bracket-team-logo">
+                            <img src="{% static km.home_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="{{ km.home_team }}" class="bt-crest">
                             {% endif %}
-                            <span class="bracket-team-name">{{ km.home_team }}</span>
-                        {% else %}
-                            <span class="bracket-team-name">TBD</span>
-                        {% endif %}
-                        {% if km.is_completed and km.home_score is not None %}
-                        <span class="bracket-team-score">{{ km.home_score }}</span>
-                        {% endif %}
-                    </div>
-                    <!-- Away team row -->
-                    <div class="bracket-team {% if km.is_completed and km.home_score is not None and km.away_score is not None %}{% if km.away_score > km.home_score %}winner{% else %}loser{% endif %}{% endif %} {% if not km.away_team %}tbd{% endif %}">
-                        {% if km.away_team %}
+                            {% else %}
+                            <span class="bt-name">TBD</span>
+                            {% endif %}
+                            {% if km.is_completed and km.home_score is not None %}
+                            <span class="bt-score">{{ km.home_score }}</span>
+                            {% endif %}
+                        </div>
+                        <!-- Away team: crest then name -->
+                        <div class="bracket-team-row away {% if km.is_completed and km.home_score is not None and km.away_score is not None %}{% if km.away_score > km.home_score %}winner{% else %}loser{% endif %}{% endif %} {% if not km.away_team %}tbd{% endif %}">
+                            {% if km.away_team %}
                             {% if km.away_team_logo %}
-                            <img src="{% static km.away_team_logo %}" alt="{{ km.away_team }}" class="bracket-team-logo">
+                            <img src="{% static km.away_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="{{ km.away_team }}" class="bt-crest">
                             {% endif %}
-                            <span class="bracket-team-name">{{ km.away_team }}</span>
-                        {% else %}
-                            <span class="bracket-team-name">TBD</span>
-                        {% endif %}
-                        {% if km.is_completed and km.away_score is not None %}
-                        <span class="bracket-team-score">{{ km.away_score }}</span>
-                        {% endif %}
+                            <span class="bt-name">{{ km.away_team }}</span>
+                            {% else %}
+                            <span class="bt-name">TBD</span>
+                            {% endif %}
+                            {% if km.is_completed and km.away_score is not None %}
+                            <span class="bt-score">{{ km.away_score }}</span>
+                            {% endif %}
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
-            <!-- Connector between rounds (not after last round) -->
+            <!-- Connector between rounds -->
             {% if not forloop.last %}
-            <div class="bracket-connector">
+            <div class="bracket-connector-col">
                 {% for km in stage.matches %}
-                <div class="bracket-connector-line {% cycle 'top' 'bottom' %}"></div>
+                <div class="bracket-connector-pair">
+                    <div class="top-line"></div>
+                    <div class="bottom-line"></div>
+                </div>
                 {% endfor %}
             </div>
             {% endif %}

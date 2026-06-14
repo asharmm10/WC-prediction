@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7!2fj(h53jz&*rb!@_#2pf2i(=ws*7ka_+sgl1s!&21(10o4f!'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-7!2fj(h53jz&*rb!@_#2pf2i(=ws*7ka_+sgl1s!&21(10o4f!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
 
 # Trust the gateway origin for CSRF
 CSRF_TRUSTED_ORIGINS = [
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -83,14 +85,30 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Supports MySQL via environment variables (Docker) or falls back to SQLite (dev)
+DB_ENGINE = os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3')
+if DB_ENGINE == 'django.db.backends.mysql':
+    DATABASES = {
+        'default': {
+            'ENGINE': DB_ENGINE,
+            'NAME': os.environ.get('DB_NAME', 'wc2026'),
+            'USER': os.environ.get('DB_USER', 'wc2026_user'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'wc2026_password'),
+            'HOST': os.environ.get('DB_HOST', 'db'),
+            'PORT': os.environ.get('DB_PORT', '3306'),
+            'OPTIONS': {
+                'charset': 'utf8mb4',
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            },
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -130,6 +148,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# WhiteNoise: serve static files through WSGI (gunicorn)
+WHITENOISE_USE_FINDERS = False
+WHITENOISE_AUTOREFRESH = False
+WHITENOISE_MAX_AGE = 0
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

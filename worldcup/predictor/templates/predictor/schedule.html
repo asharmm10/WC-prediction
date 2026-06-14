@@ -27,7 +27,7 @@
                         <div class="match-team home-team">
                             <span class="match-team-name">{{ match.home_team }}</span>
                             {% if match.home_team_logo %}
-                            <img src="{% static match.home_team_logo %}" alt="{{ match.home_team }}" class="match-team-logo">
+                            <img src="{% static match.home_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="{{ match.home_team }}" class="match-team-logo">
                             {% endif %}
                         </div>
                         <div class="match-vs-section">
@@ -41,7 +41,7 @@
                         <!-- Away team: crest then name -->
                         <div class="match-team away-team">
                             {% if match.away_team_logo %}
-                            <img src="{% static match.away_team_logo %}" alt="{{ match.away_team }}" class="match-team-logo">
+                            <img src="{% static match.away_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="{{ match.away_team }}" class="match-team-logo">
                             {% endif %}
                             <span class="match-team-name">{{ match.away_team }}</span>
                         </div>

@@ -110,12 +110,12 @@
                     <tr>
                         <td>
                             {% if match.home_team_logo %}
-                            <img src="{% static match.home_team_logo %}" alt="" class="team-logo-inline">
+                            <img src="{% static match.home_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="" class="team-logo-inline">
                             {% endif %}
                             <span class="text-white fw-bold">{{ match.home_team }}</span>
                             <span class="text-muted"> vs </span>
                             {% if match.away_team_logo %}
-                            <img src="{% static match.away_team_logo %}" alt="" class="team-logo-inline">
+                            <img src="{% static match.away_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="" class="team-logo-inline">
                             {% endif %}
                             <span class="text-white fw-bold">{{ match.away_team }}</span>
                         </td>

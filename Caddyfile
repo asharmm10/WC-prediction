@@ -3,6 +3,26 @@
                 query XTransformPort=*
         }
 
+        @static_files {
+                path /static/*
+        }
+
+        @media_files {
+                path /media/*
+        }
+
+        # Serve Django static files directly
+        handle @static_files {
+                root * /home/z/my-project/worldcup
+                file_server
+        }
+
+        # Serve Django media files directly
+        handle @media_files {
+                root * /home/z/my-project/worldcup
+                file_server
+        }
+
         handle @transform_port_query {
                 reverse_proxy localhost:{query.XTransformPort} {
                         header_up Host {host}

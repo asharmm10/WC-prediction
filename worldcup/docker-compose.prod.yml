@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: wc2026
+      MYSQL_USER: wc2026_user
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  web:
+    build: .
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_ENGINE=django.db.backends.mysql
+      - DB_NAME=wc2026
+      - DB_USER=wc2026_user
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DJANGO_SECRET_KEY=${SECRET_KEY}
+      - DJANGO_DEBUG=False
+      - DJANGO_ALLOWED_HOSTS=${ALLOWED_HOSTS:-*}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+
+  caddy:
+    image: caddy:2
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  mysql_data:
+    driver: local
+  static_volume:
+  media_volume:
+  caddy_data:
+  caddy_config:

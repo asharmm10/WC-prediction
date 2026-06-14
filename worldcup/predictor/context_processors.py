@@ -7,7 +7,7 @@ def predictor_context(request):
     """
     Context processor that adds global prediction league data to all templates.
     """
-    participant_count = Participant.objects.filter(is_active=True).count()
+    participant_count = Participant.objects.filter(is_active=True, is_admin=False).count()
 
     upcoming_matches = (
         Match.objects.filter(kickoff_datetime__gt=timezone.now())

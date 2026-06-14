@@ -14,14 +14,14 @@
         <div class="d-flex justify-content-center align-items-center gap-3 mb-4">
             <div class="text-center">
                 {% if match.home_team_logo %}
-                <img src="{% static match.home_team_logo %}" alt="" class="team-logo-md mb-1">
+                <img src="{% static match.home_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="" class="team-logo-md mb-1">
                 {% endif %}
                 <div style="font-family:var(--font-heading);font-weight:700;font-size:0.85rem;">{{ match.home_team }}</div>
             </div>
             <span class="text-muted" style="font-family:var(--font-mono);font-weight:800;">VS</span>
             <div class="text-center">
                 {% if match.away_team_logo %}
-                <img src="{% static match.away_team_logo %}" alt="" class="team-logo-md mb-1">
+                <img src="{% static match.away_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="" class="team-logo-md mb-1">
                 {% endif %}
                 <div style="font-family:var(--font-heading);font-weight:700;font-size:0.85rem;">{{ match.away_team }}</div>
             </div>

@@ -6,6 +6,20 @@ from ..models import Participant, Prediction, get_team_logo, get_team_color
 register = template.Library()
 
 
+@register.simple_tag(takes_context=True)
+def gw_static(context, path):
+    """
+    Like {% static %} but appends XTransformPort when behind the gateway.
+    Usage: {% gw_static "images/teams/brazil.png" %}
+    """
+    url = static(path)
+    xtransformport_param = context.get('xtransformport_param', '')
+    if xtransformport_param:
+        separator = '&' if '?' in url else '?'
+        url = f"{url}{separator}{xtransformport_param}"
+    return url
+
+
 @register.simple_tag
 def get_leaderboard():
     """

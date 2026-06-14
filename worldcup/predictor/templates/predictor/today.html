@@ -222,7 +222,7 @@
                 <div class="today-team home">
                     <span class="today-team-name">{{ match.home_team }}</span>
                     {% if match.home_team_logo %}
-                    <img src="{% static match.home_team_logo %}" alt="{{ match.home_team }}" class="today-team-logo">
+                    <img src="{% static match.home_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="{{ match.home_team }}" class="today-team-logo">
                     {% endif %}
                 </div>
                 <div class="today-vs">
@@ -232,7 +232,7 @@
                 <!-- Away: crest then name -->
                 <div class="today-team away">
                     {% if match.away_team_logo %}
-                    <img src="{% static match.away_team_logo %}" alt="{{ match.away_team }}" class="today-team-logo">
+                    <img src="{% static match.away_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="{{ match.away_team }}" class="today-team-logo">
                     {% endif %}
                     <span class="today-team-name">{{ match.away_team }}</span>
                 </div>
@@ -285,7 +285,7 @@
                 <div class="today-team home">
                     <span class="today-team-name">{{ match.home_team }}</span>
                     {% if match.home_team_logo %}
-                    <img src="{% static match.home_team_logo %}" alt="{{ match.home_team }}" class="today-team-logo">
+                    <img src="{% static match.home_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="{{ match.home_team }}" class="today-team-logo">
                     {% endif %}
                 </div>
                 <div class="today-vs">
@@ -294,7 +294,7 @@
                 </div>
                 <div class="today-team away">
                     {% if match.away_team_logo %}
-                    <img src="{% static match.away_team_logo %}" alt="{{ match.away_team }}" class="today-team-logo">
+                    <img src="{% static match.away_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="{{ match.away_team }}" class="today-team-logo">
                     {% endif %}
                     <span class="today-team-name">{{ match.away_team }}</span>
                 </div>
@@ -330,7 +330,7 @@
                 <div class="today-team home">
                     <span class="today-team-name">{{ match.home_team }}</span>
                     {% if match.home_team_logo %}
-                    <img src="{% static match.home_team_logo %}" alt="{{ match.home_team }}" class="today-team-logo">
+                    <img src="{% static match.home_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="{{ match.home_team }}" class="today-team-logo">
                     {% endif %}
                 </div>
                 <div class="today-vs">
@@ -339,7 +339,7 @@
                 </div>
                 <div class="today-team away">
                     {% if match.away_team_logo %}
-                    <img src="{% static match.away_team_logo %}" alt="{{ match.away_team }}" class="today-team-logo">
+                    <img src="{% static match.away_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="{{ match.away_team }}" class="today-team-logo">
                     {% endif %}
                     <span class="today-team-name">{{ match.away_team }}</span>
                 </div>

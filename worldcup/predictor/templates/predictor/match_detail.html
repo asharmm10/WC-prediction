@@ -128,7 +128,7 @@
             <div class="match-header-team home">
                 <span class="match-header-team-name">{{ match.home_team }}</span>
                 {% if match.home_team_logo %}
-                <img src="{% static match.home_team_logo %}" alt="{{ match.home_team }}" class="match-header-team-logo">
+                <img src="{% static match.home_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="{{ match.home_team }}" class="match-header-team-logo">
                 {% endif %}
             </div>
             <div class="match-header-center">
@@ -146,7 +146,7 @@
             <!-- Away: crest then name -->
             <div class="match-header-team away">
                 {% if match.away_team_logo %}
-                <img src="{% static match.away_team_logo %}" alt="{{ match.away_team }}" class="match-header-team-logo">
+                <img src="{% static match.away_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="{{ match.away_team }}" class="match-header-team-logo">
                 {% endif %}
                 <span class="match-header-team-name">{{ match.away_team }}</span>
             </div>

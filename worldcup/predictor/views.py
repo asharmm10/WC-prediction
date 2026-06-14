@@ -143,7 +143,7 @@ def home(request):
     )
 
     # Participant count
-    participant_count = Participant.objects.filter(is_active=True).count()
+    participant_count = Participant.objects.filter(is_active=True, is_admin=False).count()
 
     # Top 5 leaderboard
     full_board = get_leaderboard()
