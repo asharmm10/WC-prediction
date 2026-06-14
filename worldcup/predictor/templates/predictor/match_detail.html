@@ -4,35 +4,151 @@
 
 {% block title %}{{ match.home_team }} vs {{ match.away_team }} - WC2026{% endblock %}
 
+{% block extra_css %}
+<style>
+    .match-header {
+        position: relative;
+    }
+    .match-header .accent-top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg,{{ match.home_team_color }},rgba(255,255,255,0.1),{{ match.away_team_color }});
+        opacity: 0.5;
+    }
+    .match-header-body {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .match-header-team {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+    }
+    .match-header-team.home {
+        justify-content: flex-end;
+        text-align: right;
+    }
+    .match-header-team.away {
+        justify-content: flex-start;
+        text-align: left;
+    }
+    .match-header-team-logo {
+        width: 56px;
+        height: 56px;
+        object-fit: contain;
+        flex-shrink: 0;
+        filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+    }
+    .match-header-team-name {
+        font-family: var(--font-heading);
+        font-weight: 800;
+        font-size: 1rem;
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .match-header-center {
+        text-align: center;
+        min-width: 80px;
+        flex-shrink: 0;
+    }
+    @media (max-width: 576px) {
+        .match-header-team-logo { width: 40px; height: 40px; }
+        .match-header-team-name { font-size: 0.8rem; }
+        .match-header-center { min-width: 60px; }
+    }
+
+    /* Prediction list items */
+    .pred-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: rgba(10, 15, 30, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        margin-bottom: 6px;
+        transition: all 0.2s ease;
+    }
+    .pred-item:hover {
+        background: rgba(12, 18, 35, 0.5);
+        border-color: rgba(212,175,55,0.08);
+    }
+    .pred-item.exact {
+        border-color: rgba(16,185,129,0.2);
+        background: rgba(16, 185, 129, 0.04);
+    }
+    .pred-name {
+        flex: 1;
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .pred-score {
+        font-family: var(--font-mono);
+        font-weight: 800;
+        font-size: 1rem;
+        color: var(--gold-light);
+        flex-shrink: 0;
+    }
+    .pred-item.exact .pred-score {
+        color: #10b981;
+    }
+    .pred-badge {
+        font-size: 0.6rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 50px;
+        background: rgba(16,185,129,0.1);
+        color: #10b981;
+        border: 1px solid rgba(16,185,129,0.2);
+        flex-shrink: 0;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container" style="margin-top:100px;">
     <!-- Match Header -->
-    <div class="glass-card p-4 mb-4" style="--home-color:{{ match.home_team_color }};--away-color:{{ match.away_team_color }};">
-        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,{{ match.home_team_color }},rgba(255,255,255,0.1),{{ match.away_team_color }});opacity:0.5;"></div>
-        <div class="row align-items-center text-center">
-            <div class="col-4">
+    <div class="glass-card p-4 mb-4 match-header" style="--home-color:{{ match.home_team_color }};--away-color:{{ match.away_team_color }};">
+        <div class="accent-top"></div>
+        <div class="match-header-body">
+            <!-- Home: name then crest -->
+            <div class="match-header-team home">
+                <span class="match-header-team-name">{{ match.home_team }}</span>
                 {% if match.home_team_logo %}
-                <img src="{% static match.home_team_logo %}" alt="{{ match.home_team }}" class="team-logo-lg mb-2">
+                <img src="{% static match.home_team_logo %}" alt="{{ match.home_team }}" class="match-header-team-logo">
                 {% endif %}
-                <h3 style="font-family:var(--font-heading);font-weight:800;font-size:1.2rem;">{{ match.home_team }}</h3>
             </div>
-            <div class="col-4">
+            <div class="match-header-center">
                 {% if match.status == 'completed' and match.home_score is not None %}
-                <div class="mono-number gold-text" style="font-size:3rem;">{{ match.home_score }} - {{ match.away_score }}</div>
+                <div class="mono-number gold-text" style="font-size:2.5rem;">{{ match.home_score }} - {{ match.away_score }}</div>
                 <span class="match-status-badge completed">Full Time</span>
                 {% else %}
                 <div class="text-muted" style="font-family:var(--font-mono);font-weight:800;font-size:0.8rem;letter-spacing:2px;">VS</div>
                 <div class="text-secondary" style="font-size:0.85rem;">{{ match.kickoff_datetime|date:"M j, Y H:i" }}</div>
                 {% endif %}
                 {% if match.venue %}
-                <div class="text-muted mt-1" style="font-size:0.75rem;"><i class="bi bi-geo-alt"></i> {{ match.venue }}</div>
+                <div class="text-muted mt-1" style="font-size:0.7rem;"><i class="bi bi-geo-alt"></i> {{ match.venue }}</div>
                 {% endif %}
             </div>
-            <div class="col-4">
+            <!-- Away: crest then name -->
+            <div class="match-header-team away">
                 {% if match.away_team_logo %}
-                <img src="{% static match.away_team_logo %}" alt="{{ match.away_team }}" class="team-logo-lg mb-2">
+                <img src="{% static match.away_team_logo %}" alt="{{ match.away_team }}" class="match-header-team-logo">
                 {% endif %}
-                <h3 style="font-family:var(--font-heading);font-weight:800;font-size:1.2rem;">{{ match.away_team }}</h3>
+                <span class="match-header-team-name">{{ match.away_team }}</span>
             </div>
         </div>
         <div class="text-center mt-3">
@@ -73,7 +189,7 @@
             <i class="bi bi-box-arrow-in-right"></i> Login to Predict
         </a>
     </div>
-    {% elif match.is_locked and not match.is_locked %}
+    {% elif match.is_locked and not match.status == 'completed' %}
     <div class="text-center mb-4">
         <span class="match-status-badge locked" style="font-size:0.85rem;"><i class="bi bi-lock-fill"></i> Predictions Locked</span>
     </div>
@@ -82,24 +198,33 @@
     <!-- Predictions List -->
     {% if predictions %}
     <div class="glass-card p-4">
-        <h4 class="gold-text mb-3" style="font-family:var(--font-heading);font-weight:800;"><i class="bi bi-people"></i> Predictions ({{ predictions|length }})</h4>
-        <div class="row g-2">
+        <h4 class="gold-text mb-3" style="font-family:var(--font-heading);font-weight:800;">
+            <i class="bi bi-people"></i> Predictions ({{ predictions|length }})
+        </h4>
+        <div style="max-height:480px;overflow-y:auto;" class="custom-scrollbar">
             {% for pred in predictions %}
-            <div class="col-md-6 col-lg-4">
-                <div class="glass-card p-3" style="{% if pred.is_exact %}border-color:rgba(16,185,129,0.3);{% endif %}">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span style="font-family:var(--font-heading);font-weight:700;font-size:0.85rem;">{{ pred.participant.name }}</span>
-                        <span class="mono-number" style="font-size:1.1rem;{% if pred.is_exact %}color:#10b981;{% else %}color:var(--gold-light);{% endif %}">
-                            {{ pred.home_score }} - {{ pred.away_score }}
-                        </span>
-                    </div>
-                    {% if pred.is_exact %}
-                    <div class="mt-1"><span class="predicted-badge" style="font-size:0.65rem;"><i class="bi bi-star-fill"></i> Exact! +3 pts</span></div>
-                    {% endif %}
-                </div>
+            <div class="pred-item {% if pred.is_exact %}exact{% endif %}">
+                <div class="pred-name">{{ pred.participant.name }}</div>
+                <div class="pred-score">{{ pred.home_score }} - {{ pred.away_score }}</div>
+                {% if pred.is_exact %}
+                <span class="pred-badge"><i class="bi bi-star-fill"></i> Exact! +3</span>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
+    </div>
+    {% elif match.is_locked or match.status == 'completed' %}
+    <div class="glass-card p-4 text-center">
+        <p class="text-muted mb-0">No predictions were submitted for this match.</p>
+    </div>
+    {% else %}
+    <div class="glass-card p-4 text-center">
+        <p class="text-muted mb-0">No predictions yet. Be the first to predict!</p>
+        {% if not current_participant %}
+        <a href="{% url 'predictor:login' %}?next={% url 'predictor:match_detail' match.id %}" class="btn btn-gold btn-sm btn-glow mt-2">
+            <i class="bi bi-box-arrow-in-right"></i> Login to Predict
+        </a>
+        {% endif %}
     </div>
     {% endif %}
 </div>

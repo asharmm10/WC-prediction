@@ -13,7 +13,7 @@ def get_leaderboard():
     Calculates and returns leaderboard data as a list of dicts
     with 'participant', 'points', and 'exact_count'.
     """
-    participants = Participant.objects.filter(is_active=True)
+    participants = Participant.objects.filter(is_active=True, is_admin=False)
     leaderboard = []
 
     for participant in participants:

@@ -16,8 +16,9 @@ def get_leaderboard():
 
     Returns a list of dicts sorted by points (desc), then exact_predictions (desc),
     each containing: participant, points, exact_predictions, matches_predicted, rank.
+    Excludes admin participants.
     """
-    participants = Participant.objects.filter(is_active=True)
+    participants = Participant.objects.filter(is_active=True, is_admin=False)
     board = []
     for p in participants:
         predictions = p.predictions.select_related('match')

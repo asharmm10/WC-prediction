@@ -3,7 +3,6 @@
 {% load predictor_tags %}
 
 {% block title %}Today's Matches - WC2026{% endblock %}
-{% block nav_today %}active{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -47,11 +46,12 @@
         -webkit-backdrop-filter: blur(20px) saturate(1.4) brightness(1.1);
         border: 1px solid rgba(255,255,255,0.06);
         border-radius: 20px;
-        padding: 1.5rem;
+        padding: 1.25rem;
         margin-bottom: 1rem;
         position: relative;
         overflow: hidden;
         transition: all 0.3s ease;
+        cursor: pointer;
     }
     .today-match-card .match-accent-bar {
         position: absolute;
@@ -67,35 +67,48 @@
         background: rgba(12,18,35,0.6);
     }
     .today-match-body {
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        align-items: center;
-        gap: 1rem;
-    }
-    .today-team {
-        text-align: center;
         display: flex;
-        flex-direction: column;
         align-items: center;
         gap: 0.5rem;
     }
+    .today-team {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex: 1;
+        min-width: 0;
+    }
+    .today-team.home {
+        justify-content: flex-end;
+        text-align: right;
+    }
+    .today-team.away {
+        justify-content: flex-start;
+        text-align: left;
+    }
     .today-team-logo {
-        width: 52px;
-        height: 52px;
+        width: 40px;
+        height: 40px;
         object-fit: contain;
         filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+        flex-shrink: 0;
     }
     .today-team-name {
         font-family: var(--font-heading);
         font-weight: 700;
         font-size: 0.85rem;
         color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .today-vs {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 0.25rem;
+        min-width: 50px;
+        flex-shrink: 0;
     }
     .today-vs-text {
         font-family: var(--font-mono);
@@ -115,7 +128,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 1rem;
+        margin-top: 0.75rem;
         padding-top: 0.75rem;
         border-top: 1px solid rgba(255,255,255,0.04);
     }
@@ -133,7 +146,7 @@
         gap: 6px;
     }
     .predict-inline input {
-        width: 50px;
+        width: 46px;
         text-align: center;
         background: rgba(12,18,35,0.8);
         border: 1px solid rgba(255,255,255,0.08);
@@ -141,8 +154,8 @@
         color: var(--gold-light);
         font-family: var(--font-mono);
         font-weight: 800;
-        font-size: 1.1rem;
-        padding: 6px;
+        font-size: 1rem;
+        padding: 5px;
     }
     .predict-inline input:focus {
         border-color: rgba(212,175,55,0.4);
@@ -175,10 +188,13 @@
     }
     
     @media (max-width: 576px) {
-        .today-match-card { padding: 1rem; }
-        .today-team-logo { width: 40px; height: 40px; }
-        .today-team-name { font-size: 0.75rem; }
+        .today-match-card { padding: 0.75rem; }
+        .today-team-logo { width: 28px; height: 28px; }
+        .today-team-name { font-size: 0.7rem; }
         .today-score { font-size: 1.4rem; }
+        .today-vs { min-width: 36px; }
+        .predict-inline input { width: 38px; font-size: 0.85rem; padding: 4px; }
+        .predict-inline .btn-predict-sm { padding: 4px 10px; font-size: 0.7rem; }
     }
 </style>
 {% endblock %}
@@ -198,20 +214,23 @@
             <span class="text-success">Open for Predictions</span>
         </div>
         {% for match in open_matches %}
+        <a href="{% url 'predictor:match_detail' match.id %}" style="text-decoration:none;color:inherit;">
         <div class="today-match-card" style="--home-color:{{ match.home_team_color }};--away-color:{{ match.away_team_color }};">
             <div class="match-accent-bar"></div>
             <div class="today-match-body">
-                <div class="today-team">
+                <!-- Home: name then crest -->
+                <div class="today-team home">
+                    <span class="today-team-name">{{ match.home_team }}</span>
                     {% if match.home_team_logo %}
                     <img src="{% static match.home_team_logo %}" alt="{{ match.home_team }}" class="today-team-logo">
                     {% endif %}
-                    <span class="today-team-name">{{ match.home_team }}</span>
                 </div>
                 <div class="today-vs">
                     <span class="today-vs-text">VS</span>
                     <span class="today-match-time">{{ match.kickoff_datetime|date:"H:i" }}</span>
                 </div>
-                <div class="today-team">
+                <!-- Away: crest then name -->
+                <div class="today-team away">
                     {% if match.away_team_logo %}
                     <img src="{% static match.away_team_logo %}" alt="{{ match.away_team }}" class="today-team-logo">
                     {% endif %}
@@ -231,7 +250,7 @@
                     {% if match.has_predicted %}
                     <span class="predicted-badge"><i class="bi bi-check-circle"></i> Predicted</span>
                     {% elif current_participant %}
-                    <form method="post" action="{% url 'predictor:submit_prediction' match.id %}" class="predict-inline prediction-form" data-ajax="1">
+                    <form method="post" action="{% url 'predictor:submit_prediction' match.id %}" class="predict-inline prediction-form" data-ajax="1" onclick="event.stopPropagation();">
                         {% csrf_token %}
                         <input type="number" name="home_score" min="0" max="20" placeholder="H" required>
                         <span class="sep">-</span>
@@ -239,13 +258,14 @@
                         <button type="submit" class="btn-predict-sm">Predict</button>
                     </form>
                     {% else %}
-                    <a href="{% url 'predictor:login' %}?next={% url 'predictor:today' %}" class="btn btn-gold btn-sm btn-glow" style="border-radius:10px;font-size:0.8rem;">
-                        <i class="bi bi-box-arrow-in-right"></i> Login to Predict
-                    </a>
+                    <span class="btn btn-gold btn-sm btn-glow" style="border-radius:10px;font-size:0.75rem;">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </span>
                     {% endif %}
                 </div>
             </div>
         </div>
+        </a>
         {% endfor %}
     </div>
     {% endif %}
@@ -258,20 +278,21 @@
             <span class="text-danger">Locked</span>
         </div>
         {% for match in locked_matches %}
+        <a href="{% url 'predictor:match_detail' match.id %}" style="text-decoration:none;color:inherit;">
         <div class="today-match-card" style="--home-color:{{ match.home_team_color }};--away-color:{{ match.away_team_color }};">
             <div class="match-accent-bar"></div>
             <div class="today-match-body">
-                <div class="today-team">
+                <div class="today-team home">
+                    <span class="today-team-name">{{ match.home_team }}</span>
                     {% if match.home_team_logo %}
                     <img src="{% static match.home_team_logo %}" alt="{{ match.home_team }}" class="today-team-logo">
                     {% endif %}
-                    <span class="today-team-name">{{ match.home_team }}</span>
                 </div>
                 <div class="today-vs">
                     <span class="today-vs-text">VS</span>
                     <span class="today-match-time">{{ match.kickoff_datetime|date:"H:i" }}</span>
                 </div>
-                <div class="today-team">
+                <div class="today-team away">
                     {% if match.away_team_logo %}
                     <img src="{% static match.away_team_logo %}" alt="{{ match.away_team }}" class="today-team-logo">
                     {% endif %}
@@ -289,6 +310,7 @@
                 </div>
             </div>
         </div>
+        </a>
         {% endfor %}
     </div>
     {% endif %}
@@ -301,20 +323,21 @@
             <span class="text-info">Completed</span>
         </div>
         {% for match in completed_matches %}
+        <a href="{% url 'predictor:match_detail' match.id %}" style="text-decoration:none;color:inherit;">
         <div class="today-match-card" style="--home-color:{{ match.home_team_color }};--away-color:{{ match.away_team_color }};">
             <div class="match-accent-bar"></div>
             <div class="today-match-body">
-                <div class="today-team">
+                <div class="today-team home">
+                    <span class="today-team-name">{{ match.home_team }}</span>
                     {% if match.home_team_logo %}
                     <img src="{% static match.home_team_logo %}" alt="{{ match.home_team }}" class="today-team-logo">
                     {% endif %}
-                    <span class="today-team-name">{{ match.home_team }}</span>
                 </div>
                 <div class="today-vs">
                     <span class="today-vs-text">FT</span>
                     <span class="today-score">{{ match.home_score }} - {{ match.away_score }}</span>
                 </div>
-                <div class="today-team">
+                <div class="today-team away">
                     {% if match.away_team_logo %}
                     <img src="{% static match.away_team_logo %}" alt="{{ match.away_team }}" class="today-team-logo">
                     {% endif %}
@@ -328,12 +351,11 @@
                     {% endif %}
                 </div>
                 <div>
-                    <a href="{% url 'predictor:match_detail' match.id %}" class="btn btn-gold-outline btn-sm" style="border-radius:8px;font-size:0.75rem;">
-                        View Details <i class="bi bi-arrow-right"></i>
-                    </a>
+                    <span class="match-status-badge completed">FT</span>
                 </div>
             </div>
         </div>
+        </a>
         {% endfor %}
     </div>
     {% endif %}

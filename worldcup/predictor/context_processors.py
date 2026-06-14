@@ -54,7 +54,7 @@ def _calculate_leaderboard():
     Calculate leaderboard from predictions.
     Returns a list of dicts with 'participant', 'points', and 'exact_count'.
     """
-    participants = Participant.objects.filter(is_active=True)
+    participants = Participant.objects.filter(is_active=True, is_admin=False)
     leaderboard = []
 
     for i, participant in enumerate(participants):

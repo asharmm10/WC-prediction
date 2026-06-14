@@ -169,172 +169,13 @@
   }
 
 
-  // ==================================================================
-  // 3. FLOATING FOOTBALLS
-  // ==================================================================
-  function initFloatingFootballs() {
-    if (prefersReducedMotion) return;
-    const container = document.getElementById('floating-footballs');
-    if (!container) return;
-
-    function createFootball() {
-      const ball = document.createElement('div');
-      ball.className = 'floating-football';
-      ball.innerHTML = '⚽';
-      ball.style.left = Math.random() * 100 + '%';
-      ball.style.animationDuration = (10 + Math.random() * 8) + 's';
-      ball.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
-      ball.style.animationDelay = Math.random() * 2 + 's';
-      container.appendChild(ball);
-      setTimeout(function () {
-        if (ball.parentNode) ball.parentNode.removeChild(ball);
-      }, 20000);
-    }
-
-    createFootball();
-    setInterval(createFootball, 4000);
-  }
+  // Floating footballs removed — caused mobile flickering
 
 
-  // ==================================================================
-  // 4. ★★★ PARALLAX SCROLL — THE CRITICAL FIX ★★★
-  //     Background elements (players, logos) respond to scroll
-  // ==================================================================
-  function initParallaxScroll() {
-    if (prefersReducedMotion) return;
-
-    const playerElements = document.querySelectorAll('[data-parallax-player]');
-    const generalElements = document.querySelectorAll('[data-parallax]');
-    const watermarkElements = document.querySelectorAll('.bg-watermark');
-
-    let ticking = false;
-    let lastScrollY = window.scrollY;
-
-    function updateParallax() {
-      const scrollY = window.scrollY;
-      const vh = window.innerHeight;
-
-      // Player parallax elements
-      playerElements.forEach(function (el) {
-        const speed = parseFloat(el.getAttribute('data-parallax-player')) || 0.05;
-        const direction = el.getAttribute('data-parallax-direction') || 'up';
-        const yOffset = direction === 'up'
-          ? -(scrollY * speed)
-          : (scrollY * speed);
-        el.style.transform = 'translateY(' + yOffset + 'px)';
-
-        // Fade based on scroll position — players become more visible as you scroll
-        const fadeStart = 0;
-        const fadeEnd = vh * 2;
-        const progress = Math.min(1, Math.max(0, (scrollY - fadeStart) / (fadeEnd - fadeStart)));
-        const baseOpacity = 0.12;
-        const maxOpacity = 0.25;
-        el.style.opacity = baseOpacity + (maxOpacity - baseOpacity) * progress;
-      });
-
-      // General parallax elements (stadium, pattern)
-      generalElements.forEach(function (el) {
-        const speed = parseFloat(el.getAttribute('data-parallax')) || 0.02;
-        el.style.transform = 'translateY(' + -(scrollY * speed) + 'px)';
-      });
-
-      // Watermark parallax — slower, different direction
-      watermarkElements.forEach(function (el, i) {
-        const speed = 0.03 + (i * 0.01);
-        const rotation = Math.sin(scrollY * 0.001) * 2;
-        el.style.transform = 'translateY(' + -(scrollY * speed) + 'px) rotate(' + rotation + 'deg)';
-      });
-
-      ticking = false;
-    }
-
-    function onScroll() {
-      lastScrollY = window.scrollY;
-      if (!ticking) {
-        requestAnimationFrame(updateParallax);
-        ticking = true;
-      }
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    // Initial call
-    updateParallax();
-  }
+  // Parallax scroll removed — caused mobile flickering, players not visible
 
 
-  // ==================================================================
-  // 5. PARTICLE CANVAS — Colorful particles
-  // ==================================================================
-  function initParticles() {
-    if (prefersReducedMotion) return;
-    const canvas = document.getElementById('particles-canvas');
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    const colors = [
-      'rgba(212, 175, 55, 0.5)',
-      'rgba(59, 130, 246, 0.4)',
-      'rgba(16, 185, 129, 0.4)',
-      'rgba(139, 92, 246, 0.3)',
-      'rgba(245, 212, 66, 0.5)',
-      'rgba(6, 182, 212, 0.3)',
-    ];
-
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-
-    function createParticle() {
-      return {
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 2 + 0.5,
-        speedX: (Math.random() - 0.5) * 0.3,
-        speedY: (Math.random() - 0.5) * 0.3,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        opacity: Math.random() * 0.5 + 0.2,
-      };
-    }
-
-    function init() {
-      resize();
-      particles = [];
-      const count = Math.min(80, Math.floor(canvas.width * canvas.height / 15000));
-      for (let i = 0; i < count; i++) {
-        particles.push(createParticle());
-      }
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach(function (p) {
-        p.x += p.speedX;
-        p.y += p.speedY;
-
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.globalAlpha = p.opacity;
-        ctx.fill();
-      });
-
-      ctx.globalAlpha = 1;
-      requestAnimationFrame(animate);
-    }
-
-    window.addEventListener('resize', debounce(init, 300));
-    init();
-    animate();
-  }
+  // Particle canvas removed — caused mobile flickering
 
 
   // ==================================================================
@@ -558,9 +399,6 @@
   // ==================================================================
   function init() {
     initCountdown();
-    initFloatingFootballs();
-    initParallaxScroll();
-    initParticles();
     initNavbar();
     initPredictionForms();
     initPageLoad();

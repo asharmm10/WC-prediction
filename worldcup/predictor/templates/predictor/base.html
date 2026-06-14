@@ -24,23 +24,23 @@
   <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
   <!-- Custom Dark Theme -->
-  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=5{% if xtransformport_param %}&{{ xtransformport_param }}{% endif %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=6{% if xtransformport_param %}&{{ xtransformport_param }}{% endif %}">
 
   {% block extra_css %}{% endblock %}
 </head>
 <body>
   <!-- ============================================================
-       MULTI-LAYER PARALLAX BACKGROUND SYSTEM
+       MULTI-LAYER BACKGROUND SYSTEM (simplified — no parallax)
        ============================================================ -->
 
   <!-- Layer 1: Deep gradient base -->
   <div class="bg-layer-base"></div>
 
   <!-- Layer 2: Stadium background image (very subtle) -->
-  <div class="bg-layer-stadium" data-parallax="0.02"></div>
+  <div class="bg-layer-stadium"></div>
 
   <!-- Layer 3: Hexagonal pattern overlay -->
-  <div class="bg-layer-pattern" data-parallax="0.01"></div>
+  <div class="bg-layer-pattern"></div>
 
   <!-- Layer 4: Animated gradient orbs -->
   <div class="bg-layer-orbs">
@@ -53,35 +53,15 @@
     <div class="bg-orb bg-orb-7"></div>
   </div>
 
-  <!-- Layer 5: Parallax Player Silhouettes — using uploaded assets -->
-  <div class="bg-player-parallax bg-player-left-1" data-parallax-player="0.08" data-parallax-direction="up">
-    <img src="{% static 'images/players/messi.png' %}" alt="" loading="lazy">
-  </div>
-  <div class="bg-player-parallax bg-player-right-1" data-parallax-player="0.06" data-parallax-direction="down">
-    <img src="{% static 'images/players/ronaldo.png' %}" alt="" loading="lazy">
-  </div>
-  <div class="bg-player-parallax bg-player-left-2" data-parallax-player="0.04" data-parallax-direction="up">
-    <img src="{% static 'images/players/neymar.png' %}" alt="" loading="lazy">
-  </div>
-  <div class="bg-player-parallax bg-player-right-2" data-parallax-player="0.05" data-parallax-direction="down">
-    <img src="{% static 'images/players/mbappe.png' %}" alt="" loading="lazy">
-  </div>
-
-  <!-- Layer 6: WC Logo & Trophy watermarks -->
+  <!-- Layer 5: WC Logo & Trophy watermarks -->
   <img src="{% static 'images/bg/wc2026_logo_white.png' %}" alt="" class="bg-watermark bg-watermark-logo" loading="lazy">
   <img src="{% static 'images/bg/trophy.png' %}" alt="" class="bg-watermark bg-watermark-trophy" loading="lazy">
 
-  <!-- Layer 7: Stadium lights effect -->
+  <!-- Layer 6: Stadium lights effect -->
   <div class="stadium-lights"></div>
 
-  <!-- Layer 8: Subtle grid lines -->
+  <!-- Layer 7: Subtle grid lines -->
   <div class="bg-layer-grid"></div>
-
-  <!-- Floating Footballs Container -->
-  <div id="floating-footballs"></div>
-
-  <!-- Background Particles -->
-  <canvas id="particles-canvas"></canvas>
 
   <!-- Toast Container -->
   <div class="toast-container" id="toast-container"></div>
@@ -104,38 +84,38 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link{% block nav_home %}{% endblock %}" href="{% url 'predictor:home' %}">
+            <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'predictor:home' %}">
               <i class="bi bi-house-door"></i> Home
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{% block nav_today %}{% endblock %}" href="{% url 'predictor:today' %}">
+            <a class="nav-link {% if request.resolver_match.url_name == 'today' %}active{% endif %}" href="{% url 'predictor:today' %}">
               <i class="bi bi-calendar-event"></i> Today
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{% block nav_matches %}{% endblock %}" href="{% url 'predictor:matches' %}">
+            <a class="nav-link {% if request.resolver_match.url_name == 'matches' %}active{% endif %}" href="{% url 'predictor:matches' %}">
               <i class="bi bi-trophy"></i> Matches
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{% block nav_schedule %}{% endblock %}" href="{% url 'predictor:schedule' %}">
+            <a class="nav-link {% if request.resolver_match.url_name == 'schedule' %}active{% endif %}" href="{% url 'predictor:schedule' %}">
               <i class="bi bi-calendar3"></i> Schedule
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{% block nav_leaderboard %}{% endblock %}" href="{% url 'predictor:leaderboard' %}">
+            <a class="nav-link {% if request.resolver_match.url_name == 'leaderboard' %}active{% endif %}" href="{% url 'predictor:leaderboard' %}">
               <i class="bi bi-bar-chart-fill"></i> Leaderboard
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{% block nav_bracket %}{% endblock %}" href="{% url 'predictor:bracket' %}">
+            <a class="nav-link {% if request.resolver_match.url_name == 'bracket' %}active{% endif %}" href="{% url 'predictor:bracket' %}">
               <i class="bi bi-diagram-3"></i> Bracket
             </a>
           </li>
           {% if current_participant and current_participant.is_admin %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'predictor:admin_dashboard' %}">
+            <a class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}" href="{% url 'predictor:admin_dashboard' %}">
               <i class="bi bi-shield-lock"></i> Admin
             </a>
           </li>
@@ -216,7 +196,7 @@
   </script>
 
   <!-- Custom JS -->
-  <script src="{% static 'js/main.js' %}?v=5{% if xtransformport_param %}&{{ xtransformport_param }}{% endif %}"></script>
+  <script src="{% static 'js/main.js' %}?v=6{% if xtransformport_param %}&{{ xtransformport_param }}{% endif %}"></script>
 
   {% block extra_js %}{% endblock %}
 </body>
