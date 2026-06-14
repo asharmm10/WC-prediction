@@ -52,7 +52,7 @@ def get_current_participant(request):
 # Authentication views
 # ---------------------------------------------------------------------------
 
-def login_view(request):
+def login_view(request, admin=False):
     """Handle participant login via name + secret_code.
 
     GET: Display login form with name dropdown and secret code field.
@@ -67,7 +67,7 @@ def login_view(request):
         next_url = ''
 
     if request.method == 'POST':
-        form = ParticipantLoginForm(request.POST)
+        form = ParticipantLoginForm(request.POST, admin=admin)
         # Also read next from hidden field
         next_url = request.POST.get('next', '')
         if form.is_valid():
@@ -94,7 +94,7 @@ def login_view(request):
         else:
             messages.error(request, "Please correct the errors below.")
     else:
-        form = ParticipantLoginForm()
+        form = ParticipantLoginForm(admin=admin)
 
     return render(request, 'predictor/login.html', {
         'form': form,
@@ -502,6 +502,7 @@ def countdown_api(request):
 def admin_dashboard(request):
     """Custom admin dashboard for managing matches, results, and knockout bracket."""
     # Check if user is admin participant
+    from django.contrib import messages
     participant_id = request.session.get('participant_id')
     is_admin = False
     if participant_id:

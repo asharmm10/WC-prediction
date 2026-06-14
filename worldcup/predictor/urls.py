@@ -7,6 +7,7 @@ app_name = 'predictor'
 urlpatterns = [
     path('', views.home, name='home'),
     path('login/', views.login_view, name='login'),
+    path('admin-login/', views.login_view, {'admin': True}, name='admin_login'),
     path('logout/', views.logout_view, name='logout'),
     path('today/', views.today, name='today'),
     path('matches/', views.matches, name='matches'),

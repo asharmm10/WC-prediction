@@ -37,23 +37,27 @@ class PredictionForm(forms.Form):
 class ParticipantLoginForm(forms.Form):
     """Form for participant login with name dropdown and secret code."""
 
-    name = forms.ModelChoiceField(
-        queryset=Participant.objects.filter(is_active=True, is_admin=False),
-        widget=forms.Select(
-            attrs={
-                'class': 'form-select form-select-lg',
-            }
-        ),
-    )
-    secret_code = forms.CharField(
-        widget=forms.PasswordInput(
-            attrs={
-                'class': 'form-control form-control-lg',
-            }
-        ),
-        label='Secret Code',
-    )
 
+    def __init__(self, *args, admin=False, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+        self.fields['name'] = forms.ModelChoiceField(
+            queryset=Participant.objects.filter(is_active=True, is_admin=admin),
+            widget=forms.Select(
+                attrs={
+                    'class': 'form-select form-select-lg',
+                }
+            ),
+        )
+        self.fields['secret_code'] = forms.CharField(
+            widget=forms.PasswordInput(
+                attrs={
+                    'class': 'form-control form-control-lg',
+                }
+            ),
+            label='Secret Code',
+        )
 
 class InlinePredictionForm(forms.Form):
     """Compact prediction form for AJAX inline submissions on the today page."""

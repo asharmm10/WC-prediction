@@ -52,6 +52,7 @@ TEAM_LOGO_MAP = {
     'Uzbekistan': 'uzbekistan-national-team-footballlogos-org.png',
     'Bosnia and Herzegovina': 'bosnia-and-herzegovina-footballlogos-org.png',
     'Cabo Verde': 'cabo-verde-footballlogos-org.png',
+    'Curaçao': 'curacao-national-team-footballlogos-org.png',
 }
 
 # Team theme colors for backgrounds
