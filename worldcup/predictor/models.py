@@ -12,7 +12,7 @@ TEAM_LOGO_MAP = {
     'Brazil': 'brazil-national-team-footballlogos-org.png',
     'Canada': 'canada-national-team-footballlogos-org.png',
     'Colombia': 'colombia-national-team-footballlogos-org.png',
-    "Cote d'Ivoire": 'cote-d-ivoire-national-team-footballlogos-org.png',
+    "Ivory Coast": 'cote-d-ivoire-national-team-footballlogos-org.png',
     'Croatia': 'croatia-national-team-footballlogos-org.png',
     'Curacao': 'curacao-national-team-footballlogos-org.png',
     'Czechia': 'czechia-national-team-footballlogos-org.png',
@@ -65,7 +65,7 @@ TEAM_COLORS = {
     'Brazil': '#009739',
     'Canada': '#FF0000',
     'Colombia': '#FCD116',
-    "Cote d'Ivoire": '#F77F00',
+    "Ivory Coast": '#F77F00',
     'Croatia': '#0D5EAF',
     'Curacao': '#002B7F',
     'Czechia': '#11457E',
@@ -105,6 +105,7 @@ TEAM_COLORS = {
     'Uzbekistan': '#1EB53A',
     'Bosnia and Herzegovina': '#002395',
     'Cabo Verde': '#003893',
+    'Curaçao': '#003893',
 }
 
 
@@ -257,7 +258,7 @@ class Prediction(models.Model):
 
     @property
     def points(self):
-        return 3 if self.is_exact else 0
+        return 1 if self.is_exact else 0
 
 
 class KnockoutMatch(models.Model):

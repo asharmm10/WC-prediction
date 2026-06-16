@@ -472,7 +472,7 @@
                 <img src="{% static next_match.home_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="" class="team-logo-sm">
                 {% endif %}
                 <span class="text-secondary small">{{ next_match.home_team }}</span>
-                <span class="text-muted" style="font-size:0.7rem;">vs</span>
+                <span class="" style="font-size:0.9rem;">vs</span>
                 <span class="text-secondary small">{{ next_match.away_team }}</span>
                 {% if next_match.away_team_logo %}
                 <img src="{% static next_match.away_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="" class="team-logo-sm">
@@ -517,11 +517,18 @@
 <!-- ═══════════════════════════════════════════════════════════════
      NEXT MATCH PROMINENT CARD
      ═══════════════════════════════════════════════════════════════ -->
-{% if next_match %}
+{% if next_matches %}
+<div class="container pb-3" data-aos="fade-up">
+        <div class="match-accent-bar"></div>
+        <div class="next-match-label"><i class="bi bi-clock"></i> Upcoming Matches</div>
+</div>
+{% endif %}
+
+{% for next_match in next_matches %}
 <div class="container pb-3" data-aos="fade-up">
     <a href="{% url 'predictor:match_detail' next_match.id %}" class="next-match-card" style="--home-color:{{ next_match.home_team_color }};--away-color:{{ next_match.away_team_color }};">
         <div class="match-accent-bar"></div>
-        <div class="next-match-label"><i class="bi bi-clock"></i> Next Match</div>
+        {% comment %} <div class="next-match-label"><i class="bi bi-clock"></i> Next Match</div> {% endcomment %}
         <div class="next-match-body">
             <div class="next-match-team home">
                 <span class="next-match-team-name">{{ next_match.home_team }}</span>
@@ -542,7 +549,7 @@
         </div>
     </a>
 </div>
-{% endif %}
+{% endfor %}
 
 <!-- ═══════════════════════════════════════════════════════════════
      MAIN CONTENT

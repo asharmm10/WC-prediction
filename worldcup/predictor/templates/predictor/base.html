@@ -39,7 +39,7 @@
   <!-- Layer 2: Stadium background image (very subtle) -->
   <div class="bg-layer-stadium"></div>
 
-  <!-- Layer 3: Hexagonal pattern overlay -->
+  {% comment %} <!-- Layer 3: Hexagonal pattern overlay -->
   <div class="bg-layer-pattern"></div>
 
   <!-- Layer 4: Animated gradient orbs -->
@@ -61,7 +61,7 @@
   <div class="stadium-lights"></div>
 
   <!-- Layer 7: Subtle grid lines -->
-  <div class="bg-layer-grid"></div>
+  <div class="bg-layer-grid"></div> {% endcomment %}
 
   <!-- Toast Container -->
   <div class="toast-container" id="toast-container"></div>
@@ -165,14 +165,14 @@
           <span class="gold-text fw-bold">WC2026</span>
         </div>
         <div class="col-md-4">
-          <p class="text-muted mb-0" style="font-size:0.85rem;">FIFA World Cup 2026 — Family Prediction League</p>
-          <p class="text-muted small mb-0">Made with &#10084;&#65039; for the family</p>
+          <p class=" mb-0" style="font-size:0.85rem;">FIFA World Cup 2026 — Family Prediction League</p>
+          <p class=" small mb-0">Made with &#10084;&#65039; for the family</p>
         </div>
         <div class="col-md-4 text-md-end">
           {% if current_participant and current_participant.is_admin %}
-          <a href="{% url 'predictor:admin_dashboard' %}" class="text-muted small me-2"><i class="bi bi-shield-lock"></i> Admin</a>
+          <a href="{% url 'predictor:admin_dashboard' %}" class=" small me-2"><i class="bi bi-shield-lock"></i> Admin</a>
           {% endif %}
-          <a href="/admin/" class="text-muted small">Django Admin</a>
+          <a href="/admin/" class=" small">Django Admin</a>
         </div>
       </div>
     </div>

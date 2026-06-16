@@ -112,12 +112,12 @@
                             {% if match.home_team_logo %}
                             <img src="{% static match.home_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="" class="team-logo-inline">
                             {% endif %}
-                            <span class="text-white fw-bold">{{ match.home_team }}</span>
-                            <span class="text-muted"> vs </span>
+                            <strong class="text-white fw-bold">{{ match.home_team }}</strong>
+                            <span class="next-match-vs-text"> vs </span>
                             {% if match.away_team_logo %}
                             <img src="{% static match.away_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="" class="team-logo-inline">
                             {% endif %}
-                            <span class="text-white fw-bold">{{ match.away_team }}</span>
+                            <strong class="text-white fw-bold">{{ match.away_team }}</strong>
                         </td>
                         <td class="text-secondary">{{ match.kickoff_datetime|date:"M j, H:i" }}</td>
                         <td><span class="badge" style="background:rgba(59,130,246,0.15);color:#60a5fa;">{{ match.get_stage_display }}</span></td>

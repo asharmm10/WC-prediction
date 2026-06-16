@@ -142,6 +142,17 @@ def home(request):
         .first()
     )
 
+    from datetime import timedelta
+    next_24h = now + timedelta(hours=24)
+
+    next_matches = (
+        Match.objects.filter(
+            kickoff_datetime__gt=now,
+            kickoff_datetime__lte=next_24h
+        )
+        .order_by('kickoff_datetime')
+    )
+
     # Participant count
     participant_count = Participant.objects.filter(is_active=True, is_admin=False).count()
 
@@ -169,6 +180,7 @@ def home(request):
 
     context = {
         'next_match': next_match,
+        'next_matches': next_matches,
         'participant_count': participant_count,
         'top5': top5,
         'upcoming_matches': upcoming_matches,
