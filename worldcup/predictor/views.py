@@ -556,6 +556,11 @@ def admin_dashboard(request):
                 ko = KnockoutMatch.objects.get(pk=ko_id)
                 ko.home_team = home_team
                 ko.away_team = away_team
+
+                if ko.match:
+                    ko.match.home_team = home_team
+                    ko.match.away_team = away_team
+                    ko.match.save()
                 if home_score and away_score:
                     ko.home_score = int(home_score)
                     ko.away_score = int(away_score)

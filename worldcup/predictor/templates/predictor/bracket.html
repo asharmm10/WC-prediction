@@ -29,7 +29,6 @@
     .bracket-round {
         display: flex;
         flex-direction: column;
-        justify-content: center;
         min-width: 170px;
         position: relative;
     }
@@ -47,6 +46,8 @@
         background: rgba(212, 175, 55, 0.06);
         border: 1px solid rgba(212, 175, 55, 0.15);
         border-radius: 6px;
+        flex-shrink: 0;
+        line-height: 1.4;
     }
     
     .bracket-round-matches {
@@ -75,7 +76,59 @@
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     }
     
-    /* Team row inside a match */
+    /* ── FINAL match — golden & bigger ── */
+    .bracket-match-slot.match-final {
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.22), rgba(212, 175, 55, 0.06));
+        border: 1px solid rgba(212, 175, 55, 0.6);
+        box-shadow: 0 0 26px rgba(212, 175, 55, 0.28), 0 4px 16px rgba(0,0,0,0.4);
+        margin: 10px 0;
+    }
+    .bracket-match-slot.match-final .bracket-team-row {
+        padding: 9px 14px;
+        font-size: 0.88rem;
+    }
+    .bracket-match-slot.match-final .bt-crest { width: 28px; height: 28px; }
+    .bracket-match-slot.match-final .bt-name { font-size: 0.85rem; }
+    .bracket-match-slot.match-final .bt-score { font-size: 1.05rem; }
+    .bracket-match-slot.match-final .bt-datetime {
+        color: var(--gold);
+        background: rgba(212, 175, 55, 0.12);
+        font-weight: 700;
+        padding: 5px 8px;
+        font-size: 0.6rem;
+        letter-spacing: 1px;
+    }
+    
+    /* ── 3rd place — subtle, dimmer ── */
+    .bracket-match-slot.match-third-place {
+        background: rgba(10, 15, 30, 0.35);
+        border: 1px dashed rgba(255, 255, 255, 0.08);
+        opacity: 0.7;
+    }
+    .bracket-match-slot.match-third-place .bt-datetime {
+        color: rgba(180, 180, 180, 0.5);
+    }
+    
+    /* Date/time strip */
+    .bt-datetime {
+        padding: 3px 8px;
+        font-size: 0.55rem;
+        font-family: var(--font-mono);
+        color: rgba(255, 255, 255, 0.7);
+        text-align: center;
+        background: rgba(0, 0, 0, 0.3);
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .bt-datetime i {
+        margin-right: 3px;
+        font-size: 0.55rem;
+    }
+    
+    /* Team row */
     .bracket-team-row {
         display: flex;
         align-items: center;
@@ -89,16 +142,9 @@
     .bracket-team-row:first-child {
         border-bottom: 1px solid rgba(255, 255, 255, 0.03);
     }
-    .bracket-team-row.winner {
-        background: rgba(16, 185, 129, 0.06);
-    }
-    .bracket-team-row.loser {
-        opacity: 0.4;
-    }
-    .bracket-team-row.tbd {
-        opacity: 0.25;
-        font-style: italic;
-    }
+    .bracket-team-row.winner { background: rgba(16, 185, 129, 0.06); }
+    .bracket-team-row.loser { opacity: 0.4; }
+    .bracket-team-row.tbd { opacity: 0.25; font-style: italic; }
     .bracket-team-row.home .bt-crest { order: 2; }
     .bracket-team-row.home .bt-name { order: 1; text-align: right; flex: 1; }
     .bracket-team-row.home .bt-score { order: 3; }
@@ -128,57 +174,101 @@
         text-align: right;
     }
     
-    /* Connector between rounds */
+    /* ── Connector between rounds ── */
     .bracket-connector-col {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        width: 28px;
-        min-width: 28px;
+        width: 40px;
+        min-width: 40px;
         position: relative;
+        flex-shrink: 0;
     }
     
-    .bracket-connector-pair {
+    /* Header spacer: identical to round header so columns align */
+    .bracket-connector-header-spacer {
+        text-align: center;
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--gold);
+        margin-bottom: 0.75rem;
+        padding: 5px 10px;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        visibility: hidden;
+        flex-shrink: 0;
+        line-height: 1.4;
+    }
+    
+    .bracket-connector-matches {
         display: flex;
         flex-direction: column;
         flex: 1;
-        position: relative;
     }
     
-    /* Draw bracket lines using CSS */
+    /* Each connector pair spans the height of TWO matches.
+       With space-around in matches column and flex:1 pairs here:
+         25% → center of upper match in previous round
+         75% → center of lower match in previous round
+         50% → center of corresponding match in next round */
+    .bracket-connector-pair {
+        position: relative;
+        flex: 1 1 0;
+        min-height: 0;
+    }
+    
+    /* Top horizontal input line (from upper match's center, left edge → vertical) */
     .bracket-connector-pair::before {
         content: '';
         position: absolute;
         top: 25%;
-        bottom: 25%;
-        right: 0;
-        width: 1px;
-        background: rgba(212, 175, 55, 0.2);
+        left: 0;
+        width: 50%;
+        height: 1px;
+        background: rgba(212, 175, 55, 0.7);
     }
+    
+    /* Bottom horizontal input line (from lower match's center, left edge → vertical) */
     .bracket-connector-pair::after {
         content: '';
         position: absolute;
-        top: 50%;
-        right: 0;
-        width: 14px;
+        bottom: 25%;
+        left: 0;
+        width: 50%;
         height: 1px;
-        background: rgba(212, 175, 55, 0.2);
+        background: rgba(212, 175, 55, 0.7);
     }
-    .bracket-connector-pair .top-line {
+    
+    /* Vertical line connecting the two input lines */
+    .bracket-connector-pair .connector-vertical {
         position: absolute;
         top: 25%;
-        right: 14px;
-        width: 14px;
-        height: 1px;
-        background: rgba(212, 175, 55, 0.2);
-    }
-    .bracket-connector-pair .bottom-line {
-        position: absolute;
         bottom: 25%;
-        right: 14px;
-        width: 14px;
+        left: 50%;
+        width: 1px;
+        background: rgba(212, 175, 55, 0.7);
+        transform: translateX(-50%);
+    }
+    
+    /* Output line (vertical → right edge, at center → next round's match center) */
+    .bracket-connector-pair .connector-output {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        right: 0;
         height: 1px;
-        background: rgba(212, 175, 55, 0.2);
+        background: rgba(212, 175, 55, 0.7);
+        transform: translateY(-50%);
+    }
+    
+    /* When the next stage is the Final stage with TWO matches
+       (Final at top, 3rd place at bottom), set stage.connector_to_top = True
+       on the Semi-Final stage so the output line reaches the Final (top match). */
+    .bracket-connector-col.to-final-top .bracket-connector-pair .connector-output {
+        top: 25%;
+        transform: translateY(-50%);
     }
     
     /* Mobile bracket */
@@ -188,14 +278,14 @@
         .bt-crest { width: 16px; height: 16px; }
         .bt-name { font-size: 0.6rem; }
         .bt-score { font-size: 0.7rem; }
-        .bracket-connector-col { width: 20px; min-width: 20px; }
-        .bracket-connector-pair .top-line,
-        .bracket-connector-pair .bottom-line { width: 10px; right: 10px; }
-        .bracket-connector-pair::after { width: 10px; }
+        .bracket-connector-col { width: 30px; min-width: 30px; }
+        .bracket-match-slot.match-final .bracket-team-row { padding: 6px 10px; font-size: 0.78rem; }
+        .bracket-match-slot.match-final .bt-crest { width: 22px; height: 22px; }
     }
     @media (max-width: 400px) {
         .bracket-round { min-width: 120px; }
-        .bt-name { max-width: 50px; }
+        /* .bt-name { max-width: 50px; } */
+        .bracket-connector-col { width: 24px; min-width: 24px; }
     }
 </style>
 {% endblock %}
@@ -216,8 +306,17 @@
                 <div class="bracket-round-header">{{ stage.label }}</div>
                 <div class="bracket-round-matches">
                     {% for km in stage.matches %}
-                    <div class="bracket-match-slot">
-                        <!-- Home team: name then crest -->
+
+                    {% if km.match.id %}
+                    <a href="{% url 'predictor:match_detail' km.match.id %}" class="text-decoration-none text-reset">
+                    {% endif %}
+                    <div class="bracket-match-slot {% if stage.key == 'final' %}match-final{% elif km.key == '3rd' %}match-third-place{% endif %}">
+                        {% if km.match.kickoff_datetime %}
+                        <div class="bt-datetime">
+                            <i class="bi bi-calendar3"></i>{{ km.match.kickoff_datetime|date:"d M · H:i" }}
+                        </div>
+                        {% endif %}
+                        <!-- Home team -->
                         <div class="bracket-team-row home {% if km.is_completed and km.home_score is not None and km.away_score is not None %}{% if km.home_score > km.away_score %}winner{% else %}loser{% endif %}{% endif %} {% if not km.home_team %}tbd{% endif %}">
                             {% if km.home_team %}
                             <span class="bt-name">{{ km.home_team }}</span>
@@ -231,7 +330,7 @@
                             <span class="bt-score">{{ km.home_score }}</span>
                             {% endif %}
                         </div>
-                        <!-- Away team: crest then name -->
+                        <!-- Away team -->
                         <div class="bracket-team-row away {% if km.is_completed and km.home_score is not None and km.away_score is not None %}{% if km.away_score > km.home_score %}winner{% else %}loser{% endif %}{% endif %} {% if not km.away_team %}tbd{% endif %}">
                             {% if km.away_team %}
                             {% if km.away_team_logo %}
@@ -246,18 +345,26 @@
                             {% endif %}
                         </div>
                     </div>
+                    {% if km.match.id %}
+                    </a>
+                    {% endif %}
                     {% endfor %}
                 </div>
             </div>
             <!-- Connector between rounds -->
             {% if not forloop.last %}
-            <div class="bracket-connector-col">
-                {% for km in stage.matches %}
-                <div class="bracket-connector-pair">
-                    <div class="top-line"></div>
-                    <div class="bottom-line"></div>
+            <div class="bracket-connector-col {% if stage.connector_to_top %}to-final-top{% endif %}">
+                <div class="bracket-connector-header-spacer">&nbsp;</div>
+                <div class="bracket-connector-matches">
+                    {% for km in stage.matches %}
+                    {% if forloop.counter0|divisibleby:2 %}
+                    <div class="bracket-connector-pair">
+                        <div class="connector-vertical"></div>
+                        <div class="connector-output"></div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
             {% endif %}
             {% endfor %}
