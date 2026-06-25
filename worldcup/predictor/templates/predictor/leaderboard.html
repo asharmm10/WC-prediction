@@ -18,24 +18,24 @@
         <div class="row mb-4 text-center">
             <div class="col-4" data-aos="fade-up" data-aos-delay="100">
                 <div class="glass-card p-3" style="border-color:rgba(192,192,192,0.2);">
-                    <div style="font-size:2rem;">&#127968;</div>
-                    <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#C0C0C0,#e8e8e8);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-family:var(--font-heading);color:#0a0e17;">2</div>
+                    <div style="font-size:3rem;" class="d-flex justify-content-center">&#129352;</div>
+                    {% comment %} <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#C0C0C0,#e8e8e8);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-family:var(--font-heading);color:#0a0e17;">2</div> {% endcomment %}
                     <div style="font-family:var(--font-heading);font-weight:700;font-size:0.85rem;color:#fff;">{{ leaderboard.1.participant.name }}</div>
                     <div class="mono-number" style="color:#C0C0C0;font-size:1.2rem;">{{ leaderboard.1.points }}<span style="font-size:0.6rem;color:#6b7280;">pts</span></div>
                 </div>
             </div>
             <div class="col-4" data-aos="fade-up" data-aos-delay="0">
                 <div class="glass-card-gold p-3" style="border-color:rgba(255,215,0,0.3);">
-                    <div style="font-size:2.5rem;">&#127942;</div>
-                    <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#FFD700,#f5d442);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-family:var(--font-heading);color:#0a0e17;font-size:1.1rem;box-shadow:0 0 20px rgba(255,215,0,0.3);">1</div>
+                    <div style="font-size:3.5rem;" class="d-flex justify-content-center">&#129351;</div>
+                    {% comment %} <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#FFD700,#f5d442);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-family:var(--font-heading);color:#0a0e17;font-size:1.1rem;box-shadow:0 0 20px rgba(255,215,0,0.3);">1</div> {% endcomment %}
                     <div style="font-family:var(--font-heading);font-weight:800;font-size:0.95rem;color:#fff;">{{ leaderboard.0.participant.name }}</div>
                     <div class="mono-number" style="color:#f5d442;font-size:1.4rem;">{{ leaderboard.0.points }}<span style="font-size:0.6rem;color:#6b7280;">pts</span></div>
                 </div>
             </div>
             <div class="col-4" data-aos="fade-up" data-aos-delay="200">
                 <div class="glass-card p-3" style="border-color:rgba(205,127,50,0.2);">
-                    <div style="font-size:2rem;">&#129351;</div>
-                    <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#CD7F32,#e8a857);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-family:var(--font-heading);color:#0a0e17;">3</div>
+                    <div style="font-size:3rem;" class="d-flex justify-content-center">&#129353;</div>
+                    {% comment %} <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#CD7F32,#e8a857);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-family:var(--font-heading);color:#0a0e17;">3</div> {% endcomment %}
                     <div style="font-family:var(--font-heading);font-weight:700;font-size:0.85rem;color:#fff;">{{ leaderboard.2.participant.name }}</div>
                     <div class="mono-number" style="color:#CD7F32;font-size:1.2rem;">{{ leaderboard.2.points }}<span style="font-size:0.6rem;color:#6b7280;">pts</span></div>
                 </div>
@@ -47,7 +47,7 @@
         {% for entry in leaderboard %}
         <div class="lb-row {% if entry.rank <= 3 %}top-{{ entry.rank }}{% endif %}" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}">
             <div class="lb-rank {% if entry.rank == 1 %}gold{% elif entry.rank == 2 %}silver{% elif entry.rank == 3 %}bronze{% else %}normal{% endif %}">
-                {% if entry.rank == 1 %}&#127942;{% else %}{{ entry.rank }}{% endif %}
+                {% if entry.rank == 1 %}&#129351;{% elif entry.rank == 2 %}&#129352;{% elif entry.rank == 3 %}&#129353;{% else %}{{ entry.rank }}{% endif %}
             </div>
             <div class="lb-name">{{ entry.participant.name }}</div>
             <div class="lb-exact">{{ entry.exact_predictions }}<span style="font-size:0.55rem;color:#6b7280;margin-left:2px;">exact</span></div>

@@ -1162,19 +1162,28 @@ h3, .h3 {
 }
 
 .lb-rank.gold {
-  background: linear-gradient(135deg, #FFD700, #f5d442);
+  /* background: linear-gradient(135deg, #FFD700, #f5d442); */
+  background: transparent;
+  color: #FFD700 !important;
+  border: 2px solid;
   color: #0a0e17;
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
 }
 
 .lb-rank.silver {
-  background: linear-gradient(135deg, #C0C0C0, #e8e8e8);
+  /* background: linear-gradient(135deg, #C0C0C0, #e8e8e8); */
+  background: transparent;
+  color: #C0C0C0 !important;
+  border: 2px solid;
   color: #0a0e17;
   box-shadow: 0 0 10px rgba(192, 192, 192, 0.2);
 }
 
 .lb-rank.bronze {
-  background: linear-gradient(135deg, #CD7F32, #e8a857);
+  /* background: linear-gradient(135deg, #CD7F32, #e8a857); */
+  background: transparent;
+  color: #CD7F32 !important;
+  border: 2px solid;
   color: #0a0e17;
   box-shadow: 0 0 10px rgba(205, 127, 50, 0.2);
 }
