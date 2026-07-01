@@ -309,7 +309,24 @@ def match_detail(request, match_id):
     """
     match = get_object_or_404(Match, pk=match_id)
     current_participant = get_current_participant(request)
-    predictions = match.predictions.select_related('participant')
+    from django.db.models import Case, When, Value, IntegerField
+
+    predictions = (
+        match.predictions
+        .select_related("participant")
+        .annotate(
+            exact_first=Case(
+                When(
+                    home_score=match.home_score,
+                    away_score=match.away_score,
+                    then=Value(0),
+                ),
+                default=Value(1),
+                output_field=IntegerField(),
+            )
+        )
+        .order_by("exact_first", "submitted_at")
+    )
 
     has_predicted = False
     if current_participant:
@@ -552,6 +569,8 @@ def admin_dashboard(request):
             away_team = request.POST.get('away_team', '')
             home_score = request.POST.get('home_score')
             away_score = request.POST.get('away_score')
+            home_score_p = request.POST.get('home_score_p')
+            away_score_p = request.POST.get('away_score_p')
             try:
                 ko = KnockoutMatch.objects.get(pk=ko_id)
                 ko.home_team = home_team
@@ -560,11 +579,17 @@ def admin_dashboard(request):
                 if ko.match:
                     ko.match.home_team = home_team
                     ko.match.away_team = away_team
+                    ko.match.home_score = int(home_score)
+                    ko.match.away_score = int(away_score)
                     ko.match.save()
                 if home_score and away_score:
                     ko.home_score = int(home_score)
                     ko.away_score = int(away_score)
                     ko.is_completed = True
+                if home_score_p and away_score_p:
+                    ko.home_score_p = int(home_score_p)
+                    ko.away_score_p = int(away_score_p)
+                    
                 ko.save()
                 messages.success(request, f"Knockout match updated: {ko}")
             except (KnockoutMatch.DoesNotExist, ValueError, TypeError) as e:

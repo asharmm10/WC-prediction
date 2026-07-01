@@ -142,8 +142,8 @@
     .bracket-team-row:first-child {
         border-bottom: 1px solid rgba(255, 255, 255, 0.03);
     }
-    .bracket-team-row.winner { background: rgba(16, 185, 129, 0.06); }
-    .bracket-team-row.loser { opacity: 0.4; }
+    .bracket-team-row.winner { background: rgba(16, 185, 129, 0.15); }
+    .bracket-team-row.loser { opacity: 0.2; }
     .bracket-team-row.tbd { opacity: 0.25; font-style: italic; }
     .bracket-team-row.home .bt-crest { order: 2; }
     .bracket-team-row.home .bt-name { order: 1; text-align: right; flex: 1; }
@@ -317,7 +317,7 @@
                         </div>
                         {% endif %}
                         <!-- Home team -->
-                        <div class="bracket-team-row home {% if km.is_completed and km.home_score is not None and km.away_score is not None %}{% if km.home_score > km.away_score %}winner{% else %}loser{% endif %}{% endif %} {% if not km.home_team %}tbd{% endif %}">
+                        <div class="bracket-team-row home {% if km.is_completed and km.home_score is not None and km.away_score is not None %}{% if km.winner == km.home_team %}winner{% else %}loser{% endif %}{% endif %} {% if not km.home_team %}tbd{% endif %}">
                             {% if km.home_team %}
                             <span class="bt-name">{{ km.home_team }}</span>
                             {% if km.home_team_logo %}
@@ -327,11 +327,11 @@
                             <span class="bt-name">TBD</span>
                             {% endif %}
                             {% if km.is_completed and km.home_score is not None %}
-                            <span class="bt-score">{{ km.home_score }}</span>
+                            <span class="bt-score">{{ km.home_score }} {% if km.home_score_p %} ({{km.home_score_p}}){% endif %}</span>
                             {% endif %}
                         </div>
                         <!-- Away team -->
-                        <div class="bracket-team-row away {% if km.is_completed and km.home_score is not None and km.away_score is not None %}{% if km.away_score > km.home_score %}winner{% else %}loser{% endif %}{% endif %} {% if not km.away_team %}tbd{% endif %}">
+                        <div class="bracket-team-row away {% if km.is_completed and km.home_score is not None and km.away_score is not None %}{% if km.winner == km.away_team %}winner{% else %}loser{% endif %}{% endif %} {% if not km.away_team %}tbd{% endif %}">
                             {% if km.away_team %}
                             {% if km.away_team_logo %}
                             <img src="{% static km.away_team_logo %}{% if xtransformport_param %}?{{ xtransformport_param }}{% endif %}" alt="{{ km.away_team }}" class="bt-crest">
@@ -341,7 +341,7 @@
                             <span class="bt-name">TBD</span>
                             {% endif %}
                             {% if km.is_completed and km.away_score is not None %}
-                            <span class="bt-score">{{ km.away_score }}</span>
+                            <span class="bt-score">{{ km.away_score }} {% if km.away_score_p %} ({{km.away_score_p}}){% endif %}</span>
                             {% endif %}
                         </div>
                     </div>

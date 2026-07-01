@@ -278,6 +278,8 @@ class KnockoutMatch(models.Model):
     away_team = models.CharField(max_length=100, blank=True)
     home_score = models.IntegerField(null=True, blank=True)
     away_score = models.IntegerField(null=True, blank=True)
+    home_score_p = models.IntegerField(null=True, blank=True)
+    away_score_p = models.IntegerField(null=True, blank=True)
     match = models.OneToOneField(
         Match,
         on_delete=models.SET_NULL,
@@ -304,10 +306,23 @@ class KnockoutMatch(models.Model):
 
     @property
     def winner(self):
-        if not self.is_completed or self.home_score is None:
+        if not self.is_completed or self.home_score is None or self.away_score is None:
             return None
+
+        # Won in normal time
         if self.home_score > self.away_score:
             return self.home_team
-        elif self.away_score > self.home_score:
+        if self.away_score > self.home_score:
             return self.away_team
-        return None  # Draw/penalties - handled separately
+
+        # Draw -> penalties
+        if (
+            self.home_score_p is not None
+            and self.away_score_p is not None
+        ):
+            if self.home_score_p > self.away_score_p:
+                return self.home_team
+            if self.away_score_p > self.home_score_p:
+                return self.away_team
+
+        return None

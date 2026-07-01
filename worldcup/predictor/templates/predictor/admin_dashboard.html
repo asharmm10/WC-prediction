@@ -197,8 +197,10 @@
                         </td>
                         <td>
                                 <input type="number" name="home_score" value="{% if ko.home_score is not None %}{{ ko.home_score }}{% endif %}" class="form-control form-control-sm d-inline" style="width:45px;" placeholder="H" min="0">
-                                <span class="text-muted">-</span>
+                                (<input type="number" name="home_score_p" value="{% if ko.home_score_p is not None %}{{ ko.home_score_p }}{% endif %}" class="form-control form-control-sm d-inline" style="width:45px;" placeholder="H" min="0">)
+                                <span class="text">-</span>
                                 <input type="number" name="away_score" value="{% if ko.away_score is not None %}{{ ko.away_score }}{% endif %}" class="form-control form-control-sm d-inline" style="width:45px;" placeholder="A" min="0">
+                                (<input type="number" name="away_score_p" value="{% if ko.away_score_p is not None %}{{ ko.away_score_p }}{% endif %}" class="form-control form-control-sm d-inline" style="width:45px;" placeholder="A" min="0">)
                         </td>
                         <td>
                                 <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-check-lg"></i></button>

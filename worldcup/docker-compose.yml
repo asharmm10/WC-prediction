@@ -23,7 +23,7 @@ services:
     build: .
     restart: always
     ports:
-      - "8000:8000"
+      - "8001:8000"
     environment:
       - DB_ENGINE=django.db.backends.mysql
       - DB_NAME=wc2026
