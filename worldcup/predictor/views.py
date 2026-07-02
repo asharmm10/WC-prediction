@@ -579,8 +579,10 @@ def admin_dashboard(request):
                 if ko.match:
                     ko.match.home_team = home_team
                     ko.match.away_team = away_team
-                    ko.match.home_score = int(home_score)
-                    ko.match.away_score = int(away_score)
+                    if home_score and away_score:
+                        ko.match.home_score = int(home_score)
+                        ko.match.away_score = int(away_score)
+                        ko.match.status = 'completed'
                     ko.match.save()
                 if home_score and away_score:
                     ko.home_score = int(home_score)
@@ -594,6 +596,7 @@ def admin_dashboard(request):
                 messages.success(request, f"Knockout match updated: {ko}")
             except (KnockoutMatch.DoesNotExist, ValueError, TypeError) as e:
                 messages.error(request, f"Error updating knockout: {e}")
+                import traceback; traceback.print_exc();
 
         elif action == 'create_match':
             home_team = request.POST.get('home_team')
